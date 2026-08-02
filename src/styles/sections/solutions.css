@@ -37,7 +37,7 @@
   flex-direction: column;
   justify-content: flex-end;
   min-height: 22rem;
-  background: linear-gradient(155deg, hsl(var(--color-purple-deep)), hsl(var(--color-black)));
+  background: linear-gradient(155deg, hsl(var(--color-treme-terra-deep)), hsl(var(--color-black)));
   color: hsl(var(--color-white));
 }
 

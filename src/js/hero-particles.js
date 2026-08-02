@@ -9,7 +9,7 @@ export function initHeroParticles() {
 
   const ctx = canvas.getContext('2d');
   let width, height, particles;
-  const hue = 340;
+  const hue = 207;
 
   const resize = () => {
     width = canvas.width = canvas.offsetWidth * devicePixelRatio;

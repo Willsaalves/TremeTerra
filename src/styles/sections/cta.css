@@ -25,7 +25,7 @@
   height: 24rem;
   bottom: -12rem;
   right: 8%;
-  background: hsl(var(--color-purple) / 0.5);
+  background: hsl(var(--color-treme-terra-deep) / 0.5);
 }
 
 .cta-final .container {

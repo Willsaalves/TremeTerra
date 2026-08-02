@@ -1,5 +1,5 @@
 :root {
-  /* Paleta de marca do grupo */
+  /* Paleta legada do grupo (mantida por referência, não usada como accent principal aqui) */
   --color-magenta: 318 80% 44%;
   --color-magenta-soft: 318 85% 60%;
   --color-violet: 270 96% 43%;
@@ -7,27 +7,28 @@
   --color-purple: 270 91% 34%;
   --color-purple-deep: 270 100% 24%;
 
-  /* Accent próprio da Treme Terra dentro do grupo */
-  --color-treme-terra: 340 70% 62%;
-  --color-treme-terra-text: 340 70% 46%;
+  /* Accent real da Treme Terra — azul, extraído do produto/dashboard oficial */
+  --color-treme-terra: 207 90% 54%;
+  --color-treme-terra-text: 211 79% 38%;
+  --color-treme-terra-deep: 217 91% 34%;
 
   /* Fundo claro e superfícies */
-  --color-bg: 268 48% 97%;
+  --color-bg: 220 35% 97%;
   --color-surface: 0 0% 100%;
-  --color-surface-tint: 268 42% 95%;
+  --color-surface-tint: 220 30% 95%;
 
   /* Texto e neutros */
-  --color-ink: 270 42% 11%;
-  --color-mist: 262 14% 42%;
-  --color-mist-on-dark: 268 22% 78%;
+  --color-ink: 222 35% 12%;
+  --color-mist: 220 12% 42%;
+  --color-mist-on-dark: 220 15% 78%;
 
-  /* Bandas escuras */
-  --color-black: 273 55% 8%;
-  --color-graphite-900: 271 48% 11%;
-  --color-graphite-800: 271 42% 15%;
-  --color-graphite-700: 270 36% 20%;
-  --color-graphite-600: 268 30% 27%;
-  --color-white: 268 40% 97%;
+  /* Bandas escuras — azul-marinho quase preto, como no dashboard */
+  --color-black: 222 47% 6%;
+  --color-graphite-900: 222 42% 9%;
+  --color-graphite-800: 222 38% 13%;
+  --color-graphite-700: 220 32% 18%;
+  --color-graphite-600: 218 26% 25%;
+  --color-white: 220 30% 97%;
 
   --color-success: 152 55% 38%;
   --color-error: 356 72% 52%;

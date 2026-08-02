@@ -67,7 +67,7 @@
   overflow: hidden;
   background:
     radial-gradient(circle at 30% 20%, hsl(var(--color-treme-terra) / 0.55), transparent 55%),
-    radial-gradient(circle at 75% 75%, hsl(var(--color-violet) / 0.5), transparent 55%),
+    radial-gradient(circle at 75% 75%, hsl(var(--color-treme-terra-deep) / 0.5), transparent 55%),
     linear-gradient(160deg, hsl(var(--color-graphite-800)), hsl(var(--color-black)));
   border: 1px solid hsl(var(--color-white) / 0.08);
 }

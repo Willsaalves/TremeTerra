@@ -36,7 +36,7 @@
   height: 26rem;
   bottom: -10rem;
   left: -8rem;
-  background: hsl(var(--color-violet) / 0.4);
+  background: hsl(var(--color-treme-terra-deep) / 0.45);
 }
 
 .hero-particles {
