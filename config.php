@@ -32,3 +32,20 @@ const FOUNDING_YEAR = 2011;
 // Show". Centralizado aqui pra nunca precisar caçar a string em duas
 // linguagens (HTML estático + schema PHP) se mudar de novo.
 const FLAGSHIP_PRODUCT_NAME = 'Treme Terra Show';
+
+// Integração ActiveCampaign (usada por subscribe.php) — todo valor real
+// deve vir de variável de ambiente do servidor (getenv), NUNCA commitado
+// em texto no repositório. As constantes abaixo são só o fallback vazio
+// para ambiente local sem as env vars configuradas — nesse caso
+// subscribe.php cai em "modo desenvolvimento" (loga o payload, não
+// inventa um sucesso real da API).
+//
+// Onde achar cada valor no painel ActiveCampaign:
+//   URL/Chave  -> Settings > Developer
+//   Lista      -> Lists > (a lista) > o ID aparece na URL
+//   Campos     -> Settings > Manage Fields > o ID aparece ao editar o campo
+const ACTIVE_CAMPAIGN_API_URL          = ''; // TODO: ex. https://SUACONTA.api-us1.com
+const ACTIVE_CAMPAIGN_API_KEY          = ''; // TODO: token real — usar getenv('ACTIVECAMPAIGN_API_KEY') em produção
+const ACTIVE_CAMPAIGN_LIST_ID          = ''; // TODO: ID numérico da lista de destino
+const ACTIVE_CAMPAIGN_FIELD_EVENT_TYPE = ''; // TODO: ID do campo customizado "Tipo de evento"
+const ACTIVE_CAMPAIGN_FIELD_MESSAGE    = ''; // TODO: ID do campo customizado "Mensagem"

@@ -3,7 +3,14 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 export function initScrollFx() {
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (prefersReduced) return;
+
+  if (prefersReduced) {
+    // Sem parallax/scrub/autoplay no modo reduzido — o filme vira um
+    // vídeo comum, parado no poster até o usuário decidir tocar.
+    const filmVideo = document.querySelector('.film-video');
+    if (filmVideo) filmVideo.setAttribute('controls', '');
+    return;
+  }
 
   const hero = document.querySelector('.hero');
   if (hero) {
@@ -42,23 +49,32 @@ export function initScrollFx() {
     );
   }
 
-  const filmFrame = document.querySelector('.film-frame');
-  if (filmFrame) {
-    gsap.fromTo(
-      filmFrame,
-      { scale: 0.86, borderRadius: '40px' },
-      {
-        scale: 1,
-        borderRadius: '0px',
-        ease: 'none',
-        scrollTrigger: {
-          trigger: filmFrame,
-          start: 'top 85%',
-          end: 'top 20%',
-          scrub: 0.6,
-        },
-      }
-    );
+  const film = document.querySelector('.film');
+  const filmVideo = document.querySelector('.film-video');
+  if (film && filmVideo) {
+    const isReady = () => Number.isFinite(filmVideo.duration) && filmVideo.duration > 0;
+    // O vídeo (preload="auto") pode já ter carregado os metadados antes
+    // deste módulo rodar — checa o estado atual primeiro, e só espera o
+    // evento se ainda não estiver pronto (senão o evento já passou e o
+    // scrub nunca liga).
+    let seekable = isReady();
+    if (!seekable) {
+      filmVideo.addEventListener('loadedmetadata', () => { seekable = isReady(); }, { once: true });
+    }
+
+    // Sem play/pause normal aqui de propósito: o tempo do vídeo é
+    // amarrado 1:1 ao progresso do scroll dentro da seção — desce o
+    // scroll, o vídeo avança; sobe o scroll, o vídeo volta.
+    ScrollTrigger.create({
+      trigger: film,
+      start: 'top top',
+      end: 'bottom bottom',
+      scrub: true,
+      onUpdate: (self) => {
+        if (!seekable) return;
+        filmVideo.currentTime = self.progress * filmVideo.duration;
+      },
+    });
   }
 
   const ctaFinal = document.querySelector('.cta-final');

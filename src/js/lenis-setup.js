@@ -22,7 +22,7 @@ export function initSmoothScroll() {
   });
   gsap.ticker.lagSmoothing(0);
 
-  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+  document.querySelectorAll('a[href^="#"]:not([data-open-contact])').forEach((anchor) => {
     anchor.addEventListener('click', (e) => {
       const id = anchor.getAttribute('href');
       if (!id || id === '#') return;

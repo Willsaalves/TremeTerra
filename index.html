@@ -18,6 +18,13 @@
 
   <meta name="theme-color" content="#080c16" />
 
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" href="/favicon-16x16.png" type="image/png" sizes="16x16" />
+  <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32" />
+  <link rel="icon" href="/favicon.png" type="image/png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Montserrat:wght@400;500;600;700;800;900&display=swap" />
@@ -69,7 +76,7 @@
           <li><a href="#portfolio">Portfólio</a></li>
           <li><a href="#contato">Contato</a></li>
         </ul>
-        <a href="tel:+5511984781889" class="btn btn-primary">Falar com consultor</a>
+        <a href="#contato" class="btn btn-primary" data-open-contact>Falar com consultor</a>
         <button class="nav-toggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-nav">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
         </button>
@@ -278,29 +285,26 @@
       </div>
     </section>
 
-    <!-- BASTIDORES (vídeo real) -->
-    <section class="film band-tint" id="bastidores" aria-labelledby="film-title">
-      <div class="container film-container">
-        <p class="eyebrow">Bastidores</p>
-        <h2 id="film-title" class="film-title" data-split-reveal>
-          Cada Treme Terra Show começa horas antes de a primeira luz acender
-        </h2>
-        <div class="film-frame" data-reveal>
-          <video
-            class="film-video"
-            src="/videos/bastidores.mp4"
-            poster="/videos/bastidores-poster.jpg"
-            muted
-            loop
-            playsinline
-            autoplay
-            preload="metadata"
-            aria-label="Bastidores de montagem de um evento Treme Terra: carregamento de equipamento, montagem de treliça e operação do show ao vivo"
-          ></video>
-          <button type="button" class="film-sound-toggle" aria-pressed="false" aria-label="Ativar som do vídeo">
-            <svg class="icon-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
-            <svg class="icon-unmuted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>
-          </button>
+    <!-- BASTIDORES (vídeo real, avança/recua com o scroll) -->
+    <section class="film" id="bastidores" aria-labelledby="film-title">
+      <div class="film-pin">
+        <video
+          class="film-video"
+          poster="/videos/bastidores-poster.jpg"
+          muted
+          playsinline
+          preload="auto"
+          aria-label="Bastidores de um evento Treme Terra: carregamento de equipamento, montagem de treliça e operação do show ao vivo"
+        >
+          <source src="/videos/bastidores.webm" type="video/webm" />
+          <source src="/videos/bastidores.mp4" type="video/mp4" />
+        </video>
+        <div class="film-scrim" aria-hidden="true"></div>
+        <div class="film-copy container">
+          <p class="eyebrow">Bastidores</p>
+          <h2 id="film-title" class="film-title" data-split-reveal>
+            Cada Treme Terra Show começa horas antes de a primeira luz acender
+          </h2>
         </div>
       </div>
     </section>
@@ -341,7 +345,7 @@
         <p class="eyebrow">Vamos fazer vibrar</p>
         <h2 id="cta-title" data-split-reveal>Seu evento merece <em>essa energia</em></h2>
         <p data-reveal>Conte o que está planejando e um consultor te retorna com uma proposta sob medida.</p>
-        <a href="tel:+5511984781889" class="btn btn-primary" data-reveal>(11) 98478-1889</a>
+        <a href="#contato" class="btn btn-primary" data-reveal data-open-contact>Falar com um consultor</a>
       </div>
     </section>
   </main>
@@ -390,7 +394,10 @@
     <div class="contact-widget-panel" role="dialog" aria-labelledby="contact-widget-title" aria-hidden="true">
       <h3 id="contact-widget-title">Solicitar orçamento</h3>
       <p class="lead">Responda 4 perguntas rápidas e a gente te chama.</p>
-      <form class="contact-form" id="contact-form">
+      <form class="contact-form" id="contact-form" method="post" action="/subscribe.php">
+        <label class="contact-form-honeypot" aria-hidden="true">Website
+          <input type="text" name="website" tabindex="-1" autocomplete="off" />
+        </label>
         <label>Nome
           <input type="text" name="nome" autocomplete="name" required placeholder="Seu nome" />
         </label>
@@ -416,6 +423,7 @@
         <label>Mensagem
           <textarea name="mensagem" placeholder="Conte um pouco sobre o evento"></textarea>
         </label>
+        <p class="contact-form-error" role="alert" hidden></p>
         <button type="submit" class="btn btn-primary">Enviar</button>
         <p class="contact-form-note">Também pelo (11) 98478-1889 — seg. a sex., 8h–22h</p>
       </form>

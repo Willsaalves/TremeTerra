@@ -75,5 +75,6 @@ writeFileSync(distIndexPhp, newHtml, 'utf-8');
 mkdirSync(path.join(distDir, 'partials'), { recursive: true });
 copyFileSync(path.join(root, 'config.php'), path.join(distDir, 'config.php'));
 copyFileSync(path.join(root, 'partials', 'seo-meta.php'), path.join(distDir, 'partials', 'seo-meta.php'));
+copyFileSync(path.join(root, 'subscribe.php'), path.join(distDir, 'subscribe.php'));
 
-console.log('dist/index.php gerado + config.php/partials copiados para dist/.');
+console.log('dist/index.php gerado + config.php/partials/subscribe.php copiados para dist/.');
