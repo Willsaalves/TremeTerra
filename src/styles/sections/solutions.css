@@ -51,6 +51,22 @@
   color: hsl(var(--color-treme-terra));
 }
 
+/* A 4ª tile (Projeção) sempre sobra sozinha na última linha do grid de 3
+   colunas, já que a featured ocupa 2x2 — em vez de deixá-la órfã e
+   estreita com um vão vazio ao lado, ela assume a linha inteira de
+   propósito, em layout horizontal. */
+.solutions-grid .tile:nth-child(4) {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.solutions-grid .tile:nth-child(4) .tile-icon {
+  margin-bottom: 0;
+  flex-shrink: 0;
+}
+
 @media (max-width: 900px) {
   .solutions-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -67,5 +83,9 @@
   }
   .solutions-grid .tile:first-child {
     grid-column: span 1;
+  }
+  .solutions-grid .tile:nth-child(4) {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
