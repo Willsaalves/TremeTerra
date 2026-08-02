@@ -42,6 +42,25 @@ export function initScrollFx() {
     );
   }
 
+  const filmFrame = document.querySelector('.film-frame');
+  if (filmFrame) {
+    gsap.fromTo(
+      filmFrame,
+      { scale: 0.86, borderRadius: '40px' },
+      {
+        scale: 1,
+        borderRadius: '0px',
+        ease: 'none',
+        scrollTrigger: {
+          trigger: filmFrame,
+          start: 'top 85%',
+          end: 'top 20%',
+          scrub: 0.6,
+        },
+      }
+    );
+  }
+
   const ctaFinal = document.querySelector('.cta-final');
   if (ctaFinal) {
     const g1 = ctaFinal.querySelector('.cta-glow .g1');

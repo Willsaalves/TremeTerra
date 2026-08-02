@@ -4,12 +4,17 @@
   overflow: hidden;
 }
 
-/* Accent quente exclusivo do INNOVASHOW — sobrescreve o token de marca
-   localmente pra dar energia própria ao produto flagship */
-#innovashow {
-  --color-treme-terra: 28 92% 58%;
-  --color-treme-terra-text: 22 85% 42%;
-  --color-treme-terra-deep: 16 85% 42%;
+/* Accent exclusivo do Treme Terra Show — azul mais escuro e saturado
+   que o accent principal do site, dá energia própria ao produto flagship
+   sem sair da família azul da marca */
+#treme-terra-show {
+  --color-treme-terra: 213 85% 44%;
+  --color-treme-terra-text: 213 80% 34%;
+  --color-treme-terra-deep: 222 78% 22%;
+}
+
+#treme-terra-show .btn-primary {
+  color: hsl(var(--color-white));
 }
 
 .showcase .container {

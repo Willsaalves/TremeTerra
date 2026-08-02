@@ -10,6 +10,7 @@ import { initPortfolioScroll } from './js/portfolio-scroll.js';
 import { initHeroParticles } from './js/hero-particles.js';
 import { initScrollFx } from './js/scroll-fx.js';
 import { initButtonGlow } from './js/button-glow.js';
+import { initFilm } from './js/film.js';
 
 gsap.registerPlugin(ScrollTrigger);
 window.ScrollTrigger = ScrollTrigger;
@@ -26,4 +27,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initHeroParticles();
   initScrollFx();
   initButtonGlow();
+  initFilm();
 });

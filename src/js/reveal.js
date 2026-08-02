@@ -55,7 +55,7 @@ export function initReveal() {
       entries.forEach((entry, i) => {
         if (entry.isIntersecting) {
           const el = entry.target;
-          const delay = el.closest('.tile-grid, .packages-grid, .showcase-features')
+          const delay = el.closest('.tile-grid, .showcase-features')
             ? Array.from(el.parentElement.children).indexOf(el) * 90
             : 0;
           window.setTimeout(() => el.classList.add('is-revealed'), delay);
