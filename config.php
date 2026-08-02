@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 const SITE_NAME        = 'Treme Terra Audiovisual';
 const SITE_TITLE       = 'Treme Terra Audiovisual | Som, iluminação e produção para eventos';
-const SITE_DESCRIPTION = 'Desde 2011, a Treme Terra Audiovisual entrega sonorização, iluminação, '
+const SITE_DESCRIPTION = 'A Treme Terra Audiovisual entrega sonorização, iluminação, '
     . 'projeção e estrutura completa de palco para eventos — orçamento transparente, atendimento '
     . 'rápido e solução sob medida pro seu evento.';
 const SITE_URL         = 'https://www.tremeterraaudiovisual.com.br'; // TODO: confirmar domínio final do redesign
@@ -13,7 +13,7 @@ const SITE_THEME_COLOR = '#080c16';
 const CONTACT_PHONE_DISPLAY = '(11) 98478-1889';
 const CONTACT_PHONE_TEL     = '+5511984781889';
 const CONTACT_EMAIL         = 'comercial@tremeterraaudiovisual.com.br';
-const CONTACT_HOURS         = 'Segunda a sexta, 8h às 22h';
+const CONTACT_HOURS         = 'Segunda a sexta, 9h às 18h';
 const CONTACT_CITY          = 'São Paulo'; // TODO: confirmar cidade/endereço completo com o cliente
 const CONTACT_REGION        = 'SP';
 const CONTACT_COUNTRY       = 'BR';
