@@ -22,3 +22,43 @@
 .about-intro h2 strong {
   color: hsl(var(--color-treme-terra-text));
 }
+
+/* Grid assimétrico em zigzag — quebra o padrão de 4 cards idênticos */
+.about .tile-grid {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.about .tile-grid > .tile:nth-child(1),
+.about .tile-grid > .tile:nth-child(4) {
+  grid-column: span 2;
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.about .tile-grid > .tile:nth-child(1) .tile-icon,
+.about .tile-grid > .tile:nth-child(4) .tile-icon {
+  width: 3.5rem;
+  height: 3.5rem;
+  margin-bottom: 0;
+  flex-shrink: 0;
+}
+
+@media (max-width: 760px) {
+  .about .tile-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .about .tile-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .about .tile-grid > .tile:nth-child(1),
+  .about .tile-grid > .tile:nth-child(4) {
+    grid-column: span 1;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

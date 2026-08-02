@@ -14,14 +14,30 @@
 }
 
 .btn-primary {
+  position: relative;
+  overflow: hidden;
   background: hsl(var(--color-treme-terra));
   color: hsl(var(--color-black));
   box-shadow: var(--shadow-cta);
 }
 
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle 90px at var(--mx, 50%) var(--my, 50%), hsl(var(--color-white) / 0.4), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.35s var(--ease-soft);
+  pointer-events: none;
+}
+
 .btn-primary:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-cta-hover);
+}
+
+.btn-primary:hover::before {
+  opacity: 1;
 }
 
 .btn-ghost {

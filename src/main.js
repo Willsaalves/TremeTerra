@@ -8,6 +8,8 @@ import { initHeader, initFooterYear } from './js/nav.js';
 import { initContactWidget } from './js/contact-widget.js';
 import { initPortfolioScroll } from './js/portfolio-scroll.js';
 import { initHeroParticles } from './js/hero-particles.js';
+import { initScrollFx } from './js/scroll-fx.js';
+import { initButtonGlow } from './js/button-glow.js';
 
 gsap.registerPlugin(ScrollTrigger);
 window.ScrollTrigger = ScrollTrigger;
@@ -22,4 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initContactWidget();
   initPortfolioScroll();
   initHeroParticles();
+  initScrollFx();
+  initButtonGlow();
 });

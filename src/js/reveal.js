@@ -1,13 +1,14 @@
-function wrapWord(word) {
+function wrapWord(word, index) {
   const wrap = document.createElement('span');
   wrap.className = 'word';
   const inner = document.createElement('span');
   inner.textContent = word;
+  inner.style.transitionDelay = `${Math.min(index * 45, 480)}ms`;
   wrap.appendChild(inner);
   return wrap;
 }
 
-function splitNode(node, target) {
+function splitNode(node, target, counter) {
   node.childNodes.forEach((child) => {
     if (child.nodeType === Node.TEXT_NODE) {
       const words = child.textContent.split(/(\s+)/).filter(Boolean);
@@ -15,14 +16,14 @@ function splitNode(node, target) {
         if (/^\s+$/.test(word)) {
           target.appendChild(document.createTextNode(word));
         } else {
-          target.appendChild(wrapWord(word));
+          target.appendChild(wrapWord(word, counter.count++));
         }
       });
     } else if (child.tagName === 'BR') {
       target.appendChild(document.createElement('br'));
     } else {
       const clone = child.cloneNode(false);
-      splitNode(child, clone);
+      splitNode(child, clone, counter);
       target.appendChild(clone);
     }
   });
@@ -31,7 +32,7 @@ function splitNode(node, target) {
 function splitWords(el) {
   const original = el.cloneNode(true);
   el.innerHTML = '';
-  splitNode(original, el);
+  splitNode(original, el, { count: 0 });
 }
 
 export function initReveal() {

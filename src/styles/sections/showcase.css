@@ -4,6 +4,14 @@
   overflow: hidden;
 }
 
+/* Accent quente exclusivo do INNOVASHOW — sobrescreve o token de marca
+   localmente pra dar energia própria ao produto flagship */
+#innovashow {
+  --color-treme-terra: 28 92% 58%;
+  --color-treme-terra-text: 22 85% 42%;
+  --color-treme-terra-deep: 16 85% 42%;
+}
+
 .showcase .container {
   position: relative;
   z-index: 1;
@@ -70,6 +78,16 @@
     radial-gradient(circle at 75% 75%, hsl(var(--color-treme-terra-deep) / 0.5), transparent 55%),
     linear-gradient(160deg, hsl(var(--color-graphite-800)), hsl(var(--color-black)));
   border: 1px solid hsl(var(--color-white) / 0.08);
+}
+
+.showcase-visual::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.14;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
 }
 
 .showcase-visual .beam {

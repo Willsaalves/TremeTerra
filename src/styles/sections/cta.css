@@ -4,6 +4,21 @@
   overflow: hidden;
 }
 
+.cta-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.cta-glow::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.16;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+}
+
 .cta-glow span {
   position: absolute;
   border-radius: 50%;
