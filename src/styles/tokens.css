@@ -1,0 +1,72 @@
+:root {
+  /* Paleta de marca do grupo */
+  --color-magenta: 318 80% 44%;
+  --color-magenta-soft: 318 85% 60%;
+  --color-violet: 270 96% 43%;
+  --color-violet-soft: 270 90% 62%;
+  --color-purple: 270 91% 34%;
+  --color-purple-deep: 270 100% 24%;
+
+  /* Accent próprio da Treme Terra dentro do grupo */
+  --color-treme-terra: 340 70% 62%;
+  --color-treme-terra-text: 340 70% 46%;
+
+  /* Fundo claro e superfícies */
+  --color-bg: 268 48% 97%;
+  --color-surface: 0 0% 100%;
+  --color-surface-tint: 268 42% 95%;
+
+  /* Texto e neutros */
+  --color-ink: 270 42% 11%;
+  --color-mist: 262 14% 42%;
+  --color-mist-on-dark: 268 22% 78%;
+
+  /* Bandas escuras */
+  --color-black: 273 55% 8%;
+  --color-graphite-900: 271 48% 11%;
+  --color-graphite-800: 271 42% 15%;
+  --color-graphite-700: 270 36% 20%;
+  --color-graphite-600: 268 30% 27%;
+  --color-white: 268 40% 97%;
+
+  --color-success: 152 55% 38%;
+  --color-error: 356 72% 52%;
+
+  /* Tipografia */
+  --font-display: 'Bricolage Grotesque', 'Montserrat', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-heading: 'Montserrat', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-body: 'Montserrat', ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  --text-display: clamp(2.5rem, 6vw, 5.5rem);
+  --text-xl: clamp(2.25rem, 5vw, 4rem);
+  --text-showcase: clamp(2rem, 4vw, 3.25rem);
+  --text-statement: clamp(1.75rem, 4vw, 3.25rem);
+  --text-section: clamp(2rem, 4vw, 3rem);
+
+  /* Espaçamento */
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2.5rem;
+  --space-xl: 4rem;
+  --space-2xl: 6rem;
+  --space-3xl: 9rem;
+
+  --container-max: 1320px;
+  --container-pad: clamp(1.25rem, 4vw, 3rem);
+
+  --radius-sm: 10px;
+  --radius-md: 18px;
+  --radius-lg: 28px;
+  --radius-full: 999px;
+
+  --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-soft: cubic-bezier(0.33, 1, 0.68, 1);
+  --ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --shadow-elevate: 0 20px 60px -20px hsl(var(--color-black) / 0.6);
+  --shadow-cta: 0 12px 30px -12px hsl(var(--color-treme-terra) / 0.55);
+  --shadow-cta-hover: 0 18px 40px -14px hsl(var(--color-treme-terra) / 0.65);
+}

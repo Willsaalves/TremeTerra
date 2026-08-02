@@ -1,0 +1,24 @@
+.about {
+  padding-block: var(--space-3xl);
+}
+
+.about-intro {
+  max-width: 42rem;
+  margin-bottom: var(--space-2xl);
+}
+
+.about-intro .eyebrow {
+  margin-bottom: var(--space-sm);
+}
+
+.about-intro h2 {
+  font-family: var(--font-heading);
+  font-size: var(--text-section);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+
+.about-intro h2 strong {
+  color: hsl(var(--color-treme-terra-text));
+}

@@ -1,0 +1,125 @@
+.showcase {
+  position: relative;
+  padding-block: var(--space-3xl);
+  overflow: hidden;
+}
+
+.showcase .container {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2xl);
+  align-items: center;
+}
+
+.showcase-copy .eyebrow {
+  margin-bottom: var(--space-sm);
+}
+
+.showcase-copy h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-showcase);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.08;
+  margin-bottom: var(--space-md);
+}
+
+.showcase-copy h2 em {
+  font-style: normal;
+  color: hsl(var(--color-treme-terra));
+}
+
+.showcase-copy p {
+  color: hsl(var(--color-mist-on-dark));
+  max-width: 34ch;
+  margin-bottom: var(--space-lg);
+}
+
+.showcase-features {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-lg);
+}
+
+.showcase-features li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.showcase-features li svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  color: hsl(var(--color-treme-terra));
+  flex-shrink: 0;
+}
+
+.showcase-visual {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 30% 20%, hsl(var(--color-treme-terra) / 0.55), transparent 55%),
+    radial-gradient(circle at 75% 75%, hsl(var(--color-violet) / 0.5), transparent 55%),
+    linear-gradient(160deg, hsl(var(--color-graphite-800)), hsl(var(--color-black)));
+  border: 1px solid hsl(var(--color-white) / 0.08);
+}
+
+.showcase-visual .beam {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    100deg,
+    hsl(var(--color-white) / 0.06) 0px,
+    hsl(var(--color-white) / 0.06) 2px,
+    transparent 2px,
+    transparent 40px
+  );
+  animation: beam-shift 12s linear infinite;
+}
+
+@keyframes beam-shift {
+  from { background-position: 0 0; }
+  to { background-position: 400px 0; }
+}
+
+.showcase-visual .badge {
+  position: absolute;
+  bottom: var(--space-md);
+  left: var(--space-md);
+  right: var(--space-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  background: hsl(var(--color-black) / 0.5);
+  backdrop-filter: blur(10px);
+  border: 1px solid hsl(var(--color-white) / 0.1);
+}
+
+.showcase-visual .badge strong {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+}
+
+.showcase-visual .badge span {
+  font-size: 0.8rem;
+  color: hsl(var(--color-mist-on-dark));
+}
+
+@media (max-width: 860px) {
+  .showcase .container {
+    grid-template-columns: 1fr;
+  }
+  .showcase-visual {
+    aspect-ratio: 16 / 10;
+  }
+}

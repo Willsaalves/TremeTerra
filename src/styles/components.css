@@ -1,0 +1,193 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2xs);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
+  padding: 0.95rem 1.75rem;
+  border-radius: var(--radius-full);
+  transition: transform 0.35s var(--ease-pop), box-shadow 0.35s var(--ease-out-expo), background-color 0.25s ease, color 0.25s ease;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: hsl(var(--color-treme-terra));
+  color: hsl(var(--color-black));
+  box-shadow: var(--shadow-cta);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-cta-hover);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: hsl(var(--color-white));
+  border: 1px solid hsl(var(--color-white) / 0.3);
+}
+
+.btn-ghost:hover {
+  background: hsl(var(--color-white) / 0.08);
+  border-color: hsl(var(--color-white) / 0.6);
+}
+
+.band-light .btn-ghost,
+.band-tint .btn-ghost {
+  color: hsl(var(--color-ink));
+  border-color: hsl(var(--color-ink) / 0.2);
+}
+
+.band-light .btn-ghost:hover,
+.band-tint .btn-ghost:hover {
+  background: hsl(var(--color-ink) / 0.05);
+  border-color: hsl(var(--color-ink) / 0.4);
+}
+
+/* Tiles grid — reused by Diferenciais and Soluções */
+.tile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-md);
+}
+
+.tile {
+  position: relative;
+  padding: var(--space-lg);
+  border-radius: var(--radius-lg);
+  background: hsl(var(--color-surface));
+  box-shadow: 0 1px 0 hsl(var(--color-ink) / 0.05), 0 20px 40px -30px hsl(var(--color-ink) / 0.25);
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.tile-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: hsl(var(--color-treme-terra) / 0.14);
+  color: hsl(var(--color-treme-terra-text));
+  margin-bottom: var(--space-sm);
+}
+
+.tile-icon svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.tile h3 {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin-bottom: var(--space-2xs);
+}
+
+.tile p {
+  color: hsl(var(--color-mist));
+  font-size: 0.95rem;
+}
+
+.tile--featured {
+  background: hsl(var(--color-graphite-900));
+  color: hsl(var(--color-white));
+  grid-column: span 2;
+}
+
+.tile--featured p {
+  color: hsl(var(--color-mist-on-dark));
+}
+
+.tile--cta {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: hsl(var(--color-treme-terra) / 0.1);
+  border: 1px dashed hsl(var(--color-treme-terra) / 0.5);
+}
+
+@media (max-width: 640px) {
+  .tile--featured {
+    grid-column: span 1;
+  }
+}
+
+/* Marquee */
+.marquee {
+  overflow: hidden;
+  position: relative;
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  gap: var(--space-xl);
+  animation: marquee 32s linear infinite;
+}
+
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+.marquee-item {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  color: hsl(var(--color-mist));
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xl);
+  white-space: nowrap;
+}
+
+.marquee-item::after {
+  content: '\2726';
+  color: hsl(var(--color-treme-terra));
+  font-size: 0.9rem;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* Reveal base state */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+}
+
+[data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.9s var(--ease-premium), transform 0.9s var(--ease-premium);
+}
+
+[data-split-reveal] .word {
+  display: inline-block;
+  overflow: hidden;
+}
+
+[data-split-reveal] .word > span {
+  display: inline-block;
+  transform: translateY(110%);
+}
+
+[data-split-reveal].is-revealed .word > span {
+  transform: none;
+  transition: transform 0.8s var(--ease-premium);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    transform: none;
+  }
+  [data-split-reveal] .word > span {
+    transform: none;
+  }
+}

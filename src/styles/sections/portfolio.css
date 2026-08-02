@@ -1,0 +1,107 @@
+.portfolio {
+  padding-block: var(--space-3xl);
+}
+
+.portfolio-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+}
+
+.portfolio-head h2 {
+  font-family: var(--font-heading);
+  font-size: var(--text-section);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.portfolio-nav {
+  display: flex;
+  gap: var(--space-2xs);
+}
+
+.portfolio-nav button {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: var(--radius-full);
+  border: 1px solid hsl(var(--color-ink) / 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.portfolio-nav button:hover {
+  border-color: hsl(var(--color-treme-terra));
+  background: hsl(var(--color-treme-terra) / 0.1);
+}
+
+.portfolio-track {
+  display: flex;
+  gap: var(--space-md);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: var(--space-sm);
+  scrollbar-width: none;
+}
+
+.portfolio-track::-webkit-scrollbar {
+  display: none;
+}
+
+.portfolio-card {
+  scroll-snap-align: start;
+  flex: 0 0 clamp(260px, 32vw, 380px);
+  aspect-ratio: 3 / 4;
+  border-radius: var(--radius-lg);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  padding: var(--space-md);
+  color: hsl(var(--color-white));
+}
+
+.portfolio-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(200deg, var(--case-a), var(--case-b));
+}
+
+.portfolio-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, hsl(var(--color-black) / 0.65), transparent 55%);
+}
+
+.portfolio-card-label {
+  position: relative;
+  z-index: 1;
+}
+
+.portfolio-card-label .eyebrow {
+  color: hsl(var(--color-white) / 0.8);
+}
+
+.portfolio-card-label .eyebrow::before {
+  background: hsl(var(--color-white) / 0.8);
+}
+
+.portfolio-card-label strong {
+  display: block;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 1.15rem;
+  margin-top: var(--space-2xs);
+}
+
+.portfolio-note {
+  margin-top: var(--space-md);
+  font-size: 0.85rem;
+  color: hsl(var(--color-mist));
+}
