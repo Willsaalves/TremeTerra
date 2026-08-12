@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: treme-terra-audiovisual
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    autoDeploy: true
+    envVars:
+      # Preenchidas no dashboard do Render (Environment) — nunca commitadas
+      # aqui. Sem elas, subscribe.php cai em modo desenvolvimento (loga o
+      # payload, não envia de verdade pra ActiveCampaign).
+      - key: ACTIVECAMPAIGN_API_URL
+        sync: false
+      - key: ACTIVECAMPAIGN_API_KEY
+        sync: false
+      - key: ACTIVECAMPAIGN_LIST_ID
+        sync: false
+      - key: ACTIVECAMPAIGN_FIELD_EVENT_TYPE
+        sync: false
+      - key: ACTIVECAMPAIGN_FIELD_MESSAGE
+        sync: false
