@@ -28,10 +28,9 @@ const SOCIAL_LINKS = [
 // trocar por um cálculo "X anos atrás" que não bate com o ano real.
 const FOUNDING_YEAR = 2011;
 
-// Nome do produto flagship — renomeado de "INNOVASHOW" para "Treme Terra
-// Show". Centralizado aqui pra nunca precisar caçar a string em duas
-// linguagens (HTML estático + schema PHP) se mudar de novo.
-const FLAGSHIP_PRODUCT_NAME = 'Treme Terra Show';
+// Nome do produto flagship. Centralizado aqui pra nunca precisar caçar a
+// string em duas linguagens (HTML estático + schema PHP) se mudar de novo.
+const FLAGSHIP_PRODUCT_NAME = 'Innova Show';
 
 // Integração ActiveCampaign (usada por subscribe.php) — todo valor real
 // deve vir de variável de ambiente do servidor (getenv), NUNCA commitado

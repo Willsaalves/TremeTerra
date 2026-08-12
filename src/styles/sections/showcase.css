@@ -4,16 +4,16 @@
   overflow: hidden;
 }
 
-/* Accent exclusivo do Treme Terra Show — azul mais escuro e saturado
+/* Accent exclusivo do Innova Show — azul mais escuro e saturado
    que o accent principal do site, dá energia própria ao produto flagship
    sem sair da família azul da marca */
-#treme-terra-show {
+#innova-show {
   --color-treme-terra: 213 85% 44%;
   --color-treme-terra-text: 213 80% 34%;
   --color-treme-terra-deep: 222 78% 22%;
 }
 
-#treme-terra-show .btn-primary {
+#innova-show .btn-primary {
   color: hsl(var(--color-white));
 }
 
