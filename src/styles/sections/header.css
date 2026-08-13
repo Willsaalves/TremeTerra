@@ -32,7 +32,6 @@
 }
 
 .main-nav {
-  position: relative;
   display: flex;
   align-items: center;
   gap: var(--space-lg);
@@ -40,7 +39,12 @@
 
 .main-nav ul {
   display: flex;
+  align-items: center;
   gap: var(--space-md);
+}
+
+.main-nav-cta {
+  display: flex;
 }
 
 .main-nav a:not(.btn) {
@@ -78,8 +82,13 @@
     backdrop-filter: blur(14px);
   }
 
-  .main-nav .btn-primary {
-    display: none;
+  .main-nav-cta {
+    width: 100%;
+    padding-top: var(--space-xs);
+  }
+
+  .main-nav-cta .btn-primary {
+    width: 100%;
   }
 
   .nav-toggle {

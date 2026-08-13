@@ -11,6 +11,16 @@
   border-radius: var(--radius-full);
   transition: transform 0.35s var(--ease-pop), box-shadow 0.35s var(--ease-out-expo), background-color 0.25s ease, color 0.25s ease;
   white-space: nowrap;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .btn {
+    white-space: normal;
+  }
 }
 
 .btn-primary {

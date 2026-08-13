@@ -17,6 +17,13 @@ export function initHeader() {
     const isOpen = nav.classList.toggle('is-open');
     toggle.setAttribute('aria-expanded', String(isOpen));
   });
+
+  nav.addEventListener('click', (e) => {
+    if (e.target.closest('a')) {
+      nav.classList.remove('is-open');
+      toggle.setAttribute('aria-expanded', 'false');
+    }
+  });
 }
 
 export function initFooterYear() {
