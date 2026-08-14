@@ -1,0 +1,28 @@
+/* Botão flutuante de WhatsApp — fica à esquerda do contact-widget-launcher,
+   mesma altura/tamanho, pra abrir conversa direta sem passar pelo formulário */
+.whatsapp-float {
+  position: fixed;
+  bottom: var(--space-md);
+  right: calc(var(--space-md) + 4.5rem + var(--space-sm));
+  z-index: 200;
+  width: 3.75rem;
+  height: 3.75rem;
+  border-radius: var(--radius-full);
+  background: #25d366;
+  color: hsl(var(--color-white));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 12px 30px -10px rgb(37 211 102 / 0.55);
+  transition: transform 0.35s var(--ease-pop), box-shadow 0.3s ease;
+}
+
+.whatsapp-float:hover {
+  transform: scale(1.06);
+  box-shadow: 0 16px 36px -8px rgb(37 211 102 / 0.65);
+}
+
+.whatsapp-float svg {
+  width: 1.75rem;
+  height: 1.75rem;
+}
