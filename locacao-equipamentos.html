@@ -158,6 +158,30 @@
       </div>
     </section>
 
+    <!-- EQUIPAMENTO EM CAMPO (vídeo real, avança/recua com o scroll) -->
+    <section class="film" id="equipamento-em-campo" aria-labelledby="film-locacao-title">
+      <div class="film-pin">
+        <video
+          class="film-video"
+          poster="/videos/bastidores-poster.jpg"
+          muted
+          playsinline
+          preload="auto"
+          aria-label="Carregamento de equipamento, montagem de treliça e operação de som e luz ao vivo"
+        >
+          <source src="/videos/bastidores.webm" type="video/webm" />
+          <source src="/videos/bastidores.mp4" type="video/mp4" />
+        </video>
+        <div class="film-scrim" aria-hidden="true"></div>
+        <div class="film-copy container">
+          <p class="eyebrow">Equipamento em campo</p>
+          <h2 id="film-locacao-title" class="film-title" data-split-reveal>
+            Cada equipamento passa por conferência, transporte e montagem antes do seu evento começar
+          </h2>
+        </div>
+      </div>
+    </section>
+
     <!-- DEMONSTRAÇÃO -->
     <section class="equipment-demo band-light" id="demonstracao" aria-labelledby="demo-title">
       <div class="container">
@@ -167,32 +191,46 @@
           <p data-reveal>Fotos de montagens que já fizemos — o mesmo padrão de equipamento que vai pro seu evento.</p>
         </div>
         <div class="equipment-demo-grid">
-          <article class="portfolio-card" data-reveal>
+          <article class="portfolio-card" data-reveal data-tilt data-tilt-strength="6">
             <img class="portfolio-card-photo" src="/portfolio/palco-skylight.jpg" alt="Palco com sonorização e telão de LED montados para evento corporativo" loading="lazy" />
             <div class="portfolio-card-label">
               <p class="eyebrow">Som e estrutura</p>
               <strong>Palco montado com sonorização completa</strong>
             </div>
           </article>
-          <article class="portfolio-card" data-reveal>
+          <article class="portfolio-card" data-reveal data-tilt data-tilt-strength="6">
             <img class="portfolio-card-photo" src="/portfolio/palco-dna-sustentavel.jpg" alt="Palco com telão de LED de alta resolução para evento corporativo" loading="lazy" />
             <div class="portfolio-card-label">
               <p class="eyebrow">Painel de LED</p>
               <strong>Telão de LED em palco corporativo</strong>
             </div>
           </article>
-          <article class="portfolio-card" data-reveal>
+          <article class="portfolio-card" data-reveal data-tilt data-tilt-strength="6">
             <img class="portfolio-card-photo" src="/portfolio/gala-corporativa.jpg" alt="Salão com feixes de luz e iluminação cênica para gala corporativa" loading="lazy" />
             <div class="portfolio-card-label">
               <p class="eyebrow">Iluminação</p>
               <strong>Iluminação cênica em gala corporativa</strong>
             </div>
           </article>
-          <article class="portfolio-card" data-reveal>
+          <article class="portfolio-card" data-reveal data-tilt data-tilt-strength="6">
             <img class="portfolio-card-photo" src="/portfolio/innova-show-percussao.jpg" alt="Iluminação colorida e fogos frios em show ao vivo" loading="lazy" />
             <div class="portfolio-card-label">
               <p class="eyebrow">Iluminação e efeitos</p>
               <strong>Efeitos de luz em show ao vivo</strong>
+            </div>
+          </article>
+          <article class="portfolio-card" data-reveal data-tilt data-tilt-strength="6">
+            <img class="portfolio-card-photo" src="/portfolio/totem-digital.jpg" alt="Totens digitais interativos exibindo conteúdo institucional em evento corporativo" loading="lazy" />
+            <div class="portfolio-card-label">
+              <p class="eyebrow">Sinalização digital</p>
+              <strong>Totens interativos para ativação de marca</strong>
+            </div>
+          </article>
+          <article class="portfolio-card" data-reveal data-tilt data-tilt-strength="6">
+            <img class="portfolio-card-photo" src="/portfolio/show-acustico.jpg" alt="Show acústico ao vivo com projeção do artista no telão" loading="lazy" />
+            <div class="portfolio-card-label">
+              <p class="eyebrow">Som e projeção</p>
+              <strong>Música ao vivo com projeção</strong>
             </div>
           </article>
         </div>

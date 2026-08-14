@@ -27,6 +27,27 @@
   flex: none;
 }
 
+/* Grain mais forte que o padrão do portfólio — reforça a textura "equipamento
+   de verdade" nas fotos, mesmo truque de feTurbulence do Innova Show */
+.equipment-demo-grid .portfolio-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0.2;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+}
+
+.equipment-demo-grid .portfolio-card-photo {
+  transition: transform 0.5s var(--ease-soft);
+}
+
+.equipment-demo-grid .portfolio-card:hover .portfolio-card-photo {
+  transform: scale(1.1);
+}
+
 @media (max-width: 640px) {
   .equipment-demo-grid .portfolio-card {
     aspect-ratio: 3 / 4;
