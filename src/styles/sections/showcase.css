@@ -86,7 +86,8 @@
   border: 1px solid hsl(var(--color-white) / 0.08);
 }
 
-.showcase-visual-photo {
+.showcase-visual-photo,
+.showcase-visual-video {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -94,9 +95,14 @@
   object-fit: cover;
 }
 
+.showcase-visual-video {
+  background: hsl(var(--color-black));
+}
+
 .showcase-visual-grain {
   position: absolute;
   inset: 0;
+  z-index: 1;
   opacity: 0.16;
   mix-blend-mode: overlay;
   pointer-events: none;
@@ -105,6 +111,7 @@
 
 .showcase-visual .badge {
   position: absolute;
+  z-index: 2;
   bottom: var(--space-md);
   left: var(--space-md);
   right: var(--space-md);

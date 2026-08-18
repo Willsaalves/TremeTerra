@@ -9,6 +9,11 @@ export function initScrollFx() {
     // vídeo comum, parado no poster até o usuário decidir tocar.
     const filmVideo = document.querySelector('.film-video');
     if (filmVideo) filmVideo.setAttribute('controls', '');
+    const showcaseVideo = document.querySelector('.showcase-visual-video');
+    if (showcaseVideo) {
+      showcaseVideo.removeAttribute('autoplay');
+      showcaseVideo.pause();
+    }
     return;
   }
 
