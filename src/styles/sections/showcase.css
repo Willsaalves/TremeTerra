@@ -86,6 +86,10 @@
   border: 1px solid hsl(var(--color-white) / 0.08);
 }
 
+.showcase-visual:has(.showcase-visual-video) {
+  aspect-ratio: 16 / 9;
+}
+
 .showcase-visual-photo,
 .showcase-visual-video {
   position: absolute;
@@ -96,6 +100,7 @@
 }
 
 .showcase-visual-video {
+  object-fit: contain;
   background: hsl(var(--color-black));
 }
 
@@ -141,5 +146,9 @@
   }
   .showcase-visual {
     aspect-ratio: 16 / 10;
+  }
+
+  .showcase-visual:has(.showcase-visual-video) {
+    aspect-ratio: 16 / 9;
   }
 }
