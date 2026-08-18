@@ -17,6 +17,8 @@ declare(strict_types=1);
  *    dist/ (sem subpastas), mas o servidor embutido só serve pela URL exata
  *    do arquivo. Aqui a gente reescreve pra servir o .php correspondente
  *    quando a URL pedida não tem extensão.
+ * 3. Posts do blog: /blog/{slug} não é um arquivo .php de verdade (o slug é
+ *    dinâmico, vem do banco) — roteia pra blog-post.php?slug={slug}.
  *
  * Pra tudo mais, `return false` devolve o controle pro comportamento padrão
  * do servidor embutido (arquivo estático normal ou index.php da raiz).
@@ -42,6 +44,17 @@ if ($uri !== '/' && !is_file($path) && pathinfo($path, PATHINFO_EXTENSION) === '
     if (is_file($phpPath)) {
         chdir(dirname($phpPath));
         require $phpPath;
+        return true;
+    }
+}
+
+// --- 3. /blog/{slug} -> blog-post.php?slug={slug} ---
+if (preg_match('#^/blog/([^/]+)/?$#', $uri, $matches)) {
+    $slugPath = $root . '/blog-post.php';
+    if (is_file($slugPath)) {
+        $_GET['slug'] = $matches[1];
+        chdir($root);
+        require $slugPath;
         return true;
     }
 }

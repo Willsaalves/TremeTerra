@@ -7,16 +7,22 @@ declare(strict_types=1);
  * $pageServiceSchema (array de Schema.org Service, ou null),
  * $pageVideoSchema (array de Schema.org VideoObject, ou null),
  * $pageProductSchema (array de Schema.org Product, ou null),
+ * $pagePostSchema (array de Schema.org BlogPosting, ou null),
+ * $pageBreadcrumbTrail (array de ['name' => ..., 'url' => ...], pra
+ * breadcrumbs com 2+ níveis — ex: Home > Blog > Post. Tem prioridade sobre
+ * $pageBreadcrumbName quando definido),
  * $pageFaqItems (array de ['question' => ..., 'answer' => ...], ou null —
  * vira Schema.org FAQPage automaticamente).
  */
 $pageTitle          = $pageTitle ?? SITE_TITLE;
 $pageDescription    = $pageDescription ?? SITE_DESCRIPTION;
 $pageCanonical      = $pageCanonical ?? (SITE_URL . '/');
-$pageBreadcrumbName = $pageBreadcrumbName ?? null;
+$pageBreadcrumbName  = $pageBreadcrumbName ?? null;
+$pageBreadcrumbTrail = $pageBreadcrumbTrail ?? null;
 $pageServiceSchema  = $pageServiceSchema ?? null;
 $pageVideoSchema    = $pageVideoSchema ?? null;
 $pageProductSchema  = $pageProductSchema ?? null;
+$pagePostSchema     = $pagePostSchema ?? null;
 $pageFaqItems       = $pageFaqItems ?? null;
 
 $faqSchema = null;
@@ -77,7 +83,16 @@ $localBusinessSchema = [
 $breadcrumbItems = [
     ['@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => SITE_URL . '/'],
 ];
-if ($pageBreadcrumbName !== null) {
+if ($pageBreadcrumbTrail !== null) {
+    foreach ($pageBreadcrumbTrail as $i => $crumb) {
+        $breadcrumbItems[] = [
+            '@type'    => 'ListItem',
+            'position' => $i + 2,
+            'name'     => $crumb['name'],
+            'item'     => $crumb['url'],
+        ];
+    }
+} elseif ($pageBreadcrumbName !== null) {
     $breadcrumbItems[] = [
         '@type'    => 'ListItem',
         'position' => 2,
@@ -132,6 +147,9 @@ $breadcrumbSchema = [
 <?php endif; ?>
 <?php if ($pageProductSchema !== null): ?>
 <script type="application/ld+json"><?= json_encode($pageProductSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?></script>
+<?php endif; ?>
+<?php if ($pagePostSchema !== null): ?>
+<script type="application/ld+json"><?= json_encode($pagePostSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?></script>
 <?php endif; ?>
 <?php if ($faqSchema !== null): ?>
 <script type="application/ld+json"><?= json_encode($faqSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?></script>

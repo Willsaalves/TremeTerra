@@ -10,7 +10,7 @@ RUN npm run build:php
 FROM php:8.3-cli
 RUN apt-get update \
     && apt-get install -y --no-install-recommends libcurl4-openssl-dev pkg-config \
-    && docker-php-ext-install curl \
+    && docker-php-ext-install curl pdo_sqlite \
     && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 COPY --from=build /app/dist ./dist

@@ -2,7 +2,7 @@
 // meta tags e o Schema.org via PHP (config.php + partials/seo-meta.php),
 // mantendo intactos os assets já versionados pelo Vite (hash no nome do
 // arquivo). Rodar depois de `vite build` — ver script "build:php".
-import { readFileSync, writeFileSync, mkdirSync, copyFileSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, copyFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
@@ -495,9 +495,22 @@ require __DIR__ . '/partials/seo-meta.php';
 }
 
 mkdirSync(path.join(distDir, 'partials'), { recursive: true });
+mkdirSync(path.join(distDir, 'lib'), { recursive: true });
+mkdirSync(path.join(distDir, 'admin'), { recursive: true });
 copyFileSync(path.join(root, 'config.php'), path.join(distDir, 'config.php'));
 copyFileSync(path.join(root, 'partials', 'seo-meta.php'), path.join(distDir, 'partials', 'seo-meta.php'));
 copyFileSync(path.join(root, 'subscribe.php'), path.join(distDir, 'subscribe.php'));
 copyFileSync(path.join(root, 'router.php'), path.join(distDir, 'router.php'));
 
-console.log(`dist/{${pages.map((p) => p.phpFile).join(',')}} gerados + config.php/partials/subscribe.php/router.php copiados para dist/.`);
+// Blog (páginas públicas + admin) — não passa pelo Vite, é PHP dinâmico
+// direto (posts vêm do SQLite, não são gerados em build time).
+copyFileSync(path.join(root, 'blog.php'), path.join(distDir, 'blog.php'));
+copyFileSync(path.join(root, 'blog-post.php'), path.join(distDir, 'blog-post.php'));
+copyFileSync(path.join(root, 'src', 'styles', 'blog.css'), path.join(distDir, 'blog.css'));
+copyFileSync(path.join(root, 'lib', 'db.php'), path.join(distDir, 'lib', 'db.php'));
+copyFileSync(path.join(root, 'lib', 'require-admin.php'), path.join(distDir, 'lib', 'require-admin.php'));
+for (const file of readdirSync(path.join(root, 'admin'))) {
+  copyFileSync(path.join(root, 'admin', file), path.join(distDir, 'admin', file));
+}
+
+console.log(`dist/{${pages.map((p) => p.phpFile).join(',')}} gerados + config.php/partials/subscribe.php/router.php/blog copiados para dist/.`);
