@@ -6,6 +6,7 @@ declare(strict_types=1);
  * $pageTitle, $pageDescription, $pageCanonical, $pageBreadcrumbName,
  * $pageServiceSchema (array de Schema.org Service, ou null),
  * $pageVideoSchema (array de Schema.org VideoObject, ou null),
+ * $pageProductSchema (array de Schema.org Product, ou null),
  * $pageFaqItems (array de ['question' => ..., 'answer' => ...], ou null —
  * vira Schema.org FAQPage automaticamente).
  */
@@ -15,6 +16,7 @@ $pageCanonical      = $pageCanonical ?? (SITE_URL . '/');
 $pageBreadcrumbName = $pageBreadcrumbName ?? null;
 $pageServiceSchema  = $pageServiceSchema ?? null;
 $pageVideoSchema    = $pageVideoSchema ?? null;
+$pageProductSchema  = $pageProductSchema ?? null;
 $pageFaqItems       = $pageFaqItems ?? null;
 
 $faqSchema = null;
@@ -127,6 +129,9 @@ $breadcrumbSchema = [
 <?php endif; ?>
 <?php if ($pageVideoSchema !== null): ?>
 <script type="application/ld+json"><?= json_encode($pageVideoSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?></script>
+<?php endif; ?>
+<?php if ($pageProductSchema !== null): ?>
+<script type="application/ld+json"><?= json_encode($pageProductSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?></script>
 <?php endif; ?>
 <?php if ($faqSchema !== null): ?>
 <script type="application/ld+json"><?= json_encode($faqSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?></script>

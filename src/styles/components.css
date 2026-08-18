@@ -284,3 +284,58 @@
   padding: 0 var(--space-md) var(--space-md);
   color: hsl(var(--color-mist));
 }
+
+.tile-icon strong {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.spec-table-wrap {
+  overflow-x: auto;
+  border-radius: var(--radius-md);
+  border: 1px solid hsl(var(--color-ink) / 0.1);
+}
+
+.spec-table {
+  width: 100%;
+  min-width: 560px;
+  border-collapse: collapse;
+  background: hsl(var(--color-surface));
+}
+
+.spec-table caption {
+  caption-side: top;
+  text-align: left;
+  padding: var(--space-sm) var(--space-md);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: hsl(var(--color-ink));
+  background: hsl(var(--color-surface-tint));
+}
+
+.spec-table th,
+.spec-table td {
+  padding: var(--space-sm) var(--space-md);
+  text-align: left;
+  border-bottom: 1px solid hsl(var(--color-ink) / 0.08);
+  font-size: 0.95rem;
+}
+
+.spec-table thead th {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: hsl(var(--color-treme-terra-text));
+  background: hsl(var(--color-treme-terra) / 0.08);
+}
+
+.spec-table tbody th {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.spec-table tbody tr:last-child td,
+.spec-table tbody tr:last-child th {
+  border-bottom: none;
+}

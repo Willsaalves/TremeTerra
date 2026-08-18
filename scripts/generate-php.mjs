@@ -134,6 +134,129 @@ const pages = [
       ['Possuem opção com iluminação?', 'Sim. Pacote DJ + iluminação com Moving Heads e LED.'],
     ],
   },
+  {
+    htmlFile: 'aluguel-som-profissional.html',
+    phpFile: 'aluguel-som-profissional.php',
+    pageTitleExpr: "'Aluguel de Som Profissional para Eventos | ' . SITE_NAME",
+    pageDescriptionExpr: "'Aluguel de som profissional com Line Array, caixas PA, subs, microfones e mesas para eventos em SP. Equipe técnica incluída.'",
+    canonicalPath: '/aluguel-som-profissional',
+    breadcrumbNameExpr: "'Aluguel de Som'",
+    schemaVar: `[
+    '@context'    => 'https://schema.org',
+    '@type'       => 'Service',
+    '@id'         => SITE_URL . '/aluguel-som-profissional#service',
+    'name'        => 'Aluguel de Som Profissional',
+    'serviceType' => 'Locação de sistemas de som para eventos',
+    'description' => 'Aluguel de som profissional com Line Array, caixas PA, subwoofers, mesas digitais e microfones para eventos em São Paulo.',
+    'provider'    => ['@id' => SITE_URL . '/#organization'],
+    'areaServed'  => 'BR',
+]`,
+    faqItems: [
+      ['Frete e montagem estão inclusos?', 'Sim. O orçamento inclui transporte, montagem, operação e desmontagem. Sem custos ocultos.'],
+      ['Qual a antecedência mínima?', 'O ideal é que seja com antecedência mínima de 30 dias. Para Line Array, 45 dias.'],
+      ['Fornecem backup?', 'Sim. Equipamentos extras no local.'],
+      ['Som para cerimônia ao ar livre?', 'Sim. Sistemas wireless e portáteis sem necessidade de energia no local.'],
+      ['O que é sistema PA?', 'PA (Public Address) é o sistema de som profissional — caixas, amplificadores, mixadores e microfones.'],
+      ['Alugam para eventos corporativos?', 'Sim. Som para palestras, lançamentos, convenções e treinamentos em SP.'],
+    ],
+  },
+  {
+    htmlFile: 'iluminacao-para-festas.html',
+    phpFile: 'iluminacao-para-festas.php',
+    pageTitleExpr: "'Iluminação para Festas e Eventos | ' . SITE_NAME",
+    pageDescriptionExpr: "'Iluminação cênica para casamentos, formaturas e corporativos em SP. Moving heads, ribaltas, strobes e DMX.'",
+    canonicalPath: '/iluminacao-para-festas',
+    breadcrumbNameExpr: "'Iluminação'",
+    schemaVar: `[
+    '@context'    => 'https://schema.org',
+    '@type'       => 'Service',
+    '@id'         => SITE_URL . '/iluminacao-para-festas#service',
+    'name'        => 'Iluminação para Festas e Eventos',
+    'serviceType' => 'Iluminação cênica para eventos',
+    'description' => 'Iluminação cênica com Moving Heads, ribaltas, strobes e programação DMX para casamentos, formaturas e eventos corporativos em São Paulo.',
+    'provider'    => ['@id' => SITE_URL . '/#organization'],
+    'areaServed'  => 'BR',
+]`,
+    faqItems: [
+      ['Criam as cenas?', 'Sim. Cenas personalizadas para cada momento — cerimônia, jantar, baile e show.'],
+      ['Combina com som e LED?', 'Sim. Integração completa: iluminação, som e painéis de LED sincronizados.'],
+      ['Funciona ao ar livre?', 'Sim. Equipamentos IP65 para eventos externos, mesmo sob chuva.'],
+      ['Precisa de muita energia?', 'Equipamentos LED eficientes. Evento médio: circuito 20A suficiente.'],
+      ['Iluminação para cerimônia?', 'Sim. Suave e romântica para cerimônias, com opções natural e artificial.'],
+      ['Programação DMX personalizada?', 'Sim. Cores, intensidade, timing e efeitos conforme a identidade do evento.'],
+    ],
+  },
+  {
+    htmlFile: 'painel-de-led.html',
+    phpFile: 'painel-de-led.php',
+    pageTitleExpr: "'Painel de LED para Eventos em SP | ' . SITE_NAME",
+    pageDescriptionExpr: "'Painel de LED para eventos: telões P2, P3, P5 indoor/outdoor, 4K, para shows, casamentos e corporativos em SP.'",
+    canonicalPath: '/painel-de-led',
+    breadcrumbNameExpr: "'Painel de LED'",
+    schemaVar: `[
+    '@context'    => 'https://schema.org',
+    '@type'       => 'Service',
+    '@id'         => SITE_URL . '/painel-de-led#service',
+    'name'        => 'Painel de LED para Eventos',
+    'serviceType' => 'Locação de painéis de LED para eventos',
+    'description' => 'Painéis de LED P2, P3, P5 e 4K, indoor e outdoor, para shows, casamentos, formaturas e eventos corporativos em São Paulo.',
+    'provider'    => ['@id' => SITE_URL . '/#organization'],
+    'areaServed'  => 'BR',
+]`,
+    productSchemaVar: `[
+    '@context'   => 'https://schema.org',
+    '@type'      => 'Product',
+    'name'       => 'Painel de LED para Eventos',
+    'description' => 'Painéis de LED modulares P2, P3, P5 e 4K para locação em eventos, indoor e outdoor.',
+    'brand'      => ['@type' => 'Brand', 'name' => SITE_NAME],
+    'additionalProperty' => [
+        ['@type' => 'PropertyValue', 'name' => 'P2', 'value' => 'Indoor premium, 2–8 m'],
+        ['@type' => 'PropertyValue', 'name' => 'P3', 'value' => 'Versátil, 3–15 m'],
+        ['@type' => 'PropertyValue', 'name' => 'P5', 'value' => 'Outdoor, 5–30 m'],
+        ['@type' => 'PropertyValue', 'name' => '4K', 'value' => 'Ultra HD, sob medida'],
+    ],
+    'offers' => [
+        '@type'         => 'Offer',
+        'priceCurrency' => 'BRL',
+        'availability'  => 'https://schema.org/InStock',
+        'url'           => SITE_URL . '/painel-de-led',
+    ],
+]`,
+    faqItems: [
+      ['Qual tamanho preciso do painel de led para eventos?', 'Depende da distância. Até 10m: P2/P3. 10–20m: P3/P5. +20m: P5.'],
+      ['Funciona ao ar livre?', 'Sim. IP65 contra chuva e poeira.'],
+      ['A instalação do painel de led é inclusa?', 'Sim. Transporte, montagem, operação e desmontagem.'],
+      ['Alugam ou vendem os painéis de led?', 'Fazemos a locação completa com operação técnica.'],
+      ['Resolução ideal do painel de led?', 'Indoor: P2/P3. Outdoor: P5/4K. Projetamos o ideal.'],
+      ['Mostra imagens e vídeos no painel de led?', 'Sim. HDMI, notebook ou câmera conectados ao painel em tempo real.'],
+    ],
+  },
+  {
+    htmlFile: 'locacao-painel-led.html',
+    phpFile: 'locacao-painel-led.php',
+    pageTitleExpr: "'Locação de Painel de LED em SP | ' . SITE_NAME",
+    pageDescriptionExpr: "'Locação de painel de LED com operação técnica: telões P2, P3, P5, 4K para eventos em SP. Orçamento gratuito.'",
+    canonicalPath: '/locacao-painel-led',
+    breadcrumbNameExpr: "'Locação de LED'",
+    schemaVar: `[
+    '@context'    => 'https://schema.org',
+    '@type'       => 'Service',
+    '@id'         => SITE_URL . '/locacao-painel-led#service',
+    'name'        => 'Locação de Painel de LED',
+    'serviceType' => 'Locação de telões de LED com operação técnica',
+    'description' => 'Locação de painel de LED P2, P3, P5 e 4K, indoor e outdoor, com estrutura, operador e montagem completa para eventos em São Paulo.',
+    'provider'    => ['@id' => SITE_URL . '/#organization'],
+    'areaServed'  => 'BR',
+]`,
+    faqItems: [
+      ['Qual o preço da locação?', 'Depende do pixel pitch, tamanho e duração. Orçamento gratuito.'],
+      ['Operam o painel de led?', 'Sim, disponibilizamos o operador de vídeo no local durante todo o evento.'],
+      ['Energia específica?', 'LED eficiente. 6m² = circuito 32A suficiente.'],
+      ['A locação do painel de led é por hora ou dia?', 'Fazemos os orçamentos personalizados a depender dos pacotes por evento.'],
+      ['Como funciona a locação de painel de led para local sem estrutura?', 'Levamos gerador e infraestrutura completa.'],
+      ['Atendem fora de SP?', 'Sim. Todo o Estado de SP e, mediante acordo, outros estados.'],
+    ],
+  },
 ];
 
 // Mapa <page>.html -> URL sem extensão pra reescrever links internos entre
@@ -169,6 +292,10 @@ for (const page of pages) {
     ? `\n$pageFaqItems = ${faqPhp(page.faqItems)};\n`
     : '';
 
+  const productBlock = page.productSchemaVar
+    ? `\n$pageProductSchema = ${page.productSchemaVar};\n`
+    : '';
+
   const newHead = `<?php
 // Nota: sem declare(strict_types=1) aqui de propósito — este arquivo tem
 // HTML (o <!doctype html>/<html>/<head>) antes do primeiro bloco <?php,
@@ -184,7 +311,7 @@ $pageCanonical      = SITE_URL . '${page.canonicalPath}';
 $pageBreadcrumbName = ${page.breadcrumbNameExpr ?? 'null'};
 
 $pageServiceSchema = ${page.schemaVar};
-${faqBlock}
+${productBlock}${faqBlock}
 require __DIR__ . '/partials/seo-meta.php';
 ?>
   ${fontBlock}

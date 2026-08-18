@@ -4,7 +4,7 @@
 
 .footer-grid {
   display: grid;
-  grid-template-columns: 1.3fr 1fr 1fr;
+  grid-template-columns: 1.3fr repeat(3, 1fr);
   gap: var(--space-xl);
   padding-bottom: var(--space-xl);
   border-bottom: 1px solid hsl(var(--color-white) / 0.1);
