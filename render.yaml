@@ -19,3 +19,5 @@ services:
         sync: false
       - key: ACTIVECAMPAIGN_FIELD_MESSAGE
         sync: false
+      - key: ACTIVECAMPAIGN_FIELD_PAGE
+        sync: false
