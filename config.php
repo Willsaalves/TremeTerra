@@ -48,3 +48,4 @@ const ACTIVE_CAMPAIGN_API_KEY          = ''; // TODO: token real — usar getenv
 const ACTIVE_CAMPAIGN_LIST_ID          = ''; // TODO: ID numérico da lista de destino
 const ACTIVE_CAMPAIGN_FIELD_EVENT_TYPE = ''; // TODO: ID do campo customizado "Tipo de evento"
 const ACTIVE_CAMPAIGN_FIELD_MESSAGE    = ''; // TODO: ID do campo customizado "Mensagem"
+const ACTIVE_CAMPAIGN_FIELD_PAGE       = ''; // TODO: ID do campo customizado "Página de origem"

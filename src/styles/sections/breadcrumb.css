@@ -1,0 +1,43 @@
+/* Vive dentro do .hero (band-dark) das páginas internas, logo acima do
+   título — por isso usa cores claras direto, sem depender de variante */
+.breadcrumb {
+  position: relative;
+  z-index: 1;
+  margin-bottom: var(--space-md);
+}
+
+.breadcrumb ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2xs);
+  list-style: none;
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: hsl(var(--color-mist-on-dark));
+}
+
+.breadcrumb li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+.breadcrumb li:not(:last-child)::after {
+  content: '/';
+  color: hsl(var(--color-white) / 0.3);
+}
+
+.breadcrumb a {
+  color: hsl(var(--color-mist-on-dark));
+  transition: color 0.2s ease;
+}
+
+.breadcrumb a:hover {
+  color: hsl(var(--color-white));
+}
+
+.breadcrumb li[aria-current='page'] {
+  color: hsl(var(--color-white));
+}

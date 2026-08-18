@@ -21,6 +21,7 @@ $telefone   = trim((string) ($_POST['telefone'] ?? ''));
 $email      = trim((string) ($_POST['email'] ?? ''));
 $tipoEvento = trim((string) ($_POST['tipo_evento'] ?? ''));
 $mensagem   = trim((string) ($_POST['mensagem'] ?? ''));
+$pagina     = trim((string) ($_POST['pagina'] ?? ''));
 
 // Honeypot: campo invisível no form (via CSS), só bot preenche. Responde
 // sucesso pra não dar sinal de que foi filtrado, mas descarta.
@@ -41,6 +42,7 @@ $acApiKey          = getenv('ACTIVECAMPAIGN_API_KEY') ?: ACTIVE_CAMPAIGN_API_KEY
 $acListId          = getenv('ACTIVECAMPAIGN_LIST_ID') ?: ACTIVE_CAMPAIGN_LIST_ID;
 $acFieldEventType  = getenv('ACTIVECAMPAIGN_FIELD_EVENT_TYPE') ?: ACTIVE_CAMPAIGN_FIELD_EVENT_TYPE;
 $acFieldMessage    = getenv('ACTIVECAMPAIGN_FIELD_MESSAGE') ?: ACTIVE_CAMPAIGN_FIELD_MESSAGE;
+$acFieldPage       = getenv('ACTIVECAMPAIGN_FIELD_PAGE') ?: ACTIVE_CAMPAIGN_FIELD_PAGE;
 
 $nameParts = preg_split('/\s+/', $nome, 2) ?: [$nome];
 $firstName = $nameParts[0];
@@ -52,6 +54,9 @@ if ($acFieldEventType !== '') {
 }
 if ($acFieldMessage !== '' && $mensagem !== '') {
     $fieldValues[] = ['field' => $acFieldMessage, 'value' => $mensagem];
+}
+if ($acFieldPage !== '' && $pagina !== '') {
+    $fieldValues[] = ['field' => $acFieldPage, 'value' => $pagina];
 }
 
 $contactPayload = [

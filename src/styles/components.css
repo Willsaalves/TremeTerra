@@ -81,6 +81,7 @@
 }
 
 .tile {
+  display: block;
   position: relative;
   padding: var(--space-lg);
   border-radius: var(--radius-lg);
@@ -216,4 +217,70 @@
   [data-split-reveal] .word > span {
     transform: none;
   }
+}
+
+/* FAQ accordion — <details>/<summary> nativo, sem JS */
+.faq {
+  padding-block: var(--space-3xl);
+}
+
+.faq .eyebrow {
+  margin-bottom: var(--space-sm);
+}
+
+.faq h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-section);
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  line-height: 1.02;
+  margin-bottom: var(--space-xl);
+}
+
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  max-width: 72ch;
+}
+
+.faq-item {
+  border-radius: var(--radius-md);
+  background: hsl(var(--color-surface));
+  border: 1px solid hsl(var(--color-ink) / 0.08);
+  overflow: hidden;
+}
+
+.faq-item summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+}
+
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-item summary::after {
+  content: '+';
+  flex-shrink: 0;
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: hsl(var(--color-treme-terra-text));
+  transition: transform 0.25s var(--ease-soft);
+}
+
+.faq-item[open] summary::after {
+  transform: rotate(45deg);
+}
+
+.faq-item p {
+  padding: 0 var(--space-md) var(--space-md);
+  color: hsl(var(--color-mist));
 }

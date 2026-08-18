@@ -23,6 +23,11 @@
   color: hsl(var(--color-treme-terra-text));
 }
 
+.about-lead {
+  margin-top: var(--space-md);
+  color: hsl(var(--color-mist));
+}
+
 /* Grid assimétrico em zigzag — quebra o padrão de 4 cards idênticos */
 .about .tile-grid {
   grid-template-columns: repeat(3, 1fr);

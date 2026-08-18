@@ -2,10 +2,12 @@
 @import './base.css';
 @import './components.css';
 @import './sections/header.css';
+@import './sections/breadcrumb.css';
 @import './sections/hero.css';
 @import './sections/about.css';
 @import './sections/solutions.css';
 @import './sections/showcase.css';
+@import './sections/case-study.css';
 @import './sections/portfolio.css';
 @import './sections/equipment-demo.css';
 @import './sections/film.css';

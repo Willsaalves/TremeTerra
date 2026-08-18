@@ -39,7 +39,7 @@
 .main-nav ul {
   display: flex;
   align-items: center;
-  gap: var(--space-md);
+  gap: var(--space-sm);
 }
 
 .main-nav-cta {
@@ -50,6 +50,7 @@
   font-family: var(--font-heading);
   font-weight: 600;
   font-size: 0.9rem;
+  white-space: nowrap;
   color: hsl(var(--color-mist-on-dark));
   transition: color 0.25s ease;
 }

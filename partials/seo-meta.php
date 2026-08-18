@@ -5,7 +5,9 @@ declare(strict_types=1);
  * Overrides opcionais por página (setar ANTES de incluir este partial):
  * $pageTitle, $pageDescription, $pageCanonical, $pageBreadcrumbName,
  * $pageServiceSchema (array de Schema.org Service, ou null),
- * $pageVideoSchema (array de Schema.org VideoObject, ou null).
+ * $pageVideoSchema (array de Schema.org VideoObject, ou null),
+ * $pageFaqItems (array de ['question' => ..., 'answer' => ...], ou null —
+ * vira Schema.org FAQPage automaticamente).
  */
 $pageTitle          = $pageTitle ?? SITE_TITLE;
 $pageDescription    = $pageDescription ?? SITE_DESCRIPTION;
@@ -13,6 +15,26 @@ $pageCanonical      = $pageCanonical ?? (SITE_URL . '/');
 $pageBreadcrumbName = $pageBreadcrumbName ?? null;
 $pageServiceSchema  = $pageServiceSchema ?? null;
 $pageVideoSchema    = $pageVideoSchema ?? null;
+$pageFaqItems       = $pageFaqItems ?? null;
+
+$faqSchema = null;
+if ($pageFaqItems !== null) {
+    $faqSchema = [
+        '@context'   => 'https://schema.org',
+        '@type'      => 'FAQPage',
+        'mainEntity' => array_map(
+            static fn (array $item): array => [
+                '@type'          => 'Question',
+                'name'           => $item['question'],
+                'acceptedAnswer' => [
+                    '@type' => 'Answer',
+                    'text'  => $item['answer'],
+                ],
+            ],
+            $pageFaqItems
+        ),
+    ];
+}
 
 $organizationSchema = [
     '@context'     => 'https://schema.org',
@@ -105,4 +127,7 @@ $breadcrumbSchema = [
 <?php endif; ?>
 <?php if ($pageVideoSchema !== null): ?>
 <script type="application/ld+json"><?= json_encode($pageVideoSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?></script>
+<?php endif; ?>
+<?php if ($faqSchema !== null): ?>
+<script type="application/ld+json"><?= json_encode($faqSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?></script>
 <?php endif; ?>

@@ -8,7 +8,7 @@
     "build": "vite build",
     "build:php": "vite build && node scripts/generate-php.mjs",
     "preview": "vite preview",
-    "serve:php": "php -S localhost:8080 -t dist"
+    "serve:php": "php -S localhost:8080 -t dist dist/router.php"
   },
   "dependencies": {
     "gsap": "^3.12.5",
