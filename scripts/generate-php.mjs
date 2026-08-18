@@ -506,6 +506,7 @@ copyFileSync(path.join(root, 'router.php'), path.join(distDir, 'router.php'));
 // direto (posts vêm do SQLite, não são gerados em build time).
 copyFileSync(path.join(root, 'blog.php'), path.join(distDir, 'blog.php'));
 copyFileSync(path.join(root, 'blog-post.php'), path.join(distDir, 'blog-post.php'));
+copyFileSync(path.join(root, 'seed-blog-posts.php'), path.join(distDir, 'seed-blog-posts.php'));
 copyFileSync(path.join(root, 'src', 'styles', 'blog.css'), path.join(distDir, 'blog.css'));
 copyFileSync(path.join(root, 'lib', 'db.php'), path.join(distDir, 'lib', 'db.php'));
 copyFileSync(path.join(root, 'lib', 'require-admin.php'), path.join(distDir, 'lib', 'require-admin.php'));

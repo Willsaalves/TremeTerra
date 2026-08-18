@@ -15,4 +15,4 @@ RUN apt-get update \
 WORKDIR /app
 COPY --from=build /app/dist ./dist
 EXPOSE 10000
-CMD php -S 0.0.0.0:${PORT:-10000} -t dist dist/router.php
+CMD php dist/seed-blog-posts.php && php -S 0.0.0.0:${PORT:-10000} -t dist dist/router.php

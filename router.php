@@ -49,7 +49,10 @@ if ($uri !== '/' && !is_file($path) && pathinfo($path, PATHINFO_EXTENSION) === '
 }
 
 // --- 3. /blog/{slug} -> blog-post.php?slug={slug} ---
-if (preg_match('#^/blog/([^/]+)/?$#', $uri, $matches)) {
+// Só entra aqui se não for um arquivo estático de verdade (ex: uma imagem
+// de capa em /blog/algo.jpg) — senão essa regra capturaria as imagens do
+// blog antes delas chegarem no servidor de arquivos estáticos.
+if (!is_file($path) && preg_match('#^/blog/([^/]+)/?$#', $uri, $matches)) {
     $slugPath = $root . '/blog-post.php';
     if (is_file($slugPath)) {
         $_GET['slug'] = $matches[1];

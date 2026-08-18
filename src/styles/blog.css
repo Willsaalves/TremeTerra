@@ -201,6 +201,9 @@ article.post .cover { border-radius: var(--radius-lg); overflow: hidden; margin-
 article.post .prose { font-size: 1.05rem; }
 article.post .prose p { margin: 0 0 1.25rem; }
 article.post .prose h2 { font-family: var(--font-display); font-size: 1.5rem; margin: 2rem 0 1rem; }
+article.post .prose h3 { font-family: var(--font-display); font-size: 1.15rem; margin: 1.5rem 0 0.75rem; }
+article.post .prose ul { margin: 0 0 1.25rem; padding-left: 1.25rem; }
+article.post .prose li { margin-bottom: 0.4rem; }
 
 .faq {
   margin-top: 3rem;
