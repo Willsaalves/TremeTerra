@@ -19,9 +19,14 @@ declare(strict_types=1);
  *    quando a URL pedida não tem extensão.
  * 3. Posts do blog: /blog/{slug} não é um arquivo .php de verdade (o slug é
  *    dinâmico, vem do banco) — roteia pra blog-post.php?slug={slug}.
+ * 4. /sitemap.xml: arquivo físico é sitemap.php (gera XML dinamicamente,
+ *    incluindo os posts do blog), mas a URL pública precisa ser .xml.
+ * 5. 404 personalizado: se nada acima resolveu e o caminho não é um arquivo
+ *    estático de verdade, serve dist/404.php com status 404 em vez de
+ *    devolver o 404 cru do servidor embutido do PHP.
  *
- * Pra tudo mais, `return false` devolve o controle pro comportamento padrão
- * do servidor embutido (arquivo estático normal ou index.php da raiz).
+ * Pra tudo mais (arquivo estático que realmente existe), `return false`
+ * devolve o controle pro comportamento padrão do servidor embutido.
  */
 
 $root = __DIR__;
@@ -38,7 +43,17 @@ if (isset($videoMimes[$ext]) && is_file($path)) {
     return true;
 }
 
-// --- 2. URLs sem extensão -> arquivo .php correspondente ---
+// --- 2. Home ("/") -> index.php ---
+if ($uri === '/') {
+    $indexPath = $root . '/index.php';
+    if (is_file($indexPath)) {
+        chdir($root);
+        require $indexPath;
+        return true;
+    }
+}
+
+// --- 2b. URLs sem extensão -> arquivo .php correspondente ---
 if ($uri !== '/' && !is_file($path) && pathinfo($path, PATHINFO_EXTENSION) === '') {
     $phpPath = rtrim($path, '/') . '.php';
     if (is_file($phpPath)) {
@@ -58,6 +73,27 @@ if (!is_file($path) && preg_match('#^/blog/([^/]+)/?$#', $uri, $matches)) {
         $_GET['slug'] = $matches[1];
         chdir($root);
         require $slugPath;
+        return true;
+    }
+}
+
+// --- 4. /sitemap.xml -> sitemap.php ---
+if ($uri === '/sitemap.xml') {
+    $sitemapPath = $root . '/sitemap.php';
+    if (is_file($sitemapPath)) {
+        chdir($root);
+        require $sitemapPath;
+        return true;
+    }
+}
+
+// --- 5. 404 personalizado ---
+if (!is_file($path)) {
+    $notFoundPath = $root . '/404.php';
+    if (is_file($notFoundPath)) {
+        http_response_code(404);
+        chdir($root);
+        require $notFoundPath;
         return true;
     }
 }

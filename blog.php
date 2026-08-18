@@ -21,6 +21,7 @@ $pageCanonical   = SITE_URL . '/blog';
   <link rel="stylesheet" href="/blog.css" />
 </head>
 <body>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WQJVN5JZ" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <header class="blog-header">
     <div class="container">
       <a href="/" class="logo"><img src="/logo-tremeterra.png" alt="<?= htmlspecialchars(SITE_NAME, ENT_QUOTES, 'UTF-8') ?>" width="150" height="21" /></a>

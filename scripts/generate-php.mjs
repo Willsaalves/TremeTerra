@@ -485,6 +485,14 @@ require __DIR__ . '/partials/seo-meta.php';
 
   let newHtml = html.replace(/<head>[\s\S]*?<\/head>/, `<head>\n${newHead}\n</head>`);
 
+  // GTM exige um <noscript><iframe> logo após a abertura do <body> (fallback
+  // pra quando JS está desabilitado) — o script em si já vai no <head> via
+  // partials/seo-meta.php.
+  newHtml = newHtml.replace(
+    /<body([^>]*)>/,
+    `<body$1>\n<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WQJVN5JZ" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>`
+  );
+
   // Reescreve links internos .html -> URL sem extensão (ou raiz, no caso da
   // home) agora que a página vizinha também vira PHP servido pelo router.
   for (const [from, to] of htmlToClean) {
@@ -501,6 +509,8 @@ copyFileSync(path.join(root, 'config.php'), path.join(distDir, 'config.php'));
 copyFileSync(path.join(root, 'partials', 'seo-meta.php'), path.join(distDir, 'partials', 'seo-meta.php'));
 copyFileSync(path.join(root, 'subscribe.php'), path.join(distDir, 'subscribe.php'));
 copyFileSync(path.join(root, 'router.php'), path.join(distDir, 'router.php'));
+copyFileSync(path.join(root, 'sitemap.php'), path.join(distDir, 'sitemap.php'));
+copyFileSync(path.join(root, '404.php'), path.join(distDir, '404.php'));
 
 // Blog (páginas públicas + admin) — não passa pelo Vite, é PHP dinâmico
 // direto (posts vêm do SQLite, não são gerados em build time).
