@@ -48,11 +48,59 @@
   background: hsl(var(--color-treme-terra-deep) / 0.45);
 }
 
+/* Feixes de luz — evocam moving heads de um rig de show real, dando o
+   "luz" da dupla som + luz no hero (as barras do .hero-particles já
+   cobrem o "som"). Cones diagonais que balançam devagar, como se
+   estivessem variando o ângulo ao vivo. */
+.hero-lightbeams {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+.hero-lightbeams .beam {
+  position: absolute;
+  top: -12%;
+  left: var(--beam-left, 0%);
+  width: 46%;
+  height: 150%;
+  background: linear-gradient(to bottom, hsl(var(--beam-color, var(--color-treme-terra)) / var(--beam-alpha, 0.26)), transparent 68%);
+  clip-path: polygon(47% 0%, 53% 0%, 100% 100%, 0% 100%);
+  transform-origin: top center;
+  animation: beam-sway var(--beam-duration, 10s) ease-in-out infinite;
+  animation-delay: var(--beam-delay, 0s);
+}
+
+.beam-1 { --beam-left: -10%; --beam-duration: 9s; --beam-delay: -1.5s; }
+.beam-2 { --beam-left: 24%; --beam-color: var(--color-white); --beam-alpha: 0.12; --beam-duration: 12s; --beam-delay: -4s; }
+.beam-3 { --beam-left: 56%; --beam-color: var(--color-treme-terra-deep, var(--color-treme-terra)); --beam-duration: 14s; --beam-delay: -7s; }
+
+@keyframes beam-sway {
+  0%, 100% { transform: rotate(-10deg); }
+  50% { transform: rotate(10deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-lightbeams .beam {
+    animation: none;
+    transform: rotate(0deg);
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-lightbeams {
+    opacity: 0.65;
+  }
+}
+
 .hero-particles {
   position: absolute;
   inset: 0;
   z-index: 0;
-  opacity: 0.6;
+  opacity: 0.75;
 }
 
 .hero .container {
