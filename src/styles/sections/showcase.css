@@ -86,7 +86,12 @@
   border: 1px solid hsl(var(--color-white) / 0.08);
 }
 
-.showcase-visual:has(.showcase-visual-video) {
+/* Classe explícita em vez de :has() — :has() não é suportado em
+   navegadores mais antigos (ex: Safari < 15.4), e sem suporte a regra
+   inteira é ignorada: o container ficava no aspect-ratio 4/5 (retrato)
+   com um vídeo 16/9 (paisagem) dentro, e object-fit:contain sobrava
+   como barra enorme acima/abaixo do vídeo, na cor do fundo do container. */
+.showcase-visual--video {
   aspect-ratio: 16 / 9;
 }
 
@@ -97,11 +102,6 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-
-.showcase-visual-video {
-  object-fit: contain;
-  background: hsl(var(--color-black));
 }
 
 .showcase-visual-grain {
@@ -148,7 +148,7 @@
     aspect-ratio: 16 / 10;
   }
 
-  .showcase-visual:has(.showcase-visual-video) {
+  .showcase-visual--video {
     aspect-ratio: 16 / 9;
   }
 }
