@@ -27,19 +27,59 @@ declare(strict_types=1);
  *
  * Pra tudo mais (arquivo estático que realmente existe), `return false`
  * devolve o controle pro comportamento padrão do servidor embutido.
+ *
+ * 0. Cache-Control: o servidor embutido do PHP não define nenhum header
+ *    de cache por padrão, então todo asset (JS/CSS/imagem/vídeo/fonte)
+ *    seria sempre rebaixado do zero a cada visita. IMPORTANTE: quando o
+ *    router devolve `false`, o servidor embutido do PHP serve o arquivo
+ *    do zero (ignora qualquer header() setado antes do `return false`) —
+ *    então pra tipos de arquivo "cacheáveis" a gente serve o arquivo
+ *    manualmente aqui (readfile + Content-Type + Cache-Control) em vez de
+ *    devolver `false`. Assets do Vite em /assets/ (nome com hash,
+ *    imutável por build) ganham cache longo; demais arquivos estáticos
+ *    (public/, sem hash) ganham cache curto; HTML/PHP (conteúdo dinâmico)
+ *    continuam sem cache.
  */
 
 $root = __DIR__;
 $uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
 $uri = $uri !== false && $uri !== null ? urldecode($uri) : '/';
 $path = $root . $uri;
+$ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+
+// Default: conteúdo dinâmico (HTML/PHP) sem cache. As rotas de vídeo e de
+// arquivo estático abaixo sobrescrevem com seus próprios Cache-Control.
+header('Cache-Control: no-cache');
 
 // --- 1. Range requests pra vídeo ---
-$ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
 $videoMimes = ['mp4' => 'video/mp4', 'webm' => 'video/webm'];
 
 if (isset($videoMimes[$ext]) && is_file($path)) {
+    header('Cache-Control: public, max-age=604800');
     serveVideoWithRangeSupport($path, $videoMimes[$ext]);
+    return true;
+}
+
+// --- 1b. Demais arquivos estáticos cacheáveis (servidos manualmente, ver
+// nota "0. Cache-Control" acima sobre por que não dá pra usar `return false`
+// aqui e ainda ter cache) ---
+$staticMimes = [
+    'jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png',
+    'webp' => 'image/webp', 'gif' => 'image/gif', 'svg' => 'image/svg+xml',
+    'ico' => 'image/x-icon',
+    'woff' => 'font/woff', 'woff2' => 'font/woff2',
+    'ttf' => 'font/ttf', 'otf' => 'font/otf',
+    'css' => 'text/css', 'js' => 'application/javascript',
+    'json' => 'application/json', 'webmanifest' => 'application/manifest+json',
+];
+if (isset($staticMimes[$ext]) && is_file($path)) {
+    $cache = str_starts_with($uri, '/assets/')
+        ? 'public, max-age=31536000, immutable' // nome com hash do Vite, imutável por build
+        : 'public, max-age=604800'; // public/, sem hash, cache mais curto
+    header('Content-Type: ' . $staticMimes[$ext]);
+    header('Cache-Control: ' . $cache);
+    header('Content-Length: ' . (string) filesize($path));
+    readfile($path);
     return true;
 }
 

@@ -101,8 +101,14 @@ if (!empty($post['cover_image_url'])) {
       <?php endif; ?>
 
       <?php if (!empty($post['cover_image_url'])): ?>
+        <?php $coverWebp = preg_replace('/\.(jpe?g|png)$/i', '.webp', (string) $post['cover_image_url']); ?>
         <div class="cover">
-          <img src="<?= htmlspecialchars($post['cover_image_url'], ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars((string) ($post['cover_image_alt'] ?: $post['title']), ENT_QUOTES, 'UTF-8') ?>" loading="lazy" />
+          <picture>
+            <?php if ($coverWebp !== $post['cover_image_url']): ?>
+              <source srcset="<?= htmlspecialchars($coverWebp, ENT_QUOTES, 'UTF-8') ?>" type="image/webp" />
+            <?php endif; ?>
+            <img src="<?= htmlspecialchars($post['cover_image_url'], ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars((string) ($post['cover_image_alt'] ?: $post['title']), ENT_QUOTES, 'UTF-8') ?>" loading="lazy" />
+          </picture>
         </div>
       <?php endif; ?>
 
