@@ -67,6 +67,22 @@ export function initScrollFx() {
       filmVideo.addEventListener('loadedmetadata', () => { seekable = isReady(); }, { once: true });
     }
 
+    // "Aquece" o carregamento: em conexões restritas (dados móveis, modo
+    // de economia de dados no iOS), o preload="auto" costuma ser
+    // rebaixado/ignorado pelo navegador, e o vídeo nunca chega a baixar
+    // nada — fica preso no quadro preto pra sempre, mesmo rolando a
+    // tela. Um play() (permitido sem gesto do usuário porque o vídeo é
+    // muted) é um sinal mais forte que faz o navegador buscar os dados de
+    // verdade; pausa imediatamente depois, porque o avanço de quadro é
+    // controlado manualmente pelo scroll, não pela reprodução normal.
+    if (!seekable) {
+      filmVideo.load();
+      const warmUp = filmVideo.play();
+      if (warmUp && typeof warmUp.then === 'function') {
+        warmUp.then(() => filmVideo.pause()).catch(() => {});
+      }
+    }
+
     // Sem play/pause normal aqui de propósito: o tempo do vídeo é
     // amarrado 1:1 ao progresso do scroll dentro da seção — desce o
     // scroll, o vídeo avança; sobe o scroll, o vídeo volta.
