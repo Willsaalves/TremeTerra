@@ -1,0 +1,38 @@
+.dj-roster {
+  padding-block: var(--space-3xl);
+}
+
+.dj-roster-head {
+  margin-bottom: var(--space-xl);
+  max-width: 60ch;
+}
+
+.dj-roster-head h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-section);
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  line-height: 1.02;
+  margin-bottom: var(--space-sm);
+}
+
+.dj-roster-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--space-md);
+}
+
+.dj-roster-card {
+  display: block;
+  width: 100%;
+  aspect-ratio: 15 / 7;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 12px 32px hsl(var(--color-ink) / 0.12);
+  transition: transform 0.4s var(--ease-soft), box-shadow 0.4s var(--ease-soft);
+}
+
+.dj-roster-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px hsl(var(--color-ink) / 0.18);
+}
