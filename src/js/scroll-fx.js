@@ -1,5 +1,32 @@
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+// Parallax/scrub sem GSAP/ScrollTrigger — a lib inteira (registrada global
+// só pra uns poucos gsap.to()/ScrollTrigger.create()) pesava boa parte do
+// bundle principal (a maior fatia do "JS não usado" do Lighthouse, já que
+// só uma fração do código da lib roda de verdade). Progresso de scroll
+// recalculado ao vivo via getBoundingClientRect a cada frame — isso também
+// elimina a necessidade de recalcular medições depois do reflow de fonte
+// (o problema que o ScrollTrigger.refresh() resolvia antes): não tem nada
+// "cacheado" pra ficar desatualizado.
+
+function clamp01(v) {
+  return Math.max(0, Math.min(1, v));
+}
+
+// Replica os pares start/end do ScrollTrigger que este arquivo usava.
+function computeProgress(el, start, end) {
+  const rect = el.getBoundingClientRect();
+  const vh = window.innerHeight;
+
+  if (start === 'top top' && end === 'bottom top') {
+    return clamp01(-rect.top / rect.height);
+  }
+  if (start === 'top top' && end === 'bottom bottom') {
+    return clamp01(-rect.top / (rect.height - vh));
+  }
+  if (start === 'top bottom' && end === 'bottom top') {
+    return clamp01((vh - rect.top) / (vh + rect.height));
+  }
+  return 0;
+}
 
 export function initScrollFx() {
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -34,51 +61,73 @@ export function initScrollFx() {
     showcaseVideo.play().catch(() => {});
   }
 
+  // Cada efeito é { el, start, end, apply(progress) }. Um único loop de
+  // rAF, ligado só enquanto o usuário rola, computa e aplica tudo — evita
+  // vários listeners de scroll concorrentes e agrupa leitura (rect) e
+  // escrita (style) num único frame, o que é exatamente a recomendação
+  // padrão pra evitar "reflow forçado". Aplicação direta (sem lerp): os
+  // próprios eventos de scroll já disparam com frequência alta o
+  // suficiente pra parecer fluido, sem precisar de um loop de rAF
+  // rodando o tempo todo em segundo plano.
+  const effects = [];
+  const addParallax = (el, { start, end, apply }) => {
+    if (!el) return;
+    effects.push({ el, start, end, apply });
+  };
+
   const hero = document.querySelector('.hero');
   if (hero) {
     const g1 = hero.querySelector('.hero-glow .g1');
     const g2 = hero.querySelector('.hero-glow .g2');
-    if (g1) {
-      gsap.to(g1, {
-        yPercent: 28,
-        xPercent: -8,
-        ease: 'none',
-        scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: 0.6 },
-      });
-    }
-    if (g2) {
-      gsap.to(g2, {
-        yPercent: -18,
-        xPercent: 12,
-        ease: 'none',
-        scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: 0.6 },
-      });
-    }
+    addParallax(g1, {
+      start: 'top top',
+      end: 'bottom top',
+      apply: (p, el) => { el.style.transform = `translate3d(${-8 * p}%, ${28 * p}%, 0)`; },
+    });
+    addParallax(g2, {
+      start: 'top top',
+      end: 'bottom top',
+      apply: (p, el) => { el.style.transform = `translate3d(${12 * p}%, ${-18 * p}%, 0)`; },
+    });
   }
 
   const showcase = document.querySelector('.showcase');
   const visual = document.querySelector('.showcase-visual');
   if (showcase && visual) {
-    gsap.fromTo(
-      visual,
-      { yPercent: 6, rotate: -1.2 },
-      {
-        yPercent: -6,
-        rotate: 1.2,
-        ease: 'none',
-        scrollTrigger: { trigger: showcase, start: 'top bottom', end: 'bottom top', scrub: 0.8 },
-      }
-    );
+    addParallax(visual, {
+      start: 'top bottom',
+      end: 'bottom top',
+      apply: (p, el) => {
+        const y = 6 - p * 12;
+        const rot = -1.2 + p * 2.4;
+        el.style.transform = `translate3d(0, ${y}%, 0) rotate(${rot}deg)`;
+      },
+    });
   }
 
+  const ctaFinal = document.querySelector('.cta-final');
+  if (ctaFinal) {
+    const g1 = ctaFinal.querySelector('.cta-glow .g1');
+    const g2 = ctaFinal.querySelector('.cta-glow .g2');
+    addParallax(g1, {
+      start: 'top bottom',
+      end: 'bottom top',
+      apply: (p, el) => { el.style.transform = `translate3d(0, ${-22 * p}%, 0)`; },
+    });
+    addParallax(g2, {
+      start: 'top bottom',
+      end: 'bottom top',
+      apply: (p, el) => { el.style.transform = `translate3d(0, ${22 * p}%, 0)`; },
+    });
+  }
+
+  // Vídeo de Bastidores: tempo amarrado 1:1 ao progresso do scroll dentro
+  // da seção — desce o scroll, o vídeo avança; sobe, o vídeo volta. Sem
+  // suavização aqui (era scrub:true, acoplamento direto).
   const film = document.querySelector('.film');
   const filmVideo = document.querySelector('.film-video');
   if (film && filmVideo) {
     const isReady = () => Number.isFinite(filmVideo.duration) && filmVideo.duration > 0;
-    // O vídeo (preload="auto") pode já ter carregado os metadados antes
-    // deste módulo rodar — checa o estado atual primeiro, e só espera o
-    // evento se ainda não estiver pronto (senão o evento já passou e o
-    // scrub nunca liga).
     let seekable = isReady();
     if (!seekable) {
       filmVideo.addEventListener('loadedmetadata', () => { seekable = isReady(); }, { once: true });
@@ -121,52 +170,35 @@ export function initScrollFx() {
       warmUpVideo();
     }
 
-    // Sem play/pause normal aqui de propósito: o tempo do vídeo é
-    // amarrado 1:1 ao progresso do scroll dentro da seção — desce o
-    // scroll, o vídeo avança; sobe o scroll, o vídeo volta.
-    ScrollTrigger.create({
-      trigger: film,
+    effects.push({
+      el: film,
       start: 'top top',
       end: 'bottom bottom',
-      scrub: true,
-      onUpdate: (self) => {
+      apply: (p) => {
         if (!seekable) return;
-        filmVideo.currentTime = self.progress * filmVideo.duration;
+        filmVideo.currentTime = p * filmVideo.duration;
       },
     });
   }
 
-  const ctaFinal = document.querySelector('.cta-final');
-  if (ctaFinal) {
-    const g1 = ctaFinal.querySelector('.cta-glow .g1');
-    const g2 = ctaFinal.querySelector('.cta-glow .g2');
-    if (g1) {
-      gsap.to(g1, {
-        yPercent: -22,
-        ease: 'none',
-        scrollTrigger: { trigger: ctaFinal, start: 'top bottom', end: 'bottom top', scrub: 0.6 },
-      });
-    }
-    if (g2) {
-      gsap.to(g2, {
-        yPercent: 22,
-        ease: 'none',
-        scrollTrigger: { trigger: ctaFinal, start: 'top bottom', end: 'bottom top', scrub: 0.6 },
-      });
-    }
-  }
+  if (!effects.length) return;
 
-  // Os ScrollTriggers acima (principalmente o do .film, com scrub 1:1 do
-  // vídeo) são criados aqui perto do DOMContentLoaded, medindo start/end
-  // em pixels com o layout de *naquele momento*. A fonte do Google Fonts
-  // carrega de propósito depois do primeiro paint (truque
-  // media="print"/onload em partials/seo-meta.php) e troca a fonte de
-  // fallback pela definitiva — isso quase sempre reflowa o texto e move a
-  // posição de tudo abaixo, inclusive o .film. Sem recalcular depois desse
-  // reflow, o scroll "termina" a seção num ponto que não bate mais com
-  // onde ela realmente termina na tela.
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(() => ScrollTrigger.refresh());
-  }
-  window.addEventListener('load', () => ScrollTrigger.refresh());
+  let ticking = false;
+  const tick = () => {
+    effects.forEach(({ el, start, end, apply }) => {
+      apply(computeProgress(el, start, end), el);
+    });
+    ticking = false;
+  };
+
+  const requestTick = () => {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(tick);
+    }
+  };
+
+  tick();
+  window.addEventListener('scroll', requestTick, { passive: true });
+  window.addEventListener('resize', requestTick);
 }
