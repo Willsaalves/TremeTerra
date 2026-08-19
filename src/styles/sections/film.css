@@ -57,17 +57,28 @@
 }
 
 @media (max-width: 640px) {
+  /* No celular a seção não fica mais fixada em tela cheia (100svh) — numa
+     tela bem mais alta que larga, tentar encaixar um vídeo 16:9 nessa
+     caixa sempre sobra: object-fit:cover cortava demais as laterais, e
+     object-fit:contain deixava barras pretas enormes em cima/embaixo (o
+     vídeo virava uma fatia pequena no meio de uma área escura enorme).
+     Em vez disso, a seção vira um bloco normal do tamanho exato do
+     vídeo (aspect-ratio 16/9) — sem cortar, sem sobrar espaço, e o vídeo
+     toca sozinho em loop (ver scroll-fx.js) em vez de ficar amarrado ao
+     scroll, que só faz sentido na versão fixada em tela cheia. */
   .film {
-    height: 250vh;
+    height: auto;
+    background: none;
   }
 
-  /* Em telas estreitas e muito altas (celular), object-fit:cover cropava
-     demais as laterais do vídeo (16:9 forçado a cobrir uma caixa bem mais
-     alta que larga) — sobrava só uma fatia bem no zoom, quase sem mostrar
-     nada do cenário real. object-fit:contain mostra a largura toda do
-     vídeo, com uma "barra" preta (já é o background do próprio elemento,
-     ver acima) só em cima/embaixo em vez de cortar os lados. */
+  .film-pin {
+    position: relative;
+    top: auto;
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
+
   .film-video {
-    object-fit: contain;
+    object-fit: cover;
   }
 }

@@ -39,27 +39,10 @@ export function initScrollFx() {
     return;
   }
 
-  // Vídeo do Innova Show: sem autoplay no HTML de propósito (ele fica bem
-  // abaixo da dobra — autoplay faria o navegador baixar os ~3,5MB assim
-  // que a Home carrega, mesmo pra quem nunca rola até lá). Só chama
-  // play() quando a seção estiver perto de entrar na tela.
+  // Vídeo do Innova Show: toca assim que a página carrega, sem esperar o
+  // usuário rolar até a seção — prioridade em UX sobre economia de rede.
   const showcaseVideo = document.querySelector('.showcase-visual-video');
-  if (showcaseVideo && 'IntersectionObserver' in window) {
-    const showcaseObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            showcaseVideo.play().catch(() => {});
-            showcaseObserver.unobserve(entry.target);
-          }
-        });
-      },
-      { rootMargin: '400px 0px' }
-    );
-    showcaseObserver.observe(showcaseVideo);
-  } else if (showcaseVideo) {
-    showcaseVideo.play().catch(() => {});
-  }
+  if (showcaseVideo) showcaseVideo.play().catch(() => {});
 
   // Cada efeito é { el, start, end, apply(progress) }. Um único loop de
   // rAF, ligado só enquanto o usuário rola, computa e aplica tudo — evita
@@ -121,12 +104,18 @@ export function initScrollFx() {
     });
   }
 
-  // Vídeo de Bastidores: tempo amarrado 1:1 ao progresso do scroll dentro
-  // da seção — desce o scroll, o vídeo avança; sobe, o vídeo volta. Sem
-  // suavização aqui (era scrub:true, acoplamento direto).
+  // Vídeo de Bastidores: no desktop, tempo amarrado 1:1 ao progresso do
+  // scroll dentro da seção (pin + scrub cinematográfico) — desce o
+  // scroll, o vídeo avança; sobe, o vídeo volta. No mobile, a seção não
+  // é mais fixada em tela cheia (ver film.css): o vídeo toca sozinho em
+  // loop normal, igual o do Innova Show, evitando o efeito de "área
+  // escura enorme" que o pin+scrub causava numa tela bem mais alta que
+  // larga.
   const film = document.querySelector('.film');
   const filmVideo = document.querySelector('.film-video');
-  if (film && filmVideo) {
+  const isWideScreen = window.matchMedia('(min-width: 641px)').matches;
+
+  if (film && filmVideo && isWideScreen) {
     const isReady = () => Number.isFinite(filmVideo.duration) && filmVideo.duration > 0;
     let seekable = isReady();
     if (!seekable) {
@@ -134,13 +123,14 @@ export function initScrollFx() {
     }
 
     // "Aquece" o carregamento: em conexões restritas (dados móveis, modo
-    // de economia de dados no iOS), o preload="auto" costuma ser
-    // rebaixado/ignorado pelo navegador, e o vídeo nunca chega a baixar
-    // nada — fica preso no quadro preto pra sempre, mesmo rolando a
-    // tela. Um play() (permitido sem gesto do usuário porque o vídeo é
+    // de economia de dados no iOS), o preload="auto"/"metadata" costuma
+    // ser rebaixado/ignorado pelo navegador, e o vídeo nunca chega a
+    // baixar nada — fica preso no quadro preto pra sempre, mesmo rolando
+    // a tela. Um play() (permitido sem gesto do usuário porque o vídeo é
     // muted) é um sinal mais forte que faz o navegador buscar os dados de
-    // verdade; pausa imediatamente depois, porque o avanço de quadro é
-    // controlado manualmente pelo scroll, não pela reprodução normal.
+    // verdade; pausa imediatamente depois, porque no desktop o avanço de
+    // quadro é controlado manualmente pelo scroll, não pela reprodução
+    // normal.
     //
     // Só dispara isso quando a seção estiver perto de aparecer (não no
     // carregamento da página) — .film fica bem abaixo da dobra, e forçar
@@ -179,6 +169,8 @@ export function initScrollFx() {
         filmVideo.currentTime = p * filmVideo.duration;
       },
     });
+  } else if (filmVideo) {
+    filmVideo.play().catch(() => {});
   }
 
   if (!effects.length) return;
