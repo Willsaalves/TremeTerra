@@ -170,7 +170,27 @@ export function initScrollFx() {
       },
     });
   } else if (filmVideo) {
-    filmVideo.play().catch(() => {});
+    // Mobile: bloco normal (não fixado em tela cheia), mas ainda assim
+    // vídeo pesado (2,7-4MB) — só toca quando a seção chega perto da
+    // tela, evitando competir por banda com o resto da página logo no
+    // carregamento (diferente do Innova Show, que toca imediatamente
+    // por pedido explícito).
+    if ('IntersectionObserver' in window) {
+      const filmObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              filmVideo.play().catch(() => {});
+              filmObserver.unobserve(entry.target);
+            }
+          });
+        },
+        { rootMargin: '400px 0px' }
+      );
+      filmObserver.observe(filmVideo);
+    } else {
+      filmVideo.play().catch(() => {});
+    }
   }
 
   if (!effects.length) return;
