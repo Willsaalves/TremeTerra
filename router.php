@@ -55,7 +55,6 @@ header('Cache-Control: no-cache');
 $videoMimes = ['mp4' => 'video/mp4', 'webm' => 'video/webm'];
 
 if (isset($videoMimes[$ext]) && is_file($path)) {
-    header('Cache-Control: public, max-age=2592000');
     serveVideoWithRangeSupport($path, $videoMimes[$ext]);
     return true;
 }
@@ -151,9 +150,12 @@ function serveVideoWithRangeSupport(string $path, string $mime): void
     $range = $_SERVER['HTTP_RANGE'] ?? null;
 
     if ($range === null) {
+        // Resposta 200 do arquivo inteiro: pode ser cacheada por navegador/
+        // proxy sem ambiguidade (é o arquivo completo, sempre).
         header('Content-Type: ' . $mime);
         header('Accept-Ranges: bytes');
         header('Content-Length: ' . $size);
+        header('Cache-Control: public, max-age=2592000');
         readfile($path);
         return;
     }
@@ -176,11 +178,16 @@ function serveVideoWithRangeSupport(string $path, string $mime): void
 
     $length = $end - $start + 1;
 
+    // Resposta 206 (trecho de bytes): NUNCA cachear publicamente. Um cache
+    // (navegador agressivo, proxy/CDN na frente do Render) que guardasse
+    // isso sob a mesma chave da URL devolveria o trecho errado pra um seek
+    // diferente do vídeo, corrompendo o stream e travando o quadro em preto.
     http_response_code(206);
     header('Content-Type: ' . $mime);
     header('Accept-Ranges: bytes');
     header('Content-Range: bytes ' . $start . '-' . $end . '/' . $size);
     header('Content-Length: ' . (string) $length);
+    header('Cache-Control: no-store');
 
     $fp = fopen($path, 'rb');
     if ($fp === false) {
