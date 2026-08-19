@@ -123,14 +123,21 @@ export function initScrollFx() {
     }
 
     // "Aquece" o carregamento: em conexões restritas (dados móveis, modo
-    // de economia de dados no iOS), o preload="auto"/"metadata" costuma
-    // ser rebaixado/ignorado pelo navegador, e o vídeo nunca chega a
-    // baixar nada — fica preso no quadro preto pra sempre, mesmo rolando
-    // a tela. Um play() (permitido sem gesto do usuário porque o vídeo é
-    // muted) é um sinal mais forte que faz o navegador buscar os dados de
-    // verdade; pausa imediatamente depois, porque no desktop o avanço de
-    // quadro é controlado manualmente pelo scroll, não pela reprodução
-    // normal.
+    // de economia de dados no iOS), o preload="auto" costuma ser
+    // rebaixado/ignorado pelo navegador, e o vídeo nunca chega a baixar
+    // nada — fica preso no quadro preto pra sempre, mesmo rolando a
+    // tela. Além disso, o scrub amarra `currentTime` ao scroll pixel a
+    // pixel: se o navegador só tiver bufferizado um trecho pequeno à
+    // frente da posição atual (o que um play()+pause() rápido garante,
+    // mas não mais que isso), rolar rápido até perto do fim da seção
+    // pode pedir um trecho de bytes que ainda não chegou, e o quadro
+    // fica "travado" escuro até o fetch terminar. Como o arquivo já foi
+    // reduzido pra poucos MB nas rodadas de performance, um fetch()
+    // explícito do arquivo inteiro garante que ele fique no cache HTTP
+    // do navegador (Cache-Control: public, max-age=2592000 na resposta
+    // 200) antes do usuário começar a rolar pela seção — daí em diante
+    // toda mudança de currentTime é decodificada a partir do cache
+    // local, sem depender da rede no meio do scrub.
     //
     // Só dispara isso quando a seção estiver perto de aparecer (não no
     // carregamento da página) — .film fica bem abaixo da dobra, e forçar
@@ -139,10 +146,8 @@ export function initScrollFx() {
     const warmUpVideo = () => {
       if (seekable) return;
       filmVideo.load();
-      const warmUp = filmVideo.play();
-      if (warmUp && typeof warmUp.then === 'function') {
-        warmUp.then(() => filmVideo.pause()).catch(() => {});
-      }
+      const source = filmVideo.querySelector('source[type="video/mp4"]');
+      if (source) fetch(source.src).catch(() => {});
     };
 
     if (!seekable && 'IntersectionObserver' in window) {
