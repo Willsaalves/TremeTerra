@@ -21,8 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // vira chunk próprio no build, então páginas sem esses elementos não
   // baixam mais esse código (antes era tudo no bundle único main-*.js,
   // compartilhado por todas as 15 páginas).
-  if (document.getElementById('portfolio-track')) {
-    import('./js/portfolio-scroll.js').then((m) => m.initPortfolioScroll());
+  if (document.getElementById('portfolio-track') || document.querySelector('.dj-roster-grid')) {
+    import('./js/carousel3d.js').then((m) => m.initCarousel3D());
   }
   if (document.getElementById('hero-particles')) {
     import('./js/hero-particles.js').then((m) => m.initHeroParticles());
