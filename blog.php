@@ -7,6 +7,14 @@ require_once __DIR__ . '/lib/db.php';
 $db = getDb();
 $posts = $db->query("SELECT title, slug, category, seo_description, direct_answer FROM posts WHERE status = 'published' ORDER BY published_at DESC")->fetchAll();
 
+$categoriesPresent = [];
+foreach ($posts as $post) {
+    $cat = $post['category'];
+    if ($cat && isset(POST_CATEGORIES[$cat]) && !isset($categoriesPresent[$cat])) {
+        $categoriesPresent[$cat] = POST_CATEGORIES[$cat];
+    }
+}
+
 $pageTitle       = 'Blog | ' . SITE_NAME;
 $pageDescription = 'Guias sobre som, iluminação, painel de LED, DJ e produção de eventos em São Paulo — pela ' . SITE_NAME . '.';
 $pageCanonical   = SITE_URL . '/blog';
@@ -37,23 +45,37 @@ $pageCanonical   = SITE_URL . '/blog';
     </div>
   </section>
 
-  <div class="container post-list">
-    <?php if (empty($posts)): ?>
-      <div class="empty-state">
-        <strong>Em breve, novos posts por aqui.</strong>
-        Estamos preparando conteúdo sobre locação de som, iluminação, painel de LED, DJ e produção de eventos.
+  <div class="container">
+    <?php if (!empty($posts) && count($categoriesPresent) > 1): ?>
+      <div class="post-list-filters" role="group" aria-label="Filtrar posts por categoria">
+        <button type="button" class="filter-chip is-active" data-filter="all">Todos</button>
+        <?php foreach ($categoriesPresent as $slug => $label): ?>
+          <button type="button" class="filter-chip" data-filter="<?= htmlspecialchars($slug, ENT_QUOTES, 'UTF-8') ?>"><?= htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?></button>
+        <?php endforeach; ?>
       </div>
-    <?php else: ?>
-      <?php foreach ($posts as $post): ?>
-        <a href="/blog/<?= htmlspecialchars($post['slug'], ENT_QUOTES, 'UTF-8') ?>" class="post-card">
-          <?php if (!empty($post['category']) && isset(POST_CATEGORIES[$post['category']])): ?>
-            <span class="category"><?= htmlspecialchars(POST_CATEGORIES[$post['category']], ENT_QUOTES, 'UTF-8') ?></span>
-          <?php endif; ?>
-          <h2><?= htmlspecialchars($post['title'], ENT_QUOTES, 'UTF-8') ?></h2>
-          <p><?= htmlspecialchars((string) ($post['seo_description'] ?: $post['direct_answer']), ENT_QUOTES, 'UTF-8') ?></p>
-        </a>
-      <?php endforeach; ?>
     <?php endif; ?>
+
+    <div class="post-list">
+      <?php if (empty($posts)): ?>
+        <div class="empty-state">
+          <strong>Em breve, novos posts por aqui.</strong>
+          Estamos preparando conteúdo sobre locação de som, iluminação, painel de LED, DJ e produção de eventos.
+        </div>
+      <?php else: ?>
+        <?php foreach ($posts as $post): ?>
+          <a href="/blog/<?= htmlspecialchars($post['slug'], ENT_QUOTES, 'UTF-8') ?>" class="post-card" data-category="<?= htmlspecialchars((string) $post['category'], ENT_QUOTES, 'UTF-8') ?>">
+            <?php if (!empty($post['category']) && isset(POST_CATEGORIES[$post['category']])): ?>
+              <span class="category"><?= htmlspecialchars(POST_CATEGORIES[$post['category']], ENT_QUOTES, 'UTF-8') ?></span>
+            <?php endif; ?>
+            <h2><?= htmlspecialchars($post['title'], ENT_QUOTES, 'UTF-8') ?></h2>
+            <p><?= htmlspecialchars((string) ($post['seo_description'] ?: $post['direct_answer']), ENT_QUOTES, 'UTF-8') ?></p>
+            <span class="post-card-arrow" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </span>
+          </a>
+        <?php endforeach; ?>
+      <?php endif; ?>
+    </div>
   </div>
 
   <footer class="blog-footer">
@@ -64,5 +86,7 @@ $pageCanonical   = SITE_URL . '/blog';
       </p>
     </div>
   </footer>
+
+  <script src="/blog.js" defer></script>
 </body>
 </html>
