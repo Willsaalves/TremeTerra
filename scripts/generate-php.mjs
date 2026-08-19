@@ -326,6 +326,14 @@ const pages = [
     'provider'    => ['@id' => SITE_URL . '/#organization'],
     'areaServed'  => 'BR',
 ]`,
+    faqItems: [
+      ['Vocês atendem cerimônia, jantar e festa?', 'Sim. Cobrimos todos os momentos do casamento com som e iluminação dedicados para cada fase — da cerimônia à pista de dança.'],
+      ['O DJ está incluso no pacote?', 'Podemos incluir DJ, banda ou os dois. Montamos o pacote conforme o formato da sua festa.'],
+      ['Fazem casamento ao ar livre ou em sítio?', 'Sim. Levamos equipamentos wireless, gerador e infraestrutura completa para locais sem estrutura pronta.'],
+      ['Com quanta antecedência devo contratar?', 'O ideal é entre 60 e 90 dias. Datas de fim de semana e alta temporada se esgotam rápido.'],
+      ['A iluminação é personalizada?', 'Sim. Criamos cenas de luz para cada momento — cerimônia romântica, jantar aconchegante e balada na pista.'],
+      ['Vocês atendem em toda a Grande SP?', 'Sim. Atendemos toda a Grande São Paulo e o interior, mediante acordo de deslocamento.'],
+    ],
   },
   {
     htmlFile: 'formaturas.html',
@@ -344,6 +352,14 @@ const pages = [
     'provider'    => ['@id' => SITE_URL . '/#organization'],
     'areaServed'  => 'BR',
 ]`,
+    faqItems: [
+      ['Vocês atendem baile, colação e festa?', 'Sim. Cuidamos do som e da iluminação de todos os momentos da formatura, da colação de grau ao baile.'],
+      ['Trabalham com comissões de formatura?', 'Sim. Temos condições especiais para comissões e turmas, com proposta fechada por evento.'],
+      ['O DJ e a banda estão inclusos?', 'Podemos incluir DJ, banda ou ambos. Montamos o pacote de acordo com o formato do baile.'],
+      ['Com quanta antecedência devo contratar?', 'Recomendamos de 60 a 90 dias, principalmente para datas de fim de ano, quando a agenda lota.'],
+      ['Fazem formatura em buffet ou espaço sem estrutura?', 'Sim. Levamos som, iluminação, gerador e toda a infraestrutura necessária para o local.'],
+      ['Atendem em toda a São Paulo?', 'Sim. Atendemos a capital, a Grande SP e o interior, mediante acordo de deslocamento.'],
+    ],
   },
   {
     htmlFile: 'empresa-audiovisual.html',

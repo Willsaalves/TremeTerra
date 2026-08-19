@@ -59,6 +59,17 @@
   color: hsl(var(--color-white));
 }
 
+/* Item ativo do menu: destaca a página atual — e o pai "Locação" quando a
+   página ativa é um dos itens do dropdown (via :has). */
+.main-nav a[aria-current="page"]:not(.btn),
+.nav-item.has-dropdown:has(.nav-dropdown a[aria-current="page"]) > .nav-dropdown-group > a {
+  color: hsl(var(--color-white));
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+  text-decoration-color: hsl(var(--color-treme-terra-text));
+}
+
 .nav-toggle {
   display: none;
   color: hsl(var(--color-white));
