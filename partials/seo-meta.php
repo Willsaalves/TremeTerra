@@ -107,20 +107,47 @@ $breadcrumbSchema = [
 ];
 ?>
 <meta charset="UTF-8">
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-WQJVN5JZ');</script>
-<!-- End Google Tag Manager -->
-<!-- Google Analytics (GA4) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-69W8DMGG3B"></script>
+<!-- Google Tag Manager + GA4 — o dataLayer/gtag() ficam prontos na hora
+     (qualquer evento chamado antes do script físico carregar só fica na
+     fila), mas o carregamento de verdade dos scripts do GTM/GA (que
+     brigam por banda/conexão com o CSS bem na hora crítica da primeira
+     pintura) é adiado pro fim do load da página, ou pra primeira
+     interação do usuário — o que vier primeiro. -->
 <script>
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-69W8DMGG3B');
+
+(function () {
+  var loaded = false;
+  function loadAnalytics() {
+    if (loaded) return;
+    loaded = true;
+    (function (w, d, s, l, i) {
+      w[l] = w[l] || [];
+      w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+      var f = d.getElementsByTagName(s)[0], j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+      j.async = true;
+      j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+      f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-WQJVN5JZ');
+
+    var gtagScript = document.createElement('script');
+    gtagScript.async = true;
+    gtagScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-69W8DMGG3B';
+    document.head.appendChild(gtagScript);
+  }
+
+  if (document.readyState === 'complete') {
+    loadAnalytics();
+  } else {
+    window.addEventListener('load', loadAnalytics);
+  }
+  ['scroll', 'keydown', 'mousemove', 'touchstart'].forEach(function (evt) {
+    window.addEventListener(evt, loadAnalytics, { once: true, passive: true });
+  });
+})();
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title><?= htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8') ?></title>
