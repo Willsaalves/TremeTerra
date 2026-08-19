@@ -1,6 +1,11 @@
 .film {
   position: relative;
   height: 350vh;
+  /* Rede de segurança: se o position:sticky do .film-pin desgrudar antes
+     da hora (bug comum em iOS Safari com 100svh + a barra de endereço
+     recolhendo/expandindo durante o scroll), a área "sobrando" desse
+     contêiner mostra este fundo em vez de aparecer em branco. */
+  background: hsl(var(--color-black));
 }
 
 .film-pin {

@@ -101,4 +101,18 @@ export function initScrollFx() {
       });
     }
   }
+
+  // Os ScrollTriggers acima (principalmente o do .film, com scrub 1:1 do
+  // vídeo) são criados aqui perto do DOMContentLoaded, medindo start/end
+  // em pixels com o layout de *naquele momento*. A fonte do Google Fonts
+  // carrega de propósito depois do primeiro paint (truque
+  // media="print"/onload em partials/seo-meta.php) e troca a fonte de
+  // fallback pela definitiva — isso quase sempre reflowa o texto e move a
+  // posição de tudo abaixo, inclusive o .film. Sem recalcular depois desse
+  // reflow, o scroll "termina" a seção num ponto que não bate mais com
+  // onde ela realmente termina na tela.
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => ScrollTrigger.refresh());
+  }
+  window.addEventListener('load', () => ScrollTrigger.refresh());
 }
