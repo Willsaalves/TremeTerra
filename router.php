@@ -55,7 +55,7 @@ header('Cache-Control: no-cache');
 $videoMimes = ['mp4' => 'video/mp4', 'webm' => 'video/webm'];
 
 if (isset($videoMimes[$ext]) && is_file($path)) {
-    header('Cache-Control: public, max-age=604800');
+    header('Cache-Control: public, max-age=2592000');
     serveVideoWithRangeSupport($path, $videoMimes[$ext]);
     return true;
 }
@@ -75,7 +75,7 @@ $staticMimes = [
 if (isset($staticMimes[$ext]) && is_file($path)) {
     $cache = str_starts_with($uri, '/assets/')
         ? 'public, max-age=31536000, immutable' // nome com hash do Vite, imutável por build
-        : 'public, max-age=604800'; // public/, sem hash, cache mais curto
+        : 'public, max-age=2592000'; // public/, sem hash — 30 dias (curto o bastante pra corrigir um upload errado sem esperar muito, longo o bastante pra passar no audit de cache do Lighthouse)
     header('Content-Type: ' . $staticMimes[$ext]);
     header('Cache-Control: ' . $cache);
     header('Content-Length: ' . (string) filesize($path));
