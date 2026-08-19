@@ -22,7 +22,7 @@ $posts = $db->query('SELECT id, title, slug, category, status, published_at, upd
     <div class="container admin-header-inner">
       <strong>Admin do blog</strong>
       <nav>
-        <a href="/blog">Ver blog</a>
+        <a href="/blog/">Ver blog</a>
         <a href="/admin/logout.php">Sair</a>
       </nav>
     </div>

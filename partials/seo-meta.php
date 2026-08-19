@@ -161,6 +161,7 @@ gtag('config', 'G-69W8DMGG3B');
 <meta name="theme-color" content="<?= SITE_THEME_COLOR ?>">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <link rel="canonical" href="<?= htmlspecialchars($pageCanonical, ENT_QUOTES, 'UTF-8') ?>">
+<link rel="sitemap" type="application/xml" href="/sitemap.xml">
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">

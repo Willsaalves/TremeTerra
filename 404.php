@@ -33,7 +33,7 @@ require_once __DIR__ . '/config.php';
 
   <div class="container" style="padding-block: 3rem; display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
     <a href="/" class="btn-admin">Ir para a Home</a>
-    <a href="/blog" class="btn-admin-ghost">Ver o blog</a>
+    <a href="/blog/" class="btn-admin-ghost">Ver o blog</a>
   </div>
 
   <footer class="blog-footer">

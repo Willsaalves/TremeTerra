@@ -59,7 +59,7 @@ const pages = [
     phpFile: 'locacao-equipamentos.php',
     pageTitleExpr: "'Locação de Equipamentos para Eventos | ' . SITE_NAME",
     pageDescriptionExpr: "'Locação de iluminação, painel de LED, som e estrutura de palco para o seu evento, com entrega e suporte técnico da ' . SITE_NAME . '.'",
-    canonicalPath: '/locacao-equipamentos',
+    canonicalPath: '/locacao-equipamentos/',
     breadcrumbNameExpr: "'Locação de Equipamentos'",
     schemaVar: `[
     '@context'    => 'https://schema.org',
@@ -87,7 +87,7 @@ const pages = [
     phpFile: 'produtora-de-eventos-corporativos.php',
     pageTitleExpr: "'Eventos Corporativos em SP | ' . SITE_NAME",
     pageDescriptionExpr: "'Treme Terra: produtora de eventos corporativos em SP. Produção 360° com som, iluminação, LED e equipe técnica. 800+ eventos.'",
-    canonicalPath: '/produtora-de-eventos-corporativos',
+    canonicalPath: '/produtora-de-eventos-corporativos/',
     breadcrumbNameExpr: "'Eventos Corporativos'",
     schemaVar: `[
     '@context'    => 'https://schema.org',
@@ -113,7 +113,7 @@ const pages = [
     phpFile: 'dj-para-eventos.php',
     pageTitleExpr: "'DJ para Eventos em SP | ' . SITE_NAME",
     pageDescriptionExpr: "'DJ para eventos corporativos, aniversários e festas em SP. Repertório personalizado, equipamento incluso.'",
-    canonicalPath: '/dj-para-eventos',
+    canonicalPath: '/dj-para-eventos/',
     breadcrumbNameExpr: "'DJ para Eventos'",
     schemaVar: `[
     '@context'    => 'https://schema.org',
@@ -139,7 +139,7 @@ const pages = [
     phpFile: 'aluguel-som-profissional.php',
     pageTitleExpr: "'Aluguel de Som Profissional para Eventos | ' . SITE_NAME",
     pageDescriptionExpr: "'Aluguel de som profissional com Line Array, caixas PA, subs, microfones e mesas para eventos em SP. Equipe técnica incluída.'",
-    canonicalPath: '/aluguel-som-profissional',
+    canonicalPath: '/aluguel-som-profissional/',
     breadcrumbNameExpr: "'Aluguel de Som'",
     schemaVar: `[
     '@context'    => 'https://schema.org',
@@ -165,7 +165,7 @@ const pages = [
     phpFile: 'iluminacao-para-festas.php',
     pageTitleExpr: "'Iluminação para Festas e Eventos | ' . SITE_NAME",
     pageDescriptionExpr: "'Iluminação cênica para casamentos, formaturas e corporativos em SP. Moving heads, ribaltas, strobes e DMX.'",
-    canonicalPath: '/iluminacao-para-festas',
+    canonicalPath: '/iluminacao-para-festas/',
     breadcrumbNameExpr: "'Iluminação'",
     schemaVar: `[
     '@context'    => 'https://schema.org',
@@ -191,7 +191,7 @@ const pages = [
     phpFile: 'painel-de-led.php',
     pageTitleExpr: "'Painel de LED para Eventos em SP | ' . SITE_NAME",
     pageDescriptionExpr: "'Painel de LED para eventos: telões P2, P3, P5 indoor/outdoor, 4K, para shows, casamentos e corporativos em SP.'",
-    canonicalPath: '/painel-de-led',
+    canonicalPath: '/painel-de-led/',
     breadcrumbNameExpr: "'Painel de LED'",
     schemaVar: `[
     '@context'    => 'https://schema.org',
@@ -236,7 +236,7 @@ const pages = [
     phpFile: 'locacao-painel-led.php',
     pageTitleExpr: "'Locação de Painel de LED em SP | ' . SITE_NAME",
     pageDescriptionExpr: "'Locação de painel de LED com operação técnica: telões P2, P3, P5, 4K para eventos em SP. Orçamento gratuito.'",
-    canonicalPath: '/locacao-painel-led',
+    canonicalPath: '/locacao-painel-led/',
     breadcrumbNameExpr: "'Locação de LED'",
     schemaVar: `[
     '@context'    => 'https://schema.org',
@@ -262,7 +262,7 @@ const pages = [
     phpFile: 'dj-para-casamentos.php',
     pageTitleExpr: "'DJ para Casamento em SP | ' . SITE_NAME",
     pageDescriptionExpr: "'DJ para casamento em SP: cerimônia, jantar e festa com repertório personalizado. Banda ao vivo opcional.'",
-    canonicalPath: '/dj-para-casamentos',
+    canonicalPath: '/dj-para-casamentos/',
     breadcrumbNameExpr: "'DJ para Casamento'",
     schemaVar: `[
     '@context'    => 'https://schema.org',
@@ -288,7 +288,7 @@ const pages = [
     phpFile: 'dj-para-formatura.php',
     pageTitleExpr: "'DJ para Formatura em SP | ' . SITE_NAME",
     pageDescriptionExpr: "'DJ para formatura em SP: baile com repertório personalizado e equipamento profissional. Banda opcional.'",
-    canonicalPath: '/dj-para-formatura',
+    canonicalPath: '/dj-para-formatura/',
     breadcrumbNameExpr: "'DJ para Formatura'",
     schemaVar: `[
     '@context'    => 'https://schema.org',
@@ -314,7 +314,7 @@ const pages = [
     phpFile: 'casamentos.php',
     pageTitleExpr: "'Som e Iluminação para Casamento em SP | ' . SITE_NAME",
     pageDescriptionExpr: "'Som e iluminação para casamento em SP: cerimônia, jantar e festa. 15+ anos de experiência.'",
-    canonicalPath: '/casamentos',
+    canonicalPath: '/casamentos/',
     breadcrumbNameExpr: "'Casamentos'",
     schemaVar: `[
     '@context'    => 'https://schema.org',
@@ -332,7 +332,7 @@ const pages = [
     phpFile: 'formaturas.php',
     pageTitleExpr: "'Som e Iluminação para Formatura em SP | ' . SITE_NAME",
     pageDescriptionExpr: "'Som e iluminação para formatura em SP: baile, cerimônia e festa. Atendemos comissões de formatura.'",
-    canonicalPath: '/formaturas',
+    canonicalPath: '/formaturas/',
     breadcrumbNameExpr: "'Formaturas'",
     schemaVar: `[
     '@context'    => 'https://schema.org',
@@ -350,7 +350,7 @@ const pages = [
     phpFile: 'empresa-audiovisual.php',
     pageTitleExpr: "'Empresa de Audiovisual para Eventos | ' . SITE_NAME",
     pageDescriptionExpr: "'Treme Terra: empresa de audiovisual para eventos empresariais em SP. Som, iluminação, LED e streaming.'",
-    canonicalPath: '/empresa-audiovisual',
+    canonicalPath: '/empresa-audiovisual/',
     breadcrumbNameExpr: "'Empresa de Audiovisual'",
     schemaVar: `[
     '@context'    => 'https://schema.org',
@@ -376,7 +376,7 @@ const pages = [
     phpFile: 'shows.php',
     pageTitleExpr: "'Produção Audiovisual para Shows | ' . SITE_NAME",
     pageDescriptionExpr: "'Produção para shows: som Line Array, iluminação, palco e painel de LED em SP. Equipe técnica completa.'",
-    canonicalPath: '/shows',
+    canonicalPath: '/shows/',
     breadcrumbNameExpr: "'Shows'",
     schemaVar: `[
     '@context'    => 'https://schema.org',
@@ -402,7 +402,7 @@ const pages = [
     phpFile: 'streaming-para-eventos-corporativos.php',
     pageTitleExpr: "'Streaming para Evento Corporativo | ' . SITE_NAME",
     pageDescriptionExpr: "'Streaming para eventos corporativos em SP: transmissão ao vivo multi-câmera, encoding profissional. NDA/sigilo.'",
-    canonicalPath: '/streaming-para-eventos-corporativos',
+    canonicalPath: '/streaming-para-eventos-corporativos/',
     breadcrumbNameExpr: "'Streaming Corporativo'",
     schemaVar: `[
     '@context'    => 'https://schema.org',
@@ -425,11 +425,12 @@ const pages = [
   },
 ];
 
-// Mapa <page>.html -> URL sem extensão pra reescrever links internos entre
-// páginas depois que cada uma virar PHP (o <body> é copiado como está, e o
-// HTML fonte referencia as outras páginas pelo nome .html gerado pelo Vite).
-// router.php resolve essas URLs sem extensão pro .php correspondente.
-const htmlToClean = new Map(pages.map((p) => [`/${p.htmlFile}`, `/${p.htmlFile.replace(/\.html$/, '')}`]));
+// Mapa <page>.html -> URL sem extensão (com barra final, igual ao
+// canonicalPath) pra reescrever links internos entre páginas depois que cada
+// uma virar PHP (o <body> é copiado como está, e o HTML fonte referencia as
+// outras páginas pelo nome .html gerado pelo Vite). router.php resolve essas
+// URLs sem extensão pro .php correspondente, com ou sem barra final.
+const htmlToClean = new Map(pages.map((p) => [`/${p.htmlFile}`, `/${p.htmlFile.replace(/\.html$/, '')}/`]));
 htmlToClean.set('/index.html', '/'); // home usa raiz, não /index, nos links internos
 
 for (const page of pages) {

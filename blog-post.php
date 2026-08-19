@@ -29,7 +29,7 @@ if ($post === false) {
     <body>
       <div class="container" style="padding-block:4rem;text-align:center;">
         <h1>Post não encontrado</h1>
-        <p><a href="/blog">Voltar pro blog</a></p>
+        <p><a href="/blog/">Voltar pro blog</a></p>
       </div>
     </body>
     </html>
@@ -49,7 +49,7 @@ $pageTitle          = ($post['seo_title'] ?: $post['title']) . ' | ' . SITE_NAME
 $pageDescription    = (string) ($post['seo_description'] ?: $post['direct_answer'] ?: SITE_DESCRIPTION);
 $pageCanonical      = SITE_URL . '/blog/' . $post['slug'];
 $pageBreadcrumbTrail = [
-    ['name' => 'Blog', 'url' => SITE_URL . '/blog'],
+    ['name' => 'Blog', 'url' => SITE_URL . '/blog/'],
     ['name' => $post['title'], 'url' => $pageCanonical],
 ];
 $pageFaqItems = $faqItems;
@@ -90,7 +90,7 @@ if (!empty($post['cover_image_url'])) {
   <article class="post">
     <div class="container">
       <nav class="breadcrumb" aria-label="Breadcrumb">
-        <a href="/">Home</a> / <a href="/blog">Blog</a> / <?= htmlspecialchars($post['title'], ENT_QUOTES, 'UTF-8') ?>
+        <a href="/">Home</a> / <a href="/blog/">Blog</a> / <?= htmlspecialchars($post['title'], ENT_QUOTES, 'UTF-8') ?>
       </nav>
 
       <p class="eyebrow">Blog <?= htmlspecialchars(SITE_NAME, ENT_QUOTES, 'UTF-8') ?></p>

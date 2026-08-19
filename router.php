@@ -92,6 +92,24 @@ if ($uri === '/') {
     }
 }
 
+// --- 2a. URL canônica com barra final: se a URL limpa (sem extensão, sem
+// barra no final) corresponde a uma página real, redireciona 301 pra versão
+// com barra — a mesma que os links internos (nav/footer) e o <link
+// rel="canonical"> já usam. Sem isso, as duas variantes (com e sem barra)
+// serviriam o mesmo conteúdo com 200, o que é duplicação de conteúdo pro
+// Google. Não afeta /blog/{slug} (rota dinâmica, sem arquivo .php próprio,
+// tratada na regra 3 mais abaixo, que já aceita a barra opcional). ---
+if ($uri !== '/' && !str_ends_with($uri, '/') && !is_file($path) && pathinfo($path, PATHINFO_EXTENSION) === '') {
+    $phpPath = $path . '.php';
+    if (is_file($phpPath)) {
+        $query = $_SERVER['QUERY_STRING'] ?? '';
+        $location = $uri . '/' . ($query !== '' ? '?' . $query : '');
+        http_response_code(301);
+        header('Location: ' . $location);
+        return true;
+    }
+}
+
 // --- 2b. URLs sem extensão -> arquivo .php correspondente ---
 if ($uri !== '/' && !is_file($path) && pathinfo($path, PATHINFO_EXTENSION) === '') {
     $phpPath = rtrim($path, '/') . '.php';

@@ -17,7 +17,7 @@ foreach ($posts as $post) {
 
 $pageTitle       = 'Blog | ' . SITE_NAME;
 $pageDescription = 'Guias sobre som, iluminação, painel de LED, DJ e produção de eventos em São Paulo — pela ' . SITE_NAME . '.';
-$pageCanonical   = SITE_URL . '/blog';
+$pageCanonical   = SITE_URL . '/blog/';
 ?>
 <!doctype html>
 <html lang="pt-BR">
