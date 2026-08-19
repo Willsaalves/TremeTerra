@@ -75,12 +75,33 @@ export function initScrollFx() {
     // muted) é um sinal mais forte que faz o navegador buscar os dados de
     // verdade; pausa imediatamente depois, porque o avanço de quadro é
     // controlado manualmente pelo scroll, não pela reprodução normal.
-    if (!seekable) {
+    //
+    // Só dispara isso quando a seção estiver perto de aparecer (não no
+    // carregamento da página) — .film fica bem abaixo da dobra, e forçar
+    // o carregamento do vídeo assim que a Home abre pesaria no payload
+    // de rede de quem nunca rola até lá.
+    const warmUpVideo = () => {
+      if (seekable) return;
       filmVideo.load();
       const warmUp = filmVideo.play();
       if (warmUp && typeof warmUp.then === 'function') {
         warmUp.then(() => filmVideo.pause()).catch(() => {});
       }
+    };
+
+    if (!seekable && 'IntersectionObserver' in window) {
+      const filmObserver = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((entry) => entry.isIntersecting)) {
+            warmUpVideo();
+            filmObserver.disconnect();
+          }
+        },
+        { rootMargin: '600px 0px' }
+      );
+      filmObserver.observe(film);
+    } else if (!seekable) {
+      warmUpVideo();
     }
 
     // Sem play/pause normal aqui de propósito: o tempo do vídeo é
