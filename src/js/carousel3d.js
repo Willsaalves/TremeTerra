@@ -22,6 +22,17 @@ function supportsWebGL() {
   }
 }
 
+// Devolve o controle pro navegador entre lotes de trabalho pesado, pra não
+// travar o thread principal numa única long task (>50ms, o que derruba o
+// INP). `scheduler.yield()` é a API certa quando existe; `requestAnimationFrame`
+// é o fallback universal.
+function yieldToMain() {
+  if (typeof window.scheduler?.yield === 'function') {
+    return window.scheduler.yield();
+  }
+  return new Promise((resolve) => requestAnimationFrame(() => resolve()));
+}
+
 function roundedRectPath(ctx, x, y, w, h, r) {
   ctx.beginPath();
   ctx.moveTo(x + r, y);
@@ -184,26 +195,7 @@ async function createCarousel(container, items, { aspect, videoTexture = false, 
   camera.position.set(0, 0, radius + 7.5);
 
   const videos = [];
-  const meshes = await Promise.all(
-    items.map(async (item, i) => {
-      const angle = (i / n) * Math.PI * 2;
-      const geometry = new THREE.PlaneGeometry(cardWidth, cardHeight);
-      let texture;
-      if (videoTexture) {
-        const vt = buildVideoTexture(item.webmSrc, item.mp4Src);
-        texture = vt.texture;
-        videos.push(vt.video);
-      } else {
-        texture = await buildImageTexture(item, textureSize, Math.round(textureSize / aspect));
-      }
-      const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, toneMapped: false });
-      const mesh = new THREE.Mesh(geometry, material);
-      mesh.position.set(Math.sin(angle) * radius, 0, Math.cos(angle) * radius);
-      mesh.rotation.y = angle;
-      group.add(mesh);
-      return mesh;
-    })
-  );
+  const meshes = [];
 
   const step = (Math.PI * 2) / n;
   let targetRotation = 0;
@@ -267,6 +259,41 @@ async function createCarousel(container, items, { aspect, videoTexture = false, 
     rafId = requestAnimationFrame(animate);
   };
   rafId = requestAnimationFrame(animate);
+
+  // Constrói os cards em lotes pequenos, cedendo o thread principal entre
+  // cada lote (yieldToMain) — construir os 20 cards do Portfólio (ou
+  // disparar os 6 video.play() do roster de DJs) tudo numa task só é
+  // exatamente o tipo de long task que derruba o INP. O loop de render
+  // acima já está rodando, então os cards vão aparecendo progressivamente
+  // a cada lote em vez de tudo ficar pronto (e compilar shader) de uma
+  // vez só numa única chamada de render.
+  const batchSize = 4;
+  for (let start = 0; start < items.length; start += batchSize) {
+    const batch = items.slice(start, start + batchSize);
+    const batchMeshes = await Promise.all(
+      batch.map(async (item, j) => {
+        const i = start + j;
+        const angle = (i / n) * Math.PI * 2;
+        const geometry = new THREE.PlaneGeometry(cardWidth, cardHeight);
+        let texture;
+        if (videoTexture) {
+          const vt = buildVideoTexture(item.webmSrc, item.mp4Src);
+          texture = vt.texture;
+          videos.push(vt.video);
+        } else {
+          texture = await buildImageTexture(item, textureSize, Math.round(textureSize / aspect));
+        }
+        const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, toneMapped: false });
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.position.set(Math.sin(angle) * radius, 0, Math.cos(angle) * radius);
+        mesh.rotation.y = angle;
+        group.add(mesh);
+        return mesh;
+      })
+    );
+    meshes.push(...batchMeshes);
+    if (start + batchSize < items.length) await yieldToMain();
+  }
 
   const resize = () => {
     const w = container.clientWidth;
