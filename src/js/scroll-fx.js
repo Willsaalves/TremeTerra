@@ -122,35 +122,39 @@ export function initScrollFx() {
       filmVideo.addEventListener('loadedmetadata', () => { seekable = isReady(); }, { once: true });
     }
 
-    // "Aquece" o carregamento: em conexões restritas (dados móveis, modo
-    // de economia de dados no iOS), o preload="auto" costuma ser
-    // rebaixado/ignorado pelo navegador, e o vídeo nunca chega a baixar
-    // nada — fica preso no quadro preto pra sempre, mesmo rolando a
-    // tela. Além disso, o scrub amarra `currentTime` ao scroll pixel a
-    // pixel: se o navegador só tiver bufferizado um trecho pequeno à
-    // frente da posição atual (o que um play()+pause() rápido garante,
-    // mas não mais que isso), rolar rápido até perto do fim da seção
-    // pode pedir um trecho de bytes que ainda não chegou, e o quadro
-    // fica "travado" escuro até o fetch terminar. Como o arquivo já foi
-    // reduzido pra poucos MB nas rodadas de performance, um fetch()
-    // explícito do arquivo inteiro garante que ele fique no cache HTTP
-    // do navegador (Cache-Control: public, max-age=2592000 na resposta
-    // 200) antes do usuário começar a rolar pela seção — daí em diante
-    // toda mudança de currentTime é decodificada a partir do cache
-    // local, sem depender da rede no meio do scrub.
+    // "Aquece" o carregamento: o scrub amarra `currentTime` ao scroll
+    // pixel a pixel — se o navegador só tiver bufferizado um trecho
+    // pequeno à frente da posição atual, rolar até perto do fim da
+    // seção pode pedir um trecho de bytes que ainda não chegou, e o
+    // quadro fica "travado" escuro até o fetch terminar (lido como "o
+    // vídeo não chega a terminar, sobra scroll com tela preta"). Como o
+    // arquivo já foi reduzido pra poucos MB, um fetch() explícito do
+    // arquivo inteiro garante que ele fique no cache HTTP do navegador
+    // (Cache-Control: public, max-age=2592000 na resposta 200) antes do
+    // usuário rolar pela seção inteira — daí em diante toda mudança de
+    // currentTime é decodificada a partir do cache local.
     //
-    // Só dispara isso quando a seção estiver perto de aparecer (não no
-    // carregamento da página) — .film fica bem abaixo da dobra, e forçar
-    // o carregamento do vídeo assim que a Home abre pesaria no payload
-    // de rede de quem nunca rola até lá.
+    // IMPORTANTE: isso precisa disparar sempre, independente de
+    // `seekable` já estar `true` — com preload="auto" o navegador às
+    // vezes já sabe a duração (metadata carregada) bem antes de ter
+    // baixado o arquivo inteiro, e `seekable` vira `true` cedo demais;
+    // gatear esse fetch por `!seekable` (como antes) fazia o
+    // pré-carregamento nunca disparar nesses casos, deixando o vídeo
+    // sem o arquivo completo em cache mesmo assim.
+    let prefetched = false;
     const warmUpVideo = () => {
-      if (seekable) return;
-      filmVideo.load();
+      if (prefetched) return;
+      prefetched = true;
+      if (!seekable) filmVideo.load();
       const source = filmVideo.querySelector('source[type="video/mp4"]');
       if (source) fetch(source.src).catch(() => {});
     };
 
-    if (!seekable && 'IntersectionObserver' in window) {
+    // Só dispara isso quando a seção estiver perto de aparecer (não no
+    // carregamento da página) — .film fica bem abaixo da dobra, e forçar
+    // o carregamento do vídeo assim que a Home abre pesaria no payload
+    // de rede de quem nunca rola até lá.
+    if ('IntersectionObserver' in window) {
       const filmObserver = new IntersectionObserver(
         (entries) => {
           if (entries.some((entry) => entry.isIntersecting)) {
@@ -161,7 +165,7 @@ export function initScrollFx() {
         { rootMargin: '600px 0px' }
       );
       filmObserver.observe(film);
-    } else if (!seekable) {
+    } else {
       warmUpVideo();
     }
 
