@@ -5,16 +5,33 @@ export function initScrollFx() {
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   if (prefersReduced) {
-    // Sem parallax/scrub/autoplay no modo reduzido — o filme vira um
-    // vídeo comum, parado no poster até o usuário decidir tocar.
+    // Sem parallax/scrub/autoplay no modo reduzido — o filme e o vídeo
+    // do Innova Show ficam parados no poster até o usuário decidir tocar.
     const filmVideo = document.querySelector('.film-video');
     if (filmVideo) filmVideo.setAttribute('controls', '');
-    const showcaseVideo = document.querySelector('.showcase-visual-video');
-    if (showcaseVideo) {
-      showcaseVideo.removeAttribute('autoplay');
-      showcaseVideo.pause();
-    }
     return;
+  }
+
+  // Vídeo do Innova Show: sem autoplay no HTML de propósito (ele fica bem
+  // abaixo da dobra — autoplay faria o navegador baixar os ~3,5MB assim
+  // que a Home carrega, mesmo pra quem nunca rola até lá). Só chama
+  // play() quando a seção estiver perto de entrar na tela.
+  const showcaseVideo = document.querySelector('.showcase-visual-video');
+  if (showcaseVideo && 'IntersectionObserver' in window) {
+    const showcaseObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            showcaseVideo.play().catch(() => {});
+            showcaseObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { rootMargin: '400px 0px' }
+    );
+    showcaseObserver.observe(showcaseVideo);
+  } else if (showcaseVideo) {
+    showcaseVideo.play().catch(() => {});
   }
 
   const hero = document.querySelector('.hero');
