@@ -160,6 +160,7 @@ gtag('config', 'G-69W8DMGG3B');
 <meta name="description" content="<?= htmlspecialchars($pageDescription, ENT_QUOTES, 'UTF-8') ?>">
 <meta name="theme-color" content="<?= SITE_THEME_COLOR ?>">
 <meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="google-site-verification" content="pHi-v91cKn-ivnHsdtA3NgLyzyruSTyWVTUwJsW3M9k">
 <link rel="canonical" href="<?= htmlspecialchars($pageCanonical, ENT_QUOTES, 'UTF-8') ?>">
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 
