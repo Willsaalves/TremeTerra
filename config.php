@@ -1,6 +1,46 @@
 <?php
 declare(strict_types=1);
 
+// Carrega um arquivo .env local (se existir) para as variáveis lidas via
+// getenv() (ActiveCampaign em subscribe.php, admin do blog etc.). NÃO
+// sobrescreve variáveis já definidas no ambiente do servidor — então em
+// produção o painel do Render continua sendo a fonte da verdade e o .env
+// é só conveniência pra desenvolvimento local. O .env real nunca é
+// commitado (está no .gitignore); use .env.example como modelo.
+(static function (): void {
+    // dist/.env (quando servido do build) ou .env na raiz do repo (fonte).
+    foreach ([__DIR__ . '/.env', dirname(__DIR__) . '/.env'] as $envPath) {
+        if (!is_file($envPath) || !is_readable($envPath)) {
+            continue;
+        }
+        $lines = file($envPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+        foreach ($lines as $line) {
+            $line = trim($line);
+            if ($line === '' || $line[0] === '#') {
+                continue;
+            }
+            $eq = strpos($line, '=');
+            if ($eq === false) {
+                continue;
+            }
+            $name  = trim(substr($line, 0, $eq));
+            $value = trim(substr($line, $eq + 1));
+            // Remove aspas envolventes, se houver.
+            if (strlen($value) >= 2 && ($value[0] === '"' || $value[0] === "'") && $value[-1] === $value[0]) {
+                $value = substr($value, 1, -1);
+            }
+            // Variável já definida no ambiente real vence — não sobrescreve.
+            if ($name === '' || getenv($name) !== false) {
+                continue;
+            }
+            putenv("$name=$value");
+            $_ENV[$name]    = $value;
+            $_SERVER[$name] = $value;
+        }
+        break; // usa o primeiro .env encontrado
+    }
+})();
+
 const SITE_NAME        = 'Treme Terra Audiovisual';
 const SITE_TITLE       = 'Treme Terra Audiovisual | Som, iluminação e produção para eventos';
 const SITE_DESCRIPTION = 'A Treme Terra Audiovisual entrega sonorização, iluminação, '
