@@ -146,8 +146,14 @@ export function initScrollFx() {
       if (prefetched) return;
       prefetched = true;
       if (!seekable) filmVideo.load();
-      const source = filmVideo.querySelector('source[type="video/mp4"]');
-      if (source) fetch(source.src).catch(() => {});
+      // `currentSrc` é a fonte que o navegador REALMENTE escolheu entre os
+      // <source> (webm vem antes do mp4, então Chrome/Firefox usam o webm
+      // e o Safari o mp4). Buscar um `source[type=...]` fixo baixava o
+      // arquivo errado na metade dos navegadores: gastava banda com um
+      // arquivo que nem ia ser usado e deixava o que está tocando sem o
+      // pré-carregamento que é justamente o objetivo aqui.
+      const src = filmVideo.currentSrc || filmVideo.querySelector('source')?.src;
+      if (src) fetch(src).catch(() => {});
     };
 
     // Só dispara isso quando a seção estiver perto de aparecer (não no
@@ -169,11 +175,33 @@ export function initScrollFx() {
       warmUpVideo();
     }
 
+    // Rede de segurança: o pin+scrub depende de `position: sticky` no
+    // .film-pin. Se algum navegador não fixar o elemento (o caso clássico
+    // é um ancestral virar scroll container por causa de overflow — ver a
+    // nota em base.css), o pin passa rolando como um bloco normal e sobram
+    // ~250vh do contêiner .film vazio, ou seja uma área preta enorme
+    // depois do vídeo. Como isso já aconteceu em produção e é um defeito
+    // silencioso (nada quebra no console, só fica feio), medimos uma vez,
+    // bem no meio da faixa em que o elemento DEVERIA estar grudado: se o
+    // topo do pin não estiver perto de 0, desistimos do pin e caímos no
+    // mesmo layout de bloco 16:9 já usado no mobile.
+    const filmPin = film.querySelector('.film-pin');
+    let pinChecked = false;
+    const verifyPinning = (p) => {
+      if (pinChecked || !filmPin) return;
+      if (p < 0.25 || p > 0.75) return; // só no meio da faixa fixada
+      pinChecked = true;
+      if (filmPin.getBoundingClientRect().top < -50) {
+        film.classList.add('film--no-pin');
+      }
+    };
+
     effects.push({
       el: film,
       start: 'top top',
       end: 'bottom bottom',
       apply: (p) => {
+        verifyPinning(p);
         if (!seekable) return;
         filmVideo.currentTime = p * filmVideo.duration;
       },
