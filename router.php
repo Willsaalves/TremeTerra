@@ -82,6 +82,23 @@ if (isset($staticMimes[$ext]) && is_file($path)) {
     return true;
 }
 
+// --- 1c. Imagens enviadas pelo admin do blog ---
+// Ficam num diretório fora do dist/ (Persistent Disk em produção), então o
+// servidor de arquivos estático embutido não as encontra sozinho. O regex
+// restrito ([a-z0-9] + extensão) impede path traversal. ---
+if (preg_match('#^/uploads/([a-zA-Z0-9]+\.(?:jpe?g|png|webp|gif))$#', $uri, $upMatch)) {
+    require_once __DIR__ . '/lib/uploads.php';
+    $uploadPath = blogUploadDir() . '/' . $upMatch[1];
+    $uploadMime = blogUploadContentType($uploadPath);
+    if ($uploadMime !== null && is_file($uploadPath)) {
+        header('Content-Type: ' . $uploadMime);
+        header('Cache-Control: public, max-age=2592000');
+        header('Content-Length: ' . (string) filesize($uploadPath));
+        readfile($uploadPath);
+        return true;
+    }
+}
+
 // --- 2. Home ("/") -> index.php ---
 if ($uri === '/') {
     $indexPath = $root . '/index.php';

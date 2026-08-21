@@ -4,6 +4,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../lib/db.php';
 require_once __DIR__ . '/../lib/require-admin.php';
+require_once __DIR__ . '/../lib/uploads.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: /admin/index.php');
@@ -23,6 +24,17 @@ $seoDescription = trim((string) ($_POST['seo_description'] ?? ''));
 $directAnswer   = trim((string) ($_POST['direct_answer'] ?? ''));
 $coverImageUrl  = trim((string) ($_POST['cover_image_url'] ?? ''));
 $coverImageAlt  = trim((string) ($_POST['cover_image_alt'] ?? ''));
+
+// Se o admin enviou um arquivo de capa, ele tem prioridade sobre a URL colada.
+try {
+    $uploadedCover = handleBlogImageUpload($_FILES['cover_image_file'] ?? []);
+    if ($uploadedCover !== null) {
+        $coverImageUrl = $uploadedCover;
+    }
+} catch (RuntimeException $e) {
+    http_response_code(422);
+    exit($e->getMessage());
+}
 $bodyHtml       = (string) ($_POST['body_html'] ?? '');
 $status         = ($_POST['status'] ?? 'draft') === 'published' ? 'published' : 'draft';
 
