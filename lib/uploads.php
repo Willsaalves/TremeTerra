@@ -56,6 +56,10 @@ function handleBlogImageUpload(array $file): ?string
         return null;
     }
     if ($file['error'] !== UPLOAD_ERR_OK) {
+        // INI_SIZE/FORM_SIZE = arquivo maior que o limite do PHP/formulário.
+        if (in_array($file['error'], [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE], true)) {
+            throw new RuntimeException('Imagem muito grande. O limite é 5 MB.');
+        }
         throw new RuntimeException('Falha no upload da imagem (código ' . (int) $file['error'] . ').');
     }
     if (($file['size'] ?? 0) > BLOG_UPLOAD_MAX_BYTES) {
