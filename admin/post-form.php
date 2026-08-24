@@ -52,7 +52,7 @@ $pageHeading = $isEdit ? 'Editar post' : 'Novo post';
   <main class="container admin-main">
     <h1><?= htmlspecialchars($pageHeading, ENT_QUOTES, 'UTF-8') ?></h1>
 
-    <form method="post" action="/admin/post-save.php" id="post-form" class="admin-form">
+    <form method="post" action="/admin/post-save.php" id="post-form" class="admin-form" enctype="multipart/form-data">
       <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(csrfToken(), ENT_QUOTES, 'UTF-8') ?>" />
       <?php if ($isEdit): ?>
         <input type="hidden" name="id" value="<?= (int) $post['id'] ?>" />
@@ -89,7 +89,18 @@ $pageHeading = $isEdit ? 'Editar post' : 'Novo post';
         <textarea name="direct_answer" rows="2"><?= htmlspecialchars((string) ($post['direct_answer'] ?? ''), ENT_QUOTES, 'UTF-8') ?></textarea>
       </label>
 
-      <label>URL da imagem de capa
+      <label>Imagem de capa (upload — JPG, PNG, WebP ou GIF, até 5 MB)
+        <input type="file" name="cover_image_file" accept="image/jpeg,image/png,image/webp,image/gif" />
+      </label>
+
+      <?php if (!empty($post['cover_image_url'])): ?>
+        <p class="admin-cover-preview">
+          Capa atual:<br />
+          <img src="<?= htmlspecialchars((string) $post['cover_image_url'], ENT_QUOTES, 'UTF-8') ?>" alt="Pré-visualização da capa" />
+        </p>
+      <?php endif; ?>
+
+      <label>ou cole a URL da imagem de capa
         <input type="url" name="cover_image_url" value="<?= htmlspecialchars((string) ($post['cover_image_url'] ?? ''), ENT_QUOTES, 'UTF-8') ?>" />
       </label>
 
@@ -128,7 +139,54 @@ $pageHeading = $isEdit ? 'Editar post' : 'Novo post';
 
   <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
   <script>
-    const quill = new Quill('#quill-editor', { theme: 'snow' });
+    const csrfToken = <?= json_encode(csrfToken(), JSON_UNESCAPED_SLASHES) ?>;
+
+    // Botão de imagem do editor: em vez de embutir a imagem em base64 (padrão
+    // do Quill, que incha o HTML), faz upload pro servidor e insere a <img>
+    // apontando pra URL /uploads/... devolvida.
+    function uploadEditorImage() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/jpeg,image/png,image/webp,image/gif';
+      input.onchange = async () => {
+        const file = input.files && input.files[0];
+        if (!file) return;
+        const fd = new FormData();
+        fd.append('image', file);
+        fd.append('csrf_token', csrfToken);
+        try {
+          const res = await fetch('/admin/upload.php', { method: 'POST', body: fd });
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok || !data.url) {
+            alert(data.error || 'Falha no upload da imagem.');
+            return;
+          }
+          const range = quill.getSelection(true);
+          quill.insertEmbed(range.index, 'image', data.url, 'user');
+          quill.setSelection(range.index + 1);
+        } catch (e) {
+          alert('Erro de rede no upload da imagem.');
+        }
+      };
+      input.click();
+    }
+
+    const quill = new Quill('#quill-editor', {
+      theme: 'snow',
+      modules: {
+        toolbar: {
+          container: [
+            [{ header: [2, 3, false] }],
+            ['bold', 'italic', 'underline', 'link'],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            ['blockquote'],
+            ['image'],
+            ['clean'],
+          ],
+          handlers: { image: uploadEditorImage },
+        },
+      },
+    });
 
     const titleField = document.getElementById('field-title');
     const slugField = document.getElementById('field-slug');

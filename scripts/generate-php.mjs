@@ -538,6 +538,7 @@ copyFileSync(path.join(root, 'src', 'styles', 'blog.css'), path.join(distDir, 'b
 copyFileSync(path.join(root, 'src', 'blog.js'), path.join(distDir, 'blog.js'));
 copyFileSync(path.join(root, 'lib', 'db.php'), path.join(distDir, 'lib', 'db.php'));
 copyFileSync(path.join(root, 'lib', 'require-admin.php'), path.join(distDir, 'lib', 'require-admin.php'));
+copyFileSync(path.join(root, 'lib', 'uploads.php'), path.join(distDir, 'lib', 'uploads.php'));
 for (const file of readdirSync(path.join(root, 'admin'))) {
   copyFileSync(path.join(root, 'admin', file), path.join(distDir, 'admin', file));
 }
