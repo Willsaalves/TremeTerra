@@ -137,6 +137,18 @@ if ($uri !== '/' && !is_file($path) && pathinfo($path, PATHINFO_EXTENSION) === '
     }
 }
 
+// --- 2c. Sitemap do blog: /blog/page-sitemap.xml -> blog-sitemap.php ---
+// Precisa vir ANTES da regra de /blog/{slug} abaixo, senão o slug capturaria
+// "page-sitemap.xml" e cairia no blog-post.php (404).
+if ($uri === '/blog/page-sitemap.xml') {
+    $blogSitemap = $root . '/blog-sitemap.php';
+    if (is_file($blogSitemap)) {
+        chdir($root);
+        require $blogSitemap;
+        return true;
+    }
+}
+
 // --- 3. /blog/{slug} -> blog-post.php?slug={slug} ---
 // Só entra aqui se não for um arquivo estático de verdade (ex: uma imagem
 // de capa em /blog/algo.jpg) — senão essa regra capturaria as imagens do
