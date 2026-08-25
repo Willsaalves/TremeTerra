@@ -167,33 +167,36 @@ $pageHeading = $isEdit ? 'Editar post' : 'Novo post';
   <script>
     const csrfToken = <?= json_encode(csrfToken(), JSON_UNESCAPED_SLASHES) ?>;
 
-    // Botão de imagem do editor: em vez de embutir a imagem em base64 (padrão
-    // do Quill, que incha o HTML), faz upload pro servidor e insere a <img>
-    // apontando pra URL /uploads/... devolvida.
+    // Faz upload de um arquivo de imagem pro servidor e insere a <img>
+    // apontando pra URL /uploads/... devolvida — em vez de embutir a imagem
+    // em base64 (padrão do Quill), que incha o HTML e estoura o limite de
+    // POST ao salvar.
+    async function uploadImageFile(file) {
+      if (!file) return;
+      const fd = new FormData();
+      fd.append('image', file);
+      fd.append('csrf_token', csrfToken);
+      try {
+        const res = await fetch('/admin/upload.php', { method: 'POST', body: fd });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.url) {
+          alert(data.error || 'Falha no upload da imagem.');
+          return;
+        }
+        const range = quill.getSelection(true) || { index: quill.getLength() };
+        quill.insertEmbed(range.index, 'image', data.url, 'user');
+        quill.setSelection(range.index + 1);
+      } catch (e) {
+        alert('Erro de rede no upload da imagem.');
+      }
+    }
+
+    // Botão de imagem da barra de ferramentas.
     function uploadEditorImage() {
       const input = document.createElement('input');
       input.type = 'file';
       input.accept = 'image/jpeg,image/png,image/webp,image/gif';
-      input.onchange = async () => {
-        const file = input.files && input.files[0];
-        if (!file) return;
-        const fd = new FormData();
-        fd.append('image', file);
-        fd.append('csrf_token', csrfToken);
-        try {
-          const res = await fetch('/admin/upload.php', { method: 'POST', body: fd });
-          const data = await res.json().catch(() => ({}));
-          if (!res.ok || !data.url) {
-            alert(data.error || 'Falha no upload da imagem.');
-            return;
-          }
-          const range = quill.getSelection(true);
-          quill.insertEmbed(range.index, 'image', data.url, 'user');
-          quill.setSelection(range.index + 1);
-        } catch (e) {
-          alert('Erro de rede no upload da imagem.');
-        }
-      };
+      input.onchange = () => uploadImageFile(input.files && input.files[0]);
       input.click();
     }
 
@@ -232,6 +235,27 @@ $pageHeading = $isEdit ? 'Editar post' : 'Novo post';
         },
       },
     });
+
+    // Colar (Ctrl/Cmd+V) ou soltar uma imagem no editor: faz upload em vez
+    // de o Quill embutir em base64. Usa a fase de captura (true) pra rodar
+    // ANTES do handler interno do Quill e impedir o base64.
+    quill.root.addEventListener('paste', (e) => {
+      const items = (e.clipboardData && e.clipboardData.items) || [];
+      const imageItem = [...items].find((it) => it.kind === 'file' && it.type && it.type.indexOf('image/') === 0);
+      if (!imageItem) return; // texto/HTML: deixa o Quill tratar normalmente
+      e.preventDefault();
+      e.stopPropagation();
+      uploadImageFile(imageItem.getAsFile());
+    }, true);
+
+    quill.root.addEventListener('drop', (e) => {
+      const files = (e.dataTransfer && e.dataTransfer.files) || [];
+      const images = [...files].filter((f) => f.type && f.type.indexOf('image/') === 0);
+      if (!images.length) return;
+      e.preventDefault();
+      e.stopPropagation();
+      images.forEach(uploadImageFile);
+    }, true);
 
     const titleField = document.getElementById('field-title');
     const slugField = document.getElementById('field-slug');
