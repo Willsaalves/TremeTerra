@@ -1,0 +1,74 @@
+.dj-roster {
+  padding-block: var(--space-3xl);
+}
+
+.dj-roster-head {
+  margin-bottom: var(--space-xl);
+  max-width: 60ch;
+}
+
+.dj-roster-head h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-section);
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  line-height: 1.02;
+  margin-bottom: var(--space-sm);
+}
+
+/* Marquee horizontal contínuo — os cards deslizam em loop infinito. O
+   .dj-roster-track tem 2 conjuntos idênticos de cards e anima até -50%,
+   então o ponto de reinício coincide exatamente com o começo, sem emenda. */
+.dj-roster-marquee {
+  overflow: hidden;
+  /* Esmaece as bordas laterais pra o loop entrar/sair sem corte seco. */
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+
+.dj-roster-track {
+  display: flex;
+  width: max-content;
+  animation: dj-roster-scroll 48s linear infinite;
+  will-change: transform;
+}
+
+/* Pausa ao passar o mouse ou focar (teclado) num card. */
+.dj-roster-marquee:hover .dj-roster-track,
+.dj-roster-marquee:focus-within .dj-roster-track {
+  animation-play-state: paused;
+}
+
+.dj-roster-card {
+  flex: 0 0 auto;
+  /* A margem (em vez de gap) mantém cada bloco card+espaço uniforme, o que
+     é o que faz o translateX(-50%) fechar o loop sem pulo. */
+  margin-right: var(--space-md);
+  width: clamp(240px, 32vw, 340px);
+  aspect-ratio: 15 / 7;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 12px 32px hsl(var(--color-ink) / 0.12);
+}
+
+@keyframes dj-roster-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* Sem movimento: vira um grid estático centralizado, mostrando só o
+   primeiro conjunto (as cópias aria-hidden ficam ocultas). */
+@media (prefers-reduced-motion: reduce) {
+  .dj-roster-track {
+    animation: none;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-md);
+  }
+  .dj-roster-card {
+    margin-right: 0;
+  }
+  .dj-roster-card[aria-hidden="true"] {
+    display: none;
+  }
+}

@@ -6,15 +6,23 @@ declare(strict_types=1);
  * $pageTitle, $pageDescription, $pageCanonical, $pageBreadcrumbName,
  * $pageServiceSchema (array de Schema.org Service, ou null),
  * $pageVideoSchema (array de Schema.org VideoObject, ou null),
+ * $pageProductSchema (array de Schema.org Product, ou null),
+ * $pagePostSchema (array de Schema.org BlogPosting, ou null),
+ * $pageBreadcrumbTrail (array de ['name' => ..., 'url' => ...], pra
+ * breadcrumbs com 2+ níveis — ex: Home > Blog > Post. Tem prioridade sobre
+ * $pageBreadcrumbName quando definido),
  * $pageFaqItems (array de ['question' => ..., 'answer' => ...], ou null —
  * vira Schema.org FAQPage automaticamente).
  */
 $pageTitle          = $pageTitle ?? SITE_TITLE;
 $pageDescription    = $pageDescription ?? SITE_DESCRIPTION;
 $pageCanonical      = $pageCanonical ?? (SITE_URL . '/');
-$pageBreadcrumbName = $pageBreadcrumbName ?? null;
+$pageBreadcrumbName  = $pageBreadcrumbName ?? null;
+$pageBreadcrumbTrail = $pageBreadcrumbTrail ?? null;
 $pageServiceSchema  = $pageServiceSchema ?? null;
 $pageVideoSchema    = $pageVideoSchema ?? null;
+$pageProductSchema  = $pageProductSchema ?? null;
+$pagePostSchema     = $pagePostSchema ?? null;
 $pageFaqItems       = $pageFaqItems ?? null;
 
 $faqSchema = null;
@@ -75,7 +83,16 @@ $localBusinessSchema = [
 $breadcrumbItems = [
     ['@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => SITE_URL . '/'],
 ];
-if ($pageBreadcrumbName !== null) {
+if ($pageBreadcrumbTrail !== null) {
+    foreach ($pageBreadcrumbTrail as $i => $crumb) {
+        $breadcrumbItems[] = [
+            '@type'    => 'ListItem',
+            'position' => $i + 2,
+            'name'     => $crumb['name'],
+            'item'     => $crumb['url'],
+        ];
+    }
+} elseif ($pageBreadcrumbName !== null) {
     $breadcrumbItems[] = [
         '@type'    => 'ListItem',
         'position' => 2,
@@ -90,12 +107,62 @@ $breadcrumbSchema = [
 ];
 ?>
 <meta charset="UTF-8">
+<!-- Google Tag Manager + GA4 — o dataLayer/gtag() ficam prontos na hora
+     (qualquer evento chamado antes do script físico carregar só fica na
+     fila), mas o carregamento de verdade dos scripts do GTM/GA (que
+     brigam por banda/conexão com o CSS bem na hora crítica da primeira
+     pintura) é adiado pro fim do load da página, ou pra primeira
+     interação do usuário — o que vier primeiro. -->
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-69W8DMGG3B');
+
+(function () {
+  var loaded = false;
+  function loadAnalytics() {
+    if (loaded) return;
+    loaded = true;
+    (function (w, d, s, l, i) {
+      w[l] = w[l] || [];
+      w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+      var f = d.getElementsByTagName(s)[0], j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+      j.async = true;
+      j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+      f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-WQJVN5JZ');
+
+    var gtagScript = document.createElement('script');
+    gtagScript.async = true;
+    gtagScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-69W8DMGG3B';
+    document.head.appendChild(gtagScript);
+
+    (function (c, l, a, r, i, t, y) {
+      c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); };
+      t = l.createElement(r); t.async = 1; t.src = 'https://www.clarity.ms/tag/' + i;
+      y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+    })(window, document, 'clarity', 'script', 'y3vf44nmhf');
+  }
+
+  if (document.readyState === 'complete') {
+    loadAnalytics();
+  } else {
+    window.addEventListener('load', loadAnalytics);
+  }
+  ['scroll', 'keydown', 'mousemove', 'touchstart'].forEach(function (evt) {
+    window.addEventListener(evt, loadAnalytics, { once: true, passive: true });
+  });
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title><?= htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8') ?></title>
 <meta name="description" content="<?= htmlspecialchars($pageDescription, ENT_QUOTES, 'UTF-8') ?>">
 <meta name="theme-color" content="<?= SITE_THEME_COLOR ?>">
 <meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="google-site-verification" content="pHi-v91cKn-ivnHsdtA3NgLyzyruSTyWVTUwJsW3M9k">
 <link rel="canonical" href="<?= htmlspecialchars($pageCanonical, ENT_QUOTES, 'UTF-8') ?>">
+<link rel="sitemap" type="application/xml" href="/sitemap.xml">
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
@@ -127,6 +194,12 @@ $breadcrumbSchema = [
 <?php endif; ?>
 <?php if ($pageVideoSchema !== null): ?>
 <script type="application/ld+json"><?= json_encode($pageVideoSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?></script>
+<?php endif; ?>
+<?php if ($pageProductSchema !== null): ?>
+<script type="application/ld+json"><?= json_encode($pageProductSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?></script>
+<?php endif; ?>
+<?php if ($pagePostSchema !== null): ?>
+<script type="application/ld+json"><?= json_encode($pagePostSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?></script>
 <?php endif; ?>
 <?php if ($faqSchema !== null): ?>
 <script type="application/ld+json"><?= json_encode($faqSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?></script>

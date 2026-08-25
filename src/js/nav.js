@@ -24,6 +24,40 @@ export function initHeader() {
       toggle.setAttribute('aria-expanded', 'false');
     }
   });
+
+  initNavDropdowns();
+}
+
+function initNavDropdowns() {
+  const items = document.querySelectorAll('.nav-item.has-dropdown');
+
+  const closeItem = (item) => {
+    item.classList.remove('is-open');
+    item.querySelector('.nav-dropdown-toggle')?.setAttribute('aria-expanded', 'false');
+  };
+
+  items.forEach((item) => {
+    const btn = item.querySelector('.nav-dropdown-toggle');
+    if (!btn) return;
+
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const isOpen = item.classList.toggle('is-open');
+      btn.setAttribute('aria-expanded', String(isOpen));
+      items.forEach((other) => { if (other !== item) closeItem(other); });
+    });
+  });
+
+  document.addEventListener('click', (e) => {
+    items.forEach((item) => {
+      if (item.classList.contains('is-open') && !item.contains(e.target)) closeItem(item);
+    });
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') items.forEach(closeItem);
+  });
 }
 
 export function initFooterYear() {

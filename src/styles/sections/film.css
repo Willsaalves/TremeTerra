@@ -1,6 +1,11 @@
 .film {
   position: relative;
   height: 350vh;
+  /* Rede de segurança: se o position:sticky do .film-pin desgrudar antes
+     da hora (bug comum em iOS Safari com 100svh + a barra de endereço
+     recolhendo/expandindo durante o scroll), a área "sobrando" desse
+     contêiner mostra este fundo em vez de aparecer em branco. */
+  background: hsl(var(--color-black));
 }
 
 .film-pin {
@@ -51,8 +56,46 @@
   max-width: 32ch;
 }
 
+/* Fallback aplicado por scroll-fx.js quando ele detecta, em runtime, que o
+   `position: sticky` do .film-pin não está grudando de verdade naquele
+   navegador. Sem isso o pin passa rolando e sobram ~250vh de contêiner
+   preto vazio depois do vídeo. Cai no mesmo layout de bloco 16:9 já usado
+   e aprovado no mobile (regras equivalentes no @media abaixo). */
+.film--no-pin {
+  height: auto;
+  background: none;
+}
+
+.film--no-pin .film-pin {
+  position: relative;
+  top: auto;
+  height: auto;
+  aspect-ratio: 16 / 9;
+}
+
 @media (max-width: 640px) {
+  /* No celular a seção não fica mais fixada em tela cheia (100svh) — numa
+     tela bem mais alta que larga, tentar encaixar um vídeo 16:9 nessa
+     caixa sempre sobra: object-fit:cover cortava demais as laterais, e
+     object-fit:contain deixava barras pretas enormes em cima/embaixo (o
+     vídeo virava uma fatia pequena no meio de uma área escura enorme).
+     Em vez disso, a seção vira um bloco normal do tamanho exato do
+     vídeo (aspect-ratio 16/9) — sem cortar, sem sobrar espaço, e o vídeo
+     toca sozinho em loop (ver scroll-fx.js) em vez de ficar amarrado ao
+     scroll, que só faz sentido na versão fixada em tela cheia. */
   .film {
-    height: 250vh;
+    height: auto;
+    background: none;
+  }
+
+  .film-pin {
+    position: relative;
+    top: auto;
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
+
+  .film-video {
+    object-fit: cover;
   }
 }

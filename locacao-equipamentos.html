@@ -67,7 +67,21 @@
         <ul>
           <li><a href="/#solucoes">Soluções</a></li>
           <li><a href="/#innova-show">Innova Show</a></li>
-          <li><a href="/locacao-equipamentos.html" aria-current="page">Locação</a></li>
+          <li class="nav-item has-dropdown">
+            <div class="nav-dropdown-group">
+              <a href="/locacao-equipamentos.html" aria-current="page">Locação</a>
+              <button type="button" class="nav-dropdown-toggle" aria-label="Ver tipos de locação" aria-expanded="false">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+            </div>
+            <ul class="nav-dropdown">
+              <li><a href="/locacao-equipamentos.html">Locação de equipamentos</a></li>
+              <li><a href="/aluguel-som-profissional.html">Aluguel de som profissional</a></li>
+              <li><a href="/iluminacao-para-festas.html">Iluminação para festas</a></li>
+              <li><a href="/painel-de-led.html">Painel de LED</a></li>
+              <li><a href="/locacao-painel-led.html">Locação de painel de LED</a></li>
+            </ul>
+          </li>
           <li><a href="/produtora-de-eventos-corporativos.html">Corporativo</a></li>
           <li><a href="/dj-para-eventos.html">DJ</a></li>
           <li><a href="/#portfolio">Portfólio</a></li>
@@ -98,16 +112,16 @@
           <h1 class="hero-title" data-split-reveal>
             Equipamento pronto pro seu <em>evento</em> vibrar
           </h1>
-          <p class="hero-subtitle" data-reveal>
+          <p class="hero-subtitle">
             Iluminação, painel de LED, som e estrutura de palco pra locação,
             com entrega e suporte técnico da nossa equipe no dia do evento.
           </p>
-          <div class="hero-actions" data-reveal>
+          <div class="hero-actions">
             <a href="#equipamentos" class="btn btn-primary">Ver equipamentos</a>
             <a href="#contato" class="btn btn-ghost" data-open-contact>Falar com um consultor</a>
           </div>
-          <p class="hero-group-label" data-reveal>Uma empresa do Grupo All Party</p>
-          <div class="hero-trust" data-reveal>
+          <p class="hero-group-label">Uma empresa do Grupo All Party</p>
+          <div class="hero-trust">
             <div class="hero-stat">
               <strong data-count-to="15" data-count-suffix="+">0</strong>
               <span>Anos de mercado</span>
@@ -134,27 +148,27 @@
           <p data-reveal>Equipamento profissional, revisado e testado antes de cada evento — com entrega, montagem e suporte técnico no local.</p>
         </div>
         <div class="solutions-grid tile-grid">
-          <article class="tile" data-reveal data-tilt data-tilt-strength="6">
+          <a class="tile" href="/iluminacao-para-festas.html" data-reveal data-tilt data-tilt-strength="6">
             <div class="tile-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.73c.53.5.75 1.24.75 1.77h6.5c0-.53.22-1.27.75-1.77A7 7 0 0 0 12 2z"/></svg>
             </div>
             <h3>Iluminação</h3>
             <p>Moving heads, canhões de LED e efeitos para criar a atmosfera certa em qualquer ambiente.</p>
-          </article>
-          <article class="tile" data-reveal data-tilt data-tilt-strength="6">
+          </a>
+          <a class="tile" href="/painel-de-led.html" data-reveal data-tilt data-tilt-strength="6">
             <div class="tile-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M8 20h8M12 16v4"/></svg>
             </div>
             <h3>Painel de LED</h3>
             <p>Painéis modulares de alta resolução para palco, backdrop e sinalização digital.</p>
-          </article>
-          <article class="tile" data-reveal data-tilt data-tilt-strength="6">
+          </a>
+          <a class="tile" href="/aluguel-som-profissional.html" data-reveal data-tilt data-tilt-strength="6">
             <div class="tile-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10v4h4l5 5V5L7 10H3z"/><path d="M16 8a5 5 0 0 1 0 8M19 5a9 9 0 0 1 0 14"/></svg>
             </div>
             <h3>Som</h3>
             <p>Caixas, mesa de som e microfones dimensionados para cada tamanho de público.</p>
-          </article>
+          </a>
           <article class="tile" data-reveal data-tilt data-tilt-strength="6">
             <div class="tile-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="1.5"/><path d="m3 3 18 18M21 3 3 21"/></svg>
@@ -199,6 +213,20 @@
           <p data-reveal>Fotos de montagens que já fizemos — o mesmo padrão de equipamento que vai pro seu evento.</p>
         </div>
         <div class="equipment-demo-grid">
+          <article class="portfolio-card" data-reveal data-tilt data-tilt-strength="6">
+            <img class="portfolio-card-photo" src="/portfolio/mesa-mixagem-ao-vivo.jpg" alt="Mesa de mixagem digital em operação durante show, com pista lotada ao fundo" loading="lazy" />
+            <div class="portfolio-card-label">
+              <p class="eyebrow">Sonorização</p>
+              <strong>Mesa digital e monitoramento de som ao vivo</strong>
+            </div>
+          </article>
+          <article class="portfolio-card" data-reveal data-tilt data-tilt-strength="6">
+            <img class="portfolio-card-photo" src="/portfolio/line-array-som.jpg" alt="Sistema de line array suspenso na treliça, sonorização profissional para grandes eventos" loading="lazy" />
+            <div class="portfolio-card-label">
+              <p class="eyebrow">Sonorização</p>
+              <strong>Line array suspenso para grandes eventos</strong>
+            </div>
+          </article>
           <article class="portfolio-card" data-reveal data-tilt data-tilt-strength="6">
             <img class="portfolio-card-photo" src="/portfolio/palco-skylight.jpg" alt="Palco com sonorização e telão de LED montados para evento corporativo" loading="lazy" />
             <div class="portfolio-card-label">
@@ -264,20 +292,38 @@
           <a href="/" class="logo"><img src="/logo-tremeterra.png" alt="Treme Terra Audiovisual" width="315" height="44" /></a>
           <p>Som, iluminação, projeção e estrutura de palco para eventos. Uma empresa do Grupo All Party.</p>
           <div class="footer-social">
-            <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram da Treme Terra">
+            <a href="https://www.instagram.com/agenciatremeterra?igsh=a3Rmd2IyeTZrZWVn" target="_blank" rel="noopener noreferrer" aria-label="Instagram da Treme Terra">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
             </a>
-            <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook da Treme Terra">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 3h-2a4 4 0 0 0-4 4v3H6v4h3v7h4v-7h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            <a href="https://br.linkedin.com/company/treme-terra-audiovisual" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn da Treme Terra">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="8" y1="11" x2="8" y2="16"/><line x1="8" y1="8" x2="8" y2="8"/><path d="M12 16v-3a2 2 0 0 1 4 0v3"/><line x1="16" y1="11" x2="16" y2="16"/></svg>
             </a>
           </div>
         </div>
         <div class="footer-col">
           <h4>Contato</h4>
           <ul>
-            <li><a href="tel:+5511984781889">(11) 98478-1889</a></li>
+            <li><a href="https://wa.me/5511984781889?text=Ol%C3%A1%2C%20vim%20pelo%20site%20e%20estou%20com%20interesse%20para%20saber%20mais" target="_blank" rel="noopener noreferrer">(11) 98478-1889</a></li>
             <li><a href="mailto:comercial@tremeterraaudiovisual.com.br">comercial@tremeterraaudiovisual.com.br</a></li>
             <li>Segunda a sexta, 9h às 18h</li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Locação de equipamentos</h4>
+          <ul>
+            <li><a href="/aluguel-som-profissional.html">Aluguel de som profissional</a></li>
+            <li><a href="/iluminacao-para-festas.html">Iluminação para festas</a></li>
+            <li><a href="/painel-de-led.html">Painel de LED</a></li>
+            <li><a href="/locacao-painel-led.html">Locação de painel de LED</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Casamentos e formaturas</h4>
+          <ul>
+            <li><a href="/dj-para-casamentos.html">DJ para casamentos</a></li>
+            <li><a href="/dj-para-formatura.html">DJ para formatura</a></li>
+            <li><a href="/casamentos.html">Casamentos</a></li>
+            <li><a href="/formaturas.html">Formaturas</a></li>
           </ul>
         </div>
         <div class="footer-col">
@@ -289,6 +335,10 @@
             <li><a href="/produtora-de-eventos-corporativos.html">Eventos corporativos</a></li>
             <li><a href="/dj-para-eventos.html">DJ para eventos</a></li>
             <li><a href="/#portfolio">Portfólio</a></li>
+            <li><a href="/empresa-audiovisual.html">Empresa de audiovisual</a></li>
+            <li><a href="/shows.html">Shows</a></li>
+            <li><a href="/streaming-para-eventos-corporativos.html">Streaming corporativo</a></li>
+            <li><a href="/blog/">Blog</a></li>
           </ul>
         </div>
       </div>

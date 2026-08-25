@@ -1,18 +1,10 @@
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { initSmoothScroll } from './js/lenis-setup.js';
 import { initReveal } from './js/reveal.js';
 import { initTilt } from './js/tilt.js';
 import { initCounters } from './js/counter.js';
 import { initHeader, initFooterYear } from './js/nav.js';
 import { initContactWidget } from './js/contact-widget.js';
-import { initPortfolioScroll } from './js/portfolio-scroll.js';
-import { initHeroParticles } from './js/hero-particles.js';
-import { initScrollFx } from './js/scroll-fx.js';
 import { initButtonGlow } from './js/button-glow.js';
-
-gsap.registerPlugin(ScrollTrigger);
-window.ScrollTrigger = ScrollTrigger;
 
 document.addEventListener('DOMContentLoaded', () => {
   initSmoothScroll();
@@ -22,8 +14,25 @@ document.addEventListener('DOMContentLoaded', () => {
   initTilt();
   initCounters();
   initContactWidget();
-  initPortfolioScroll();
-  initHeroParticles();
-  initScrollFx();
   initButtonGlow();
+
+  // Code-splitting: esses módulos só existem/fazem algo em páginas com os
+  // elementos correspondentes (Home, principalmente) — import() dinâmico
+  // vira chunk próprio no build, então páginas sem esses elementos não
+  // baixam mais esse código (antes era tudo no bundle único main-*.js,
+  // compartilhado por todas as 15 páginas).
+  // Portfólio: galeria horizontal com scroll nativo + botões prev/next.
+  // (O antigo carrossel 3D em three.js foi removido — pesava no LCP/INP e
+  // deixava uma faixa preta quando o WebGL não desenhava a tempo.)
+  if (document.getElementById('portfolio-track')) {
+    import('./js/portfolio-scroll.js').then((m) => m.initPortfolioScroll());
+  }
+  // Roster de DJs: marquee horizontal contínuo é 100% CSS (ver
+  // sections/dj-roster.css), sem JS.
+  if (document.getElementById('hero-particles')) {
+    import('./js/hero-particles.js').then((m) => m.initHeroParticles());
+  }
+  if (document.querySelector('.film-video, .showcase-visual-video, .hero-glow')) {
+    import('./js/scroll-fx.js').then((m) => m.initScrollFx());
+  }
 });

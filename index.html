@@ -73,7 +73,21 @@
         <ul>
           <li><a href="#solucoes">Soluções</a></li>
           <li><a href="#innova-show">Innova Show</a></li>
-          <li><a href="/locacao-equipamentos.html">Locação</a></li>
+          <li class="nav-item has-dropdown">
+            <div class="nav-dropdown-group">
+              <a href="/locacao-equipamentos.html">Locação</a>
+              <button type="button" class="nav-dropdown-toggle" aria-label="Ver tipos de locação" aria-expanded="false">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+            </div>
+            <ul class="nav-dropdown">
+              <li><a href="/locacao-equipamentos.html">Locação de equipamentos</a></li>
+              <li><a href="/aluguel-som-profissional.html">Aluguel de som profissional</a></li>
+              <li><a href="/iluminacao-para-festas.html">Iluminação para festas</a></li>
+              <li><a href="/painel-de-led.html">Painel de LED</a></li>
+              <li><a href="/locacao-painel-led.html">Locação de painel de LED</a></li>
+            </ul>
+          </li>
           <li><a href="/produtora-de-eventos-corporativos.html">Corporativo</a></li>
           <li><a href="/dj-para-eventos.html">DJ</a></li>
           <li><a href="#portfolio">Portfólio</a></li>
@@ -91,23 +105,28 @@
     <!-- HERO -->
     <section class="hero band-dark" id="topo" aria-label="Abertura">
       <div class="hero-glow" aria-hidden="true"><span class="g1"></span><span class="g2"></span></div>
+      <div class="hero-lightbeams" aria-hidden="true">
+        <span class="beam beam-1"></span>
+        <span class="beam beam-2"></span>
+        <span class="beam beam-3"></span>
+      </div>
       <canvas class="hero-particles" id="hero-particles" aria-hidden="true"></canvas>
       <div class="container">
         <div class="hero-content">
           <p class="eyebrow hero-eyebrow">Treme Terra Audiovisual</p>
           <h1 class="hero-title" data-split-reveal>
-            Produção audiovisual para eventos que <em>precisam funcionar</em>
+            Produção audiovisual para eventos é com a <em>Treme Terra</em>
           </h1>
-          <p class="hero-subtitle" data-reveal>
+          <p class="hero-subtitle">
             Som, iluminação, painéis de LED e produção completa para eventos
             corporativos, casamentos, formaturas e shows em São Paulo.
           </p>
-          <div class="hero-actions" data-reveal>
+          <div class="hero-actions">
             <a href="#contato" class="btn btn-primary" data-open-contact>Solicitar orçamento</a>
             <a href="#solucoes" class="btn btn-ghost">Ver soluções</a>
           </div>
-          <p class="hero-group-label" data-reveal>Uma empresa do Grupo All Party</p>
-          <div class="hero-trust" data-reveal>
+          <p class="hero-group-label">Uma empresa do Grupo All Party</p>
+          <div class="hero-trust">
             <div class="hero-stat">
               <strong data-count-to="800" data-count-suffix="+">0</strong>
               <span>Eventos realizados</span>
@@ -193,21 +212,21 @@
           <p data-reveal>Som, imagem, consultoria completa e estrutura — coordenados por um time experiente em campo.</p>
         </div>
         <div class="solutions-grid tile-grid">
-          <a class="tile" href="/locacao-equipamentos.html" data-reveal data-tilt data-tilt-strength="6">
+          <a class="tile" href="/aluguel-som-profissional.html" data-reveal data-tilt data-tilt-strength="6">
             <div class="tile-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10v4h4l5 5V5L7 10H3z"/><path d="M16 8a5 5 0 0 1 0 8M19 5a9 9 0 0 1 0 14"/></svg>
             </div>
             <h3>Som Profissional</h3>
             <p>Sistemas dimensionados para cada tamanho de público e ambiente.</p>
           </a>
-          <a class="tile" href="/locacao-equipamentos.html" data-reveal data-tilt data-tilt-strength="6">
+          <a class="tile" href="/iluminacao-para-festas.html" data-reveal data-tilt data-tilt-strength="6">
             <div class="tile-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/></svg>
             </div>
             <h3>Iluminação Cênica</h3>
             <p>Moving heads, ribaltas e programação DMX para criar a atmosfera certa.</p>
           </a>
-          <a class="tile" href="/locacao-equipamentos.html" data-reveal data-tilt data-tilt-strength="6">
+          <a class="tile" href="/painel-de-led.html" data-reveal data-tilt data-tilt-strength="6">
             <div class="tile-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M8 20h8M12 16v4"/></svg>
             </div>
@@ -278,11 +297,10 @@
           </ul>
           <a href="#contato" class="btn btn-primary" data-open-contact>Quero o Innova Show no meu evento</a>
         </div>
-        <div class="showcase-visual" data-reveal>
+        <div class="showcase-visual showcase-visual--video" data-reveal>
           <video
             class="showcase-visual-video"
-            poster="/portfolio/innova-show-percussao.jpg"
-            autoplay
+            poster="/videos/innova-show-poster.webp"
             muted
             loop
             playsinline
@@ -318,80 +336,233 @@
         </div>
         <div class="portfolio-track" id="portfolio-track" tabindex="0" aria-label="Galeria de cases, arraste para navegar">
           <article class="portfolio-card">
-            <img class="portfolio-card-photo" src="/portfolio/confraternizacao.jpg" alt="Confraternização corporativa com show ao vivo, decoração temática e telão de resultados" loading="lazy" />
+            <picture>
+              <source srcset="/portfolio/confraternizacao.webp" type="image/webp" />
+              <img class="portfolio-card-photo" src="/portfolio/confraternizacao.jpg" alt="Confraternização corporativa com show ao vivo, decoração temática e telão de resultados" loading="lazy" />
+            </picture>
             <div class="portfolio-card-label">
               <p class="eyebrow">Confraternização</p>
               <strong>Festa corporativa com show ao vivo</strong>
             </div>
           </article>
           <article class="portfolio-card">
-            <img class="portfolio-card-photo" src="/portfolio/innova-show-percussao.jpg" alt="Percussionista se apresentando no Innova Show, com iluminação colorida e efeitos de fogos frios" loading="lazy" />
+            <picture>
+              <source srcset="/portfolio/innova-show-percussao.webp" type="image/webp" />
+              <img class="portfolio-card-photo" src="/portfolio/innova-show-percussao.jpg" alt="Percussionista se apresentando no Innova Show, com iluminação colorida e efeitos de fogos frios" loading="lazy" />
+            </picture>
             <div class="portfolio-card-label">
               <p class="eyebrow">Innova Show</p>
               <strong>Percussão e luz ao vivo</strong>
             </div>
           </article>
           <article class="portfolio-card">
-            <img class="portfolio-card-photo" src="/portfolio/palestra-mercado.jpg" alt="Palestrante apresentando painel de mercado em evento corporativo com telão de LED" loading="lazy" />
+            <picture>
+              <source srcset="/portfolio/palestra-mercado.webp" type="image/webp" />
+              <img class="portfolio-card-photo" src="/portfolio/palestra-mercado.jpg" alt="Palestrante apresentando painel de mercado em evento corporativo com telão de LED" loading="lazy" />
+            </picture>
             <div class="portfolio-card-label">
               <p class="eyebrow">Corporativo</p>
               <strong>Palestra e painel de mercado</strong>
             </div>
           </article>
           <article class="portfolio-card">
-            <img class="portfolio-card-photo" src="/portfolio/congresso-tecnico.jpg" alt="Palestrante em congresso técnico com telão de LED e estandes de patrocinadores" loading="lazy" />
+            <picture>
+              <source srcset="/portfolio/congresso-tecnico.webp" type="image/webp" />
+              <img class="portfolio-card-photo" src="/portfolio/congresso-tecnico.jpg" alt="Palestrante em congresso técnico com telão de LED e estandes de patrocinadores" loading="lazy" />
+            </picture>
             <div class="portfolio-card-label">
               <p class="eyebrow">Congresso</p>
               <strong>Evento técnico com múltiplos patrocinadores</strong>
             </div>
           </article>
           <article class="portfolio-card">
-            <img class="portfolio-card-photo" src="/portfolio/show-acustico.jpg" alt="Show acústico ao vivo com projeção do artista no telão" loading="lazy" />
+            <picture>
+              <source srcset="/portfolio/show-acustico.webp" type="image/webp" />
+              <img class="portfolio-card-photo" src="/portfolio/show-acustico.jpg" alt="Show acústico ao vivo com projeção do artista no telão" loading="lazy" />
+            </picture>
             <div class="portfolio-card-label">
               <p class="eyebrow">Show ao vivo</p>
               <strong>Música ao vivo com projeção</strong>
             </div>
           </article>
           <article class="portfolio-card">
-            <img class="portfolio-card-photo" src="/portfolio/palestra-keynote.jpg" alt="Palestrante caminhando pelo palco durante keynote corporativo, com plateia e telão de LED" loading="lazy" />
+            <picture>
+              <source srcset="/portfolio/palestra-keynote.webp" type="image/webp" />
+              <img class="portfolio-card-photo" src="/portfolio/palestra-keynote.jpg" alt="Palestrante caminhando pelo palco durante keynote corporativo, com plateia e telão de LED" loading="lazy" />
+            </picture>
             <div class="portfolio-card-label">
               <p class="eyebrow">Corporativo</p>
               <strong>Keynote com grande público</strong>
             </div>
           </article>
           <article class="portfolio-card">
-            <img class="portfolio-card-photo" src="/portfolio/gala-corporativa.jpg" alt="Salão de gala corporativa com bola de espelhos, feixes de luz e telão de boas-vindas" loading="lazy" />
+            <picture>
+              <source srcset="/portfolio/gala-corporativa.webp" type="image/webp" />
+              <img class="portfolio-card-photo" src="/portfolio/gala-corporativa.jpg" alt="Salão de gala corporativa com bola de espelhos, feixes de luz e telão de boas-vindas" loading="lazy" />
+            </picture>
             <div class="portfolio-card-label">
               <p class="eyebrow">Gala corporativa</p>
               <strong>Ambientação e iluminação de recepção</strong>
             </div>
           </article>
           <article class="portfolio-card">
-            <img class="portfolio-card-photo" src="/portfolio/formatura-show.jpg" alt="Convidados em trajes de gala dançando em frente à banda, com telão de LED animado ao fundo" loading="lazy" />
+            <picture>
+              <source srcset="/portfolio/formatura-show.webp" type="image/webp" />
+              <img class="portfolio-card-photo" src="/portfolio/formatura-show.jpg" alt="Convidados em trajes de gala dançando em frente à banda, com telão de LED animado ao fundo" loading="lazy" />
+            </picture>
             <div class="portfolio-card-label">
               <p class="eyebrow">Formatura</p>
               <strong>Banda ao vivo e pista lotada</strong>
             </div>
           </article>
           <article class="portfolio-card">
-            <img class="portfolio-card-photo" src="/portfolio/palco-dna-sustentavel.jpg" alt="Palco montado com telão de LED para evento corporativo, plateia com cadeiras personalizadas" loading="lazy" />
+            <picture>
+              <source srcset="/portfolio/palco-dna-sustentavel.webp" type="image/webp" />
+              <img class="portfolio-card-photo" src="/portfolio/palco-dna-sustentavel.jpg" alt="Palco montado com telão de LED para evento corporativo, plateia com cadeiras personalizadas" loading="lazy" />
+            </picture>
             <div class="portfolio-card-label">
               <p class="eyebrow">Corporativo</p>
               <strong>Estrutura de palco e telão de LED</strong>
             </div>
           </article>
           <article class="portfolio-card">
-            <img class="portfolio-card-photo" src="/portfolio/palco-skylight.jpg" alt="Palco com sonorização e telão de LED montados para lançamento de produto com patrocinadores" loading="lazy" />
+            <picture>
+              <source srcset="/portfolio/palco-skylight.webp" type="image/webp" />
+              <img class="portfolio-card-photo" src="/portfolio/palco-skylight.jpg" alt="Palco com sonorização e telão de LED montados para lançamento de produto com patrocinadores" loading="lazy" />
+            </picture>
             <div class="portfolio-card-label">
               <p class="eyebrow">Lançamento</p>
               <strong>Sonorização e telão para lançamento de produto</strong>
             </div>
           </article>
           <article class="portfolio-card">
-            <img class="portfolio-card-photo" src="/portfolio/totem-digital.jpg" alt="Totens digitais interativos exibindo conteúdo institucional em evento corporativo" loading="lazy" />
+            <picture>
+              <source srcset="/portfolio/totem-digital.webp" type="image/webp" />
+              <img class="portfolio-card-photo" src="/portfolio/totem-digital.jpg" alt="Totens digitais interativos exibindo conteúdo institucional em evento corporativo" loading="lazy" />
+            </picture>
             <div class="portfolio-card-label">
               <p class="eyebrow">Sinalização digital</p>
               <strong>Totens interativos para ativação de marca</strong>
+            </div>
+          </article>
+          <article class="portfolio-card">
+            <picture>
+              <source srcset="/portfolio/mesa-mixagem-ao-vivo.webp" type="image/webp" />
+              <img class="portfolio-card-photo" src="/portfolio/mesa-mixagem-ao-vivo.jpg" alt="Mesa de mixagem digital em operação durante show, com pista lotada ao fundo" loading="lazy" />
+            </picture>
+            <div class="portfolio-card-label">
+              <p class="eyebrow">Sonorização</p>
+              <strong>Mesa digital acompanhando a energia da pista</strong>
+            </div>
+          </article>
+          <article class="portfolio-card">
+            <picture>
+              <source srcset="/portfolio/tecnico-audio-mixagem.webp" type="image/webp" />
+              <img class="portfolio-card-photo" src="/portfolio/tecnico-audio-mixagem.jpg" alt="Técnico de áudio ajustando os faders da mesa de som durante o evento" loading="lazy" />
+            </picture>
+            <div class="portfolio-card-label">
+              <p class="eyebrow">Equipe técnica</p>
+              <strong>Técnico de áudio ajustando a mixagem ao vivo</strong>
+            </div>
+          </article>
+          <article class="portfolio-card">
+            <picture>
+              <source srcset="/portfolio/formatura-uninove.webp" type="image/webp" />
+              <img class="portfolio-card-photo" src="/portfolio/formatura-uninove.jpg" alt="Solenidade de colação de grau com identidade visual UNINOVE, telão de transmissão e formandos no palco" loading="lazy" />
+            </picture>
+            <div class="portfolio-card-label">
+              <p class="eyebrow">Formatura</p>
+              <strong>Colação de grau com transmissão e identidade visual</strong>
+            </div>
+          </article>
+          <article class="portfolio-card">
+            <picture>
+              <source srcset="/portfolio/vj-innova-show.webp" type="image/webp" />
+              <img class="portfolio-card-photo" src="/portfolio/vj-innova-show.jpg" alt="Operador de VJ sincronizando efeitos visuais do Innova Show ao vivo, com treliça de iluminação e multidão ao fundo" loading="lazy" />
+            </picture>
+            <div class="portfolio-card-label">
+              <p class="eyebrow">Innova Show</p>
+              <strong>VJ sincronizando efeitos visuais ao vivo</strong>
+            </div>
+          </article>
+          <article class="portfolio-card">
+            <picture>
+              <source srcset="/portfolio/mesa-luzes-teto.webp" type="image/webp" />
+              <img class="portfolio-card-photo" src="/portfolio/mesa-luzes-teto.jpg" alt="Mesa de som operada ao vivo com feixes de luz cruzando o teto do salão" loading="lazy" />
+            </picture>
+            <div class="portfolio-card-label">
+              <p class="eyebrow">Iluminação e efeitos</p>
+              <strong>Feixes de luz sincronizados com o show</strong>
+            </div>
+          </article>
+          <article class="portfolio-card">
+            <picture>
+              <source srcset="/portfolio/innova-show-telao-noite.webp" type="image/webp" />
+              <img class="portfolio-card-photo" src="/portfolio/innova-show-telao-noite.jpg" alt="Telão de LED com identidade Innova Show à noite, operado a partir do rack de produção" loading="lazy" />
+            </picture>
+            <div class="portfolio-card-label">
+              <p class="eyebrow">Innova Show</p>
+              <strong>Telão de LED com identidade visual ao vivo</strong>
+            </div>
+          </article>
+          <article class="portfolio-card">
+            <picture>
+              <source srcset="/portfolio/montagem-truss.webp" type="image/webp" />
+              <img class="portfolio-card-photo" src="/portfolio/montagem-truss.jpg" alt="Equipe montando estrutura de treliça e iluminação nos bastidores antes do evento" loading="lazy" />
+            </picture>
+            <div class="portfolio-card-label">
+              <p class="eyebrow">Bastidores</p>
+              <strong>Montagem de treliça e iluminação</strong>
+            </div>
+          </article>
+          <article class="portfolio-card">
+            <picture>
+              <source srcset="/portfolio/innova-show-palco-hosts.webp" type="image/webp" />
+              <img class="portfolio-card-photo" src="/portfolio/innova-show-palco-hosts.jpg" alt="Apresentadores no palco do Innova Show, com telão de LED e DJ ao fundo" loading="lazy" />
+            </picture>
+            <div class="portfolio-card-label">
+              <p class="eyebrow">Innova Show</p>
+              <strong>Apresentadores e DJ no palco</strong>
+            </div>
+          </article>
+          <article class="portfolio-card">
+            <picture>
+              <source srcset="/portfolio/line-array-som.webp" type="image/webp" />
+              <img class="portfolio-card-photo" src="/portfolio/line-array-som.jpg" alt="Sistema de line array suspenso na treliça, sonorização profissional para grandes eventos" loading="lazy" />
+            </picture>
+            <div class="portfolio-card-label">
+              <p class="eyebrow">Sonorização</p>
+              <strong>Line array suspenso para grandes eventos</strong>
+            </div>
+          </article>
+          <article class="portfolio-card">
+            <picture>
+              <source srcset="/portfolio/mesa-iluminacao-controle.webp" type="image/webp" />
+              <img class="portfolio-card-photo" src="/portfolio/mesa-iluminacao-controle.jpg" alt="Mesa de controle de iluminação operada nos bastidores, com telão de LED ao fundo" loading="lazy" />
+            </picture>
+            <div class="portfolio-card-label">
+              <p class="eyebrow">Iluminação</p>
+              <strong>Console de iluminação em operação</strong>
+            </div>
+          </article>
+          <article class="portfolio-card">
+            <picture>
+              <source srcset="/portfolio/palestra-treme-terra.webp" type="image/webp" />
+              <img class="portfolio-card-photo" src="/portfolio/palestra-treme-terra.jpg" alt="Palestra corporativa com identidade visual Treme Terra no telão e estande de recepção" loading="lazy" />
+            </picture>
+            <div class="portfolio-card-label">
+              <p class="eyebrow">Corporativo</p>
+              <strong>Palestra com identidade visual no telão</strong>
+            </div>
+          </article>
+          <article class="portfolio-card">
+            <picture>
+              <source srcset="/portfolio/vj-innova-show-multidao.webp" type="image/webp" />
+              <img class="portfolio-card-photo" src="/portfolio/vj-innova-show-multidao.jpg" alt="Operador de VJ do Innova Show com a pista lotada e iluminação roxa ao fundo" loading="lazy" />
+            </picture>
+            <div class="portfolio-card-label">
+              <p class="eyebrow">Innova Show</p>
+              <strong>Efeitos visuais com a pista lotada</strong>
             </div>
           </article>
         </div>
@@ -405,6 +576,7 @@
           class="film-video"
           poster="/videos/bastidores-poster.jpg"
           muted
+          loop
           playsinline
           preload="auto"
           aria-label="Bastidores de um evento Treme Terra: carregamento de equipamento, montagem de treliça e operação do show ao vivo"
@@ -502,20 +674,38 @@
           <a href="#topo" class="logo"><img src="/logo-tremeterra.png" alt="Treme Terra Audiovisual" width="315" height="44" /></a>
           <p>Som, iluminação, projeção e estrutura de palco para eventos. Uma empresa do Grupo All Party.</p>
           <div class="footer-social">
-            <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram da Treme Terra">
+            <a href="https://www.instagram.com/agenciatremeterra?igsh=a3Rmd2IyeTZrZWVn" target="_blank" rel="noopener noreferrer" aria-label="Instagram da Treme Terra">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
             </a>
-            <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook da Treme Terra">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 3h-2a4 4 0 0 0-4 4v3H6v4h3v7h4v-7h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            <a href="https://br.linkedin.com/company/treme-terra-audiovisual" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn da Treme Terra">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="8" y1="11" x2="8" y2="16"/><line x1="8" y1="8" x2="8" y2="8"/><path d="M12 16v-3a2 2 0 0 1 4 0v3"/><line x1="16" y1="11" x2="16" y2="16"/></svg>
             </a>
           </div>
         </div>
         <div class="footer-col">
           <h4>Contato</h4>
           <ul>
-            <li><a href="tel:+5511984781889">(11) 98478-1889</a></li>
+            <li><a href="https://wa.me/5511984781889?text=Ol%C3%A1%2C%20vim%20pelo%20site%20e%20estou%20com%20interesse%20para%20saber%20mais" target="_blank" rel="noopener noreferrer">(11) 98478-1889</a></li>
             <li><a href="mailto:comercial@tremeterraaudiovisual.com.br">comercial@tremeterraaudiovisual.com.br</a></li>
             <li>Segunda a sexta, 9h às 18h</li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Locação de equipamentos</h4>
+          <ul>
+            <li><a href="/aluguel-som-profissional.html">Aluguel de som profissional</a></li>
+            <li><a href="/iluminacao-para-festas.html">Iluminação para festas</a></li>
+            <li><a href="/painel-de-led.html">Painel de LED</a></li>
+            <li><a href="/locacao-painel-led.html">Locação de painel de LED</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Casamentos e formaturas</h4>
+          <ul>
+            <li><a href="/dj-para-casamentos.html">DJ para casamentos</a></li>
+            <li><a href="/dj-para-formatura.html">DJ para formatura</a></li>
+            <li><a href="/casamentos.html">Casamentos</a></li>
+            <li><a href="/formaturas.html">Formaturas</a></li>
           </ul>
         </div>
         <div class="footer-col">
@@ -527,6 +717,10 @@
             <li><a href="/produtora-de-eventos-corporativos.html">Eventos corporativos</a></li>
             <li><a href="/dj-para-eventos.html">DJ para eventos</a></li>
             <li><a href="#portfolio">Portfólio</a></li>
+            <li><a href="/empresa-audiovisual.html">Empresa de audiovisual</a></li>
+            <li><a href="/shows.html">Shows</a></li>
+            <li><a href="/streaming-para-eventos-corporativos.html">Streaming corporativo</a></li>
+            <li><a href="/blog/">Blog</a></li>
           </ul>
         </div>
       </div>

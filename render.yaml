@@ -3,8 +3,16 @@ services:
     name: treme-terra-audiovisual
     runtime: docker
     dockerfilePath: ./Dockerfile
+    # NOTA: Persistent Disks (abaixo) exigem um plano pago no Render — o
+    # plano "free" não suporta disco anexado. Trocar pra "starter" (ou
+    # superior) no dashboard antes de fazer deploy com o disco configurado,
+    # senão o deploy falha na criação do disco.
     plan: free
     autoDeploy: true
+    disk:
+      name: blog-data
+      mountPath: /var/data
+      sizeGB: 1
     envVars:
       # Preenchidas no dashboard do Render (Environment) — nunca commitadas
       # aqui. Sem elas, subscribe.php cai em modo desenvolvimento (loga o
@@ -20,4 +28,14 @@ services:
       - key: ACTIVECAMPAIGN_FIELD_MESSAGE
         sync: false
       - key: ACTIVECAMPAIGN_FIELD_PAGE
+        sync: false
+      # Caminho do banco SQLite do blog, dentro do Persistent Disk acima —
+      # sobrevive a redeploys. Sem essa env var, o blog usa um arquivo local
+      # em data/ (bom só pra rodar localmente com `npm run serve:php`).
+      - key: SQLITE_DB_PATH
+        value: /var/data/blog.sqlite
+      # Hash da senha do admin do blog (usuário fixo "admin"). Gerar com:
+      #   php -r "echo password_hash('SUA_SENHA_AQUI', PASSWORD_DEFAULT);"
+      # e colar o resultado aqui no dashboard — nunca a senha em texto puro.
+      - key: ADMIN_PASSWORD_HASH
         sync: false

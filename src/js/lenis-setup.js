@@ -1,26 +1,9 @@
-import Lenis from 'lenis';
-import gsap from 'gsap';
-
+// Scroll suave nativo (sem Lenis) — o scroll com inércia customizada era
+// um "nice to have" que puxava mais uma lib pro bundle principal. O
+// scrollTo nativo com behavior:'smooth' já dá uma rolagem suave o
+// suficiente, e ainda respeita prefers-reduced-motion automaticamente.
 export function initSmoothScroll() {
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (prefersReduced) return null;
-
-  const lenis = new Lenis({
-    duration: 1.1,
-    easing: (t) => 1 - Math.pow(1 - t, 3),
-    smoothWheel: true,
-  });
-
-  document.documentElement.classList.add('has-lenis');
-
-  lenis.on('scroll', () => {
-    if (window.ScrollTrigger) window.ScrollTrigger.update();
-  });
-
-  gsap.ticker.add((time) => {
-    lenis.raf(time * 1000);
-  });
-  gsap.ticker.lagSmoothing(0);
 
   document.querySelectorAll('a[href^="#"]:not([data-open-contact])').forEach((anchor) => {
     anchor.addEventListener('click', (e) => {
@@ -29,9 +12,8 @@ export function initSmoothScroll() {
       const target = document.querySelector(id);
       if (!target) return;
       e.preventDefault();
-      lenis.scrollTo(target, { offset: -80 });
+      const top = target.getBoundingClientRect().top + window.scrollY - 80;
+      window.scrollTo({ top, behavior: prefersReduced ? 'auto' : 'smooth' });
     });
   });
-
-  return lenis;
 }

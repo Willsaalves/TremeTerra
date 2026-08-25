@@ -4,15 +4,22 @@
   box-sizing: border-box;
 }
 
+/* IMPORTANTE — `overflow-x: clip`, não `hidden`: pela spec de CSS Overflow,
+   quando um eixo não é `visible` o outro computa de `visible` pra `auto`,
+   o que transforma o elemento num scroll container de verdade. Isso quebra
+   o `position: sticky` de qualquer descendente (o bloco contêiner do
+   sticky deixa de ser o viewport) — era exatamente o que estava fazendo
+   o `.film-pin` da seção de Bastidores não grudar, deixando ~250vh de
+   área preta vazia depois do vídeo. `clip` recorta o estouro horizontal
+   igual ao `hidden` mas NÃO cria scroll container, então o sticky volta a
+   funcionar. A linha `hidden` fica como fallback pra navegador antigo que
+   não entenda `clip` (ele ignora a segunda declaração). */
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: auto;
   overflow-x: hidden;
+  overflow-x: clip;
   max-width: 100%;
-}
-
-html.has-lenis {
-  scroll-behavior: auto;
 }
 
 body {
@@ -25,7 +32,9 @@ body {
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  /* Ver nota sobre clip vs hidden na regra do `html` acima. */
   overflow-x: hidden;
+  overflow-x: clip;
 }
 
 img,
