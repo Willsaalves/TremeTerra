@@ -36,7 +36,7 @@ $pageHeading = $isEdit ? 'Editar post' : 'Novo post';
   <title><?= htmlspecialchars($pageHeading, ENT_QUOTES, 'UTF-8') ?> | Admin do blog</title>
   <meta name="robots" content="noindex, nofollow" />
   <link rel="stylesheet" href="/blog.css" />
-  <link href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css" rel="stylesheet" />
+  <link href="/vendor/quill/quill.snow.css" rel="stylesheet" />
 </head>
 <body class="admin-body">
   <header class="admin-header">
@@ -163,7 +163,7 @@ $pageHeading = $isEdit ? 'Editar post' : 'Novo post';
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
+  <script src="/vendor/quill/quill.min.js"></script>
   <script>
     const csrfToken = <?= json_encode(csrfToken(), JSON_UNESCAPED_SLASHES) ?>;
 
