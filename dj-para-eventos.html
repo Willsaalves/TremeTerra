@@ -231,13 +231,25 @@
           <h2 id="djs-title" data-reveal>DJs que já fizeram o chão tremer</h2>
           <p data-reveal>Profissionais experientes, prontos pra ler a pista e conduzir a festa do início ao fim.</p>
         </div>
-        <div class="dj-roster-grid">
-          <img class="dj-roster-card" src="/djs/dj-kaue-souza.gif" alt="DJ Kaue Souza" loading="lazy" data-reveal data-tilt data-tilt-strength="6" />
-          <img class="dj-roster-card" src="/djs/dj-k1.gif" alt="DJ K1" loading="lazy" data-reveal data-tilt data-tilt-strength="6" />
-          <img class="dj-roster-card" src="/djs/dj-jeeh-fdc.gif" alt="DJ Jeeh FDC" loading="lazy" data-reveal data-tilt data-tilt-strength="6" />
-          <img class="dj-roster-card" src="/djs/dj-hts.gif" alt="DJ HTS" loading="lazy" data-reveal data-tilt data-tilt-strength="6" />
-          <img class="dj-roster-card" src="/djs/dj-j-villa.gif" alt="DJ J Villa" loading="lazy" data-reveal data-tilt data-tilt-strength="6" />
-          <img class="dj-roster-card" src="/djs/dj-henrique-de-ferraz.gif" alt="DJ Henrique de Ferraz" loading="lazy" data-reveal data-tilt data-tilt-strength="6" />
+        <!-- Marquee: os cards deslizam horizontalmente em loop contínuo (CSS
+             puro). O segundo conjunto é uma cópia decorativa (aria-hidden)
+             pra fechar o loop sem emenda. Pausa no hover; em
+             prefers-reduced-motion vira grid estático (ver dj-roster.css). -->
+        <div class="dj-roster-marquee" data-reveal aria-label="DJs residentes da Treme Terra">
+          <div class="dj-roster-track">
+            <img class="dj-roster-card" src="/djs/dj-kaue-souza.gif" alt="DJ Kaue Souza" loading="lazy" />
+            <img class="dj-roster-card" src="/djs/dj-k1.gif" alt="DJ K1" loading="lazy" />
+            <img class="dj-roster-card" src="/djs/dj-jeeh-fdc.gif" alt="DJ Jeeh FDC" loading="lazy" />
+            <img class="dj-roster-card" src="/djs/dj-hts.gif" alt="DJ HTS" loading="lazy" />
+            <img class="dj-roster-card" src="/djs/dj-j-villa.gif" alt="DJ J Villa" loading="lazy" />
+            <img class="dj-roster-card" src="/djs/dj-henrique-de-ferraz.gif" alt="DJ Henrique de Ferraz" loading="lazy" />
+            <img class="dj-roster-card" src="/djs/dj-kaue-souza.gif" alt="" aria-hidden="true" loading="lazy" />
+            <img class="dj-roster-card" src="/djs/dj-k1.gif" alt="" aria-hidden="true" loading="lazy" />
+            <img class="dj-roster-card" src="/djs/dj-jeeh-fdc.gif" alt="" aria-hidden="true" loading="lazy" />
+            <img class="dj-roster-card" src="/djs/dj-hts.gif" alt="" aria-hidden="true" loading="lazy" />
+            <img class="dj-roster-card" src="/djs/dj-j-villa.gif" alt="" aria-hidden="true" loading="lazy" />
+            <img class="dj-roster-card" src="/djs/dj-henrique-de-ferraz.gif" alt="" aria-hidden="true" loading="lazy" />
+          </div>
         </div>
       </div>
     </section>

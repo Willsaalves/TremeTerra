@@ -52,7 +52,7 @@ $pageHeading = $isEdit ? 'Editar post' : 'Novo post';
   <main class="container admin-main">
     <h1><?= htmlspecialchars($pageHeading, ENT_QUOTES, 'UTF-8') ?></h1>
 
-    <form method="post" action="/admin/post-save.php" id="post-form" class="admin-form">
+    <form method="post" action="/admin/post-save.php" id="post-form" class="admin-form" enctype="multipart/form-data">
       <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(csrfToken(), ENT_QUOTES, 'UTF-8') ?>" />
       <?php if ($isEdit): ?>
         <input type="hidden" name="id" value="<?= (int) $post['id'] ?>" />
@@ -89,7 +89,18 @@ $pageHeading = $isEdit ? 'Editar post' : 'Novo post';
         <textarea name="direct_answer" rows="2"><?= htmlspecialchars((string) ($post['direct_answer'] ?? ''), ENT_QUOTES, 'UTF-8') ?></textarea>
       </label>
 
-      <label>URL da imagem de capa
+      <label>Imagem de capa (upload — JPG, PNG, WebP ou GIF, até 5 MB)
+        <input type="file" name="cover_image_file" accept="image/jpeg,image/png,image/webp,image/gif" />
+      </label>
+
+      <?php if (!empty($post['cover_image_url'])): ?>
+        <p class="admin-cover-preview">
+          Capa atual:<br />
+          <img src="<?= htmlspecialchars((string) $post['cover_image_url'], ENT_QUOTES, 'UTF-8') ?>" alt="Pré-visualização da capa" />
+        </p>
+      <?php endif; ?>
+
+      <label>ou cole a URL da imagem de capa
         <input type="url" name="cover_image_url" value="<?= htmlspecialchars((string) ($post['cover_image_url'] ?? ''), ENT_QUOTES, 'UTF-8') ?>" />
       </label>
 
@@ -98,6 +109,9 @@ $pageHeading = $isEdit ? 'Editar post' : 'Novo post';
       </label>
 
       <label>Conteúdo do post</label>
+      <div class="editor-tools">
+        <button type="button" class="btn-admin-ghost" id="insert-table">+ Inserir tabela</button>
+      </div>
       <div id="quill-editor"><?= $post['body_html'] ?? '' ?></div>
       <input type="hidden" name="body_html" id="field-body-html" />
 
@@ -126,9 +140,98 @@ $pageHeading = $isEdit ? 'Editar post' : 'Novo post';
     </form>
   </main>
 
+  <!-- Modal de inserir tabela -->
+  <div id="table-modal" class="table-modal" hidden>
+    <div class="table-modal-card">
+      <h2>Inserir tabela</h2>
+      <div class="table-modal-controls">
+        <label>Colunas
+          <input type="number" id="tbl-cols" min="2" max="6" value="3" />
+        </label>
+        <label>Linhas de dados
+          <input type="number" id="tbl-rows" min="1" max="20" value="4" />
+        </label>
+        <button type="button" class="btn-admin-ghost" id="tbl-build">Gerar campos</button>
+        <button type="button" class="btn-admin-ghost" id="tbl-preset">Modelo comparativo</button>
+      </div>
+      <p class="table-modal-hint">A primeira linha é o cabeçalho. Preencha as células e clique em “Inserir no post”.</p>
+      <div id="tbl-grid" class="table-grid"></div>
+      <div class="table-modal-actions">
+        <button type="button" class="btn-admin-ghost" id="tbl-cancel">Cancelar</button>
+        <button type="button" class="btn-admin" id="tbl-insert">Inserir no post</button>
+      </div>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
   <script>
-    const quill = new Quill('#quill-editor', { theme: 'snow' });
+    const csrfToken = <?= json_encode(csrfToken(), JSON_UNESCAPED_SLASHES) ?>;
+
+    // Botão de imagem do editor: em vez de embutir a imagem em base64 (padrão
+    // do Quill, que incha o HTML), faz upload pro servidor e insere a <img>
+    // apontando pra URL /uploads/... devolvida.
+    function uploadEditorImage() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/jpeg,image/png,image/webp,image/gif';
+      input.onchange = async () => {
+        const file = input.files && input.files[0];
+        if (!file) return;
+        const fd = new FormData();
+        fd.append('image', file);
+        fd.append('csrf_token', csrfToken);
+        try {
+          const res = await fetch('/admin/upload.php', { method: 'POST', body: fd });
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok || !data.url) {
+            alert(data.error || 'Falha no upload da imagem.');
+            return;
+          }
+          const range = quill.getSelection(true);
+          quill.insertEmbed(range.index, 'image', data.url, 'user');
+          quill.setSelection(range.index + 1);
+        } catch (e) {
+          alert('Erro de rede no upload da imagem.');
+        }
+      };
+      input.click();
+    }
+
+    // Quill 1.x não tem tabela nativa: registramos um "block embed" que
+    // guarda o HTML da tabela inteiro, pra ela sobreviver no body_html ao
+    // salvar e ser reconstruída ao reabrir o post pra editar.
+    const BlockEmbed = Quill.import('blots/block/embed');
+    class TableBlot extends BlockEmbed {
+      static create(value) {
+        const node = super.create();
+        node.innerHTML = value;
+        return node;
+      }
+      static value(node) {
+        return node.innerHTML;
+      }
+    }
+    TableBlot.blotName = 'ttTable';
+    TableBlot.tagName = 'div';
+    TableBlot.className = 'post-table-wrap';
+    Quill.register(TableBlot);
+
+    const quill = new Quill('#quill-editor', {
+      theme: 'snow',
+      modules: {
+        toolbar: {
+          container: [
+            [{ header: [2, 3, false] }],
+            ['bold', 'italic', 'underline', 'link'],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            ['blockquote'],
+            ['image'],
+            ['clean'],
+          ],
+          handlers: { image: uploadEditorImage },
+        },
+      },
+    });
 
     const titleField = document.getElementById('field-title');
     const slugField = document.getElementById('field-slug');
@@ -158,6 +261,85 @@ $pageHeading = $isEdit ? 'Editar post' : 'Novo post';
 
     document.getElementById('post-form').addEventListener('submit', () => {
       document.getElementById('field-body-html').value = quill.root.innerHTML;
+    });
+
+    // ---- Inserir tabela (botão + mini-formulário) ----
+    const tableModal = document.getElementById('table-modal');
+    const tblGrid = document.getElementById('tbl-grid');
+    const tblCols = document.getElementById('tbl-cols');
+    const tblRows = document.getElementById('tbl-rows');
+
+    function escHtml(s) {
+      return String(s)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    // Monta os campos de input (linha 0 = cabeçalho). Preserva o que já foi
+    // digitado ao regerar, e aceita cabeçalhos pré-preenchidos (preset).
+    function buildTableGrid(headers) {
+      const cols = Math.max(2, Math.min(6, parseInt(tblCols.value, 10) || 3));
+      const rows = Math.max(1, Math.min(20, parseInt(tblRows.value, 10) || 4));
+      tblCols.value = cols;
+      tblRows.value = rows;
+
+      const prev = {};
+      tblGrid.querySelectorAll('.tbl-cell').forEach((el) => {
+        prev[el.dataset.r + ':' + el.dataset.c] = el.value;
+      });
+
+      tblGrid.style.gridTemplateColumns = 'repeat(' + cols + ', 1fr)';
+      tblGrid.innerHTML = '';
+      for (let r = 0; r <= rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const inp = document.createElement('input');
+          inp.type = 'text';
+          inp.className = 'tbl-cell' + (r === 0 ? ' tbl-head' : '');
+          inp.placeholder = r === 0 ? 'Cabeçalho ' + (c + 1) : '—';
+          inp.dataset.r = String(r);
+          inp.dataset.c = String(c);
+          if (headers && r === 0 && headers[c] !== undefined) {
+            inp.value = headers[c];
+          } else if (prev[r + ':' + c] !== undefined) {
+            inp.value = prev[r + ':' + c];
+          }
+          tblGrid.appendChild(inp);
+        }
+      }
+    }
+
+    const openTableModal = () => { buildTableGrid(); tableModal.hidden = false; };
+    const closeTableModal = () => { tableModal.hidden = true; };
+
+    document.getElementById('insert-table').addEventListener('click', openTableModal);
+    document.getElementById('tbl-cancel').addEventListener('click', closeTableModal);
+    document.getElementById('tbl-build').addEventListener('click', () => buildTableGrid());
+    document.getElementById('tbl-preset').addEventListener('click', () => {
+      tblCols.value = 3;
+      tblRows.value = 4;
+      buildTableGrid(['Critério', 'Eventos Corporativos', 'Formaturas e Casamentos']);
+    });
+    tableModal.addEventListener('click', (e) => { if (e.target === tableModal) closeTableModal(); });
+
+    document.getElementById('tbl-insert').addEventListener('click', () => {
+      const cols = Math.max(2, Math.min(6, parseInt(tblCols.value, 10) || 3));
+      const rows = Math.max(1, Math.min(20, parseInt(tblRows.value, 10) || 4));
+      const cell = (r, c) => tblGrid.querySelector('.tbl-cell[data-r="' + r + '"][data-c="' + c + '"]');
+
+      let html = '<table class="post-table"><thead><tr>';
+      for (let c = 0; c < cols; c++) html += '<th>' + escHtml(cell(0, c) ? cell(0, c).value : '') + '</th>';
+      html += '</tr></thead><tbody>';
+      for (let r = 1; r <= rows; r++) {
+        html += '<tr>';
+        for (let c = 0; c < cols; c++) html += '<td>' + escHtml(cell(r, c) ? cell(r, c).value : '') + '</td>';
+        html += '</tr>';
+      }
+      html += '</tbody></table>';
+
+      const range = quill.getSelection(true) || { index: quill.getLength() };
+      quill.insertEmbed(range.index, 'ttTable', html, 'user');
+      quill.setSelection(range.index + 1);
+      closeTableModal();
     });
   </script>
 </body>

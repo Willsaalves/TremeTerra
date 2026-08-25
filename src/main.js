@@ -21,30 +21,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // vira chunk próprio no build, então páginas sem esses elementos não
   // baixam mais esse código (antes era tudo no bundle único main-*.js,
   // compartilhado por todas as 15 páginas).
-  // Carrossel 3D (three.js, ~127KB gzip): nem o Portfólio nem o roster
-  // de DJs ficam acima da dobra, então o import() + a inicialização
-  // pesada (WebGLRenderer, construção de texturas/vídeos) só acontecem
-  // quando a seção se aproxima da tela — mesma técnica de
-  // IntersectionObserver já usada em scroll-fx.js pro "aquecimento" do
-  // vídeo de Bastidores. Sem isso, esse trabalho competia com o
-  // carregamento inicial da página e derrubava LCP/INP.
-  const carouselTarget = document.getElementById('portfolio-track') || document.querySelector('.dj-roster-grid');
-  if (carouselTarget) {
-    if ('IntersectionObserver' in window) {
-      const carouselObserver = new IntersectionObserver(
-        (entries) => {
-          if (entries.some((entry) => entry.isIntersecting)) {
-            import('./js/carousel3d.js').then((m) => m.initCarousel3D());
-            carouselObserver.disconnect();
-          }
-        },
-        { rootMargin: '800px 0px' }
-      );
-      carouselObserver.observe(carouselTarget);
-    } else {
-      import('./js/carousel3d.js').then((m) => m.initCarousel3D());
-    }
+  // Portfólio: galeria horizontal com scroll nativo + botões prev/next.
+  // (O antigo carrossel 3D em three.js foi removido — pesava no LCP/INP e
+  // deixava uma faixa preta quando o WebGL não desenhava a tempo.)
+  if (document.getElementById('portfolio-track')) {
+    import('./js/portfolio-scroll.js').then((m) => m.initPortfolioScroll());
   }
+  // Roster de DJs: marquee horizontal contínuo é 100% CSS (ver
+  // sections/dj-roster.css), sem JS.
   if (document.getElementById('hero-particles')) {
     import('./js/hero-particles.js').then((m) => m.initHeroParticles());
   }
