@@ -1,0 +1,70 @@
+.reels {
+  padding-block: var(--space-3xl);
+}
+
+.reels .eyebrow {
+  margin-bottom: var(--space-sm);
+}
+
+.reels h2 {
+  max-width: 18ch;
+}
+
+.reels-lead {
+  max-width: 52ch;
+  margin-top: var(--space-md);
+  color: hsl(var(--color-white) / 0.72);
+}
+
+.reels-grid {
+  margin-top: var(--space-2xl);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
+}
+
+.reel-card {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.reel-video {
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  object-fit: cover;
+  background: hsl(var(--color-black) / 0.6);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-elevate);
+  display: block;
+}
+
+.reel-caption {
+  font-size: 0.95rem;
+  color: hsl(var(--color-white) / 0.72);
+  padding-inline: var(--space-2xs, 0.25rem);
+}
+
+@media (max-width: 860px) {
+  .reels-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  /* terceiro card ocupa a linha inteira e fica centralizado */
+  .reel-card:last-child {
+    grid-column: 1 / -1;
+    max-width: 60%;
+    margin-inline: auto;
+  }
+}
+
+@media (max-width: 560px) {
+  .reels-grid {
+    grid-template-columns: 1fr;
+    max-width: 340px;
+    margin-inline: auto;
+  }
+  .reel-card:last-child {
+    max-width: 100%;
+  }
+}
