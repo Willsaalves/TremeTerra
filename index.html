@@ -102,8 +102,27 @@
   </header>
 
   <main id="conteudo">
+    <!-- HERO VÍDEO (topo, autoplay) -->
+    <section class="hero-video band-dark" id="topo" aria-label="Vídeo de abertura">
+      <video
+        class="hero-video-bg"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="auto"
+        poster="/videos/hero-reel.jpg"
+        aria-label="Montagem de eventos produzidos pela Treme Terra: confraternizações, shows, iluminação e palco"
+      >
+        <source src="/videos/hero-reel.webm" type="video/webm" />
+        <source src="/videos/hero-reel.mp4" type="video/mp4" />
+      </video>
+      <div class="hero-video-scrim" aria-hidden="true"></div>
+      <div class="hero-scroll-cue" aria-hidden="true"><span class="line"></span>Role</div>
+    </section>
+
     <!-- HERO -->
-    <section class="hero band-dark" id="topo" aria-label="Abertura">
+    <section class="hero band-dark" id="intro" aria-label="Abertura">
       <div class="hero-glow" aria-hidden="true"><span class="g1"></span><span class="g2"></span></div>
       <div class="hero-lightbeams" aria-hidden="true">
         <span class="beam beam-1"></span>
