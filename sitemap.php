@@ -11,6 +11,7 @@ $staticPaths = [
     '/',
     '/locacao-equipamentos/',
     '/produtora-de-eventos-corporativos/',
+    '/montagem-de-palco/',
     '/dj-para-eventos/',
     '/aluguel-som-profissional/',
     '/iluminacao-para-festas/',
