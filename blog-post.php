@@ -91,13 +91,30 @@ if (!empty($post['cover_image_url'])) {
       <?php endif; ?>
 
       <?php if (!empty($post['cover_image_url'])): ?>
-        <?php $coverWebp = preg_replace('/\.(jpe?g|png)$/i', '.webp', (string) $post['cover_image_url']); ?>
+        <?php
+        $coverUrl  = (string) $post['cover_image_url'];
+        $coverWebp = preg_replace('/\.(jpe?g|png)$/i', '.webp', $coverUrl);
+        // Só oferece a variante .webp quando o arquivo realmente existe. O
+        // <picture> escolhe a <source> webp pelo suporte do navegador (não pela
+        // disponibilidade), e NÃO cai pro <img> se a webp der 404 — então uma
+        // webp inexistente (caso das imagens enviadas pelo admin, que só geram
+        // o original) quebrava a imagem de capa. Ver blog-post.php.
+        $coverHasWebp = false;
+        if ($coverWebp !== $coverUrl) {
+            if (str_starts_with($coverUrl, '/uploads/')) {
+                require_once __DIR__ . '/lib/uploads.php';
+                $coverHasWebp = is_file(blogUploadDir() . '/' . basename($coverWebp));
+            } elseif (str_starts_with($coverUrl, '/')) {
+                $coverHasWebp = is_file(__DIR__ . $coverWebp);
+            }
+        }
+        ?>
         <div class="cover">
           <picture>
-            <?php if ($coverWebp !== $post['cover_image_url']): ?>
+            <?php if ($coverHasWebp): ?>
               <source srcset="<?= htmlspecialchars($coverWebp, ENT_QUOTES, 'UTF-8') ?>" type="image/webp" />
             <?php endif; ?>
-            <img src="<?= htmlspecialchars($post['cover_image_url'], ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars((string) ($post['cover_image_alt'] ?: $post['title']), ENT_QUOTES, 'UTF-8') ?>" loading="lazy" />
+            <img src="<?= htmlspecialchars($coverUrl, ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars((string) ($post['cover_image_alt'] ?: $post['title']), ENT_QUOTES, 'UTF-8') ?>" loading="lazy" />
           </picture>
         </div>
       <?php endif; ?>
