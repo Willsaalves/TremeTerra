@@ -5,6 +5,16 @@
 import { readFileSync, writeFileSync, mkdirSync, copyFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import { transformSync } from 'esbuild';
+
+// Minifica um arquivo-fonte (CSS/JS) e grava no dist/. Usado pros assets do
+// blog (blog.css/blog.js), que não passam pelo bundler do Vite e antes iam
+// crus pro dist — o audit de SEO apontava esses dois como não minificados.
+function minifyToDist(srcRel, outName, loader) {
+  const code = readFileSync(path.join(root, srcRel), 'utf8');
+  const { code: min } = transformSync(code, { loader, minify: true });
+  writeFileSync(path.join(distDir, outName), min);
+}
 
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const distDir = path.join(root, 'dist');
@@ -561,8 +571,8 @@ copyFileSync(path.join(root, '404.php'), path.join(distDir, '404.php'));
 copyFileSync(path.join(root, 'blog.php'), path.join(distDir, 'blog.php'));
 copyFileSync(path.join(root, 'blog-post.php'), path.join(distDir, 'blog-post.php'));
 copyFileSync(path.join(root, 'seed-blog-posts.php'), path.join(distDir, 'seed-blog-posts.php'));
-copyFileSync(path.join(root, 'src', 'styles', 'blog.css'), path.join(distDir, 'blog.css'));
-copyFileSync(path.join(root, 'src', 'blog.js'), path.join(distDir, 'blog.js'));
+minifyToDist(path.join('src', 'styles', 'blog.css'), 'blog.css', 'css');
+minifyToDist(path.join('src', 'blog.js'), 'blog.js', 'js');
 copyFileSync(path.join(root, 'lib', 'db.php'), path.join(distDir, 'lib', 'db.php'));
 copyFileSync(path.join(root, 'lib', 'require-admin.php'), path.join(distDir, 'lib', 'require-admin.php'));
 copyFileSync(path.join(root, 'lib', 'uploads.php'), path.join(distDir, 'lib', 'uploads.php'));
