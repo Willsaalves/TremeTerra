@@ -16,7 +16,7 @@ $seedPosts = [
         'title' => "Como escolher som, luz e estrutura para uma produção de eventos marcante",
         'slug' => "como-escolher-som-luz-e-estrutura-para-uma-producao-de-eventos-marcante",
         'category' => "producao",
-        'seo_title' => "",
+        'seo_title' => "Como Escolher Som, Luz e Estrutura para Eventos | Treme Terra",
         'seo_description' => "Quando essas escolhas são feitas com critério, a produção de eventos ganha uma qualidade rara: ela parece simples para quem participa...",
         'direct_answer' => "Quando som, luz e estrutura são escolhidos com critério, o evento deixa de ser apenas bem montado e passa a ter presença.",
         'cover_image_url' => "/blog/como-escolher-som-luz-estrutura.jpg",
@@ -348,7 +348,7 @@ BODY_312,
         'title' => "Produção de eventos sociais: como criar emoção em casamentos e aniversários",
         'slug' => "producao-de-eventos-sociais-como-criar-emocao-em-casamentos-e-aniversarios",
         'category' => "social",
-        'seo_title' => "",
+        'seo_title' => "Produção de Eventos Sociais para Casamentos | Treme Terra",
         'seo_description' => "Em produção de eventos sociais, emoção não acontece por acaso. Ela é construída em camadas, quase como uma trilha invisível que conduz...",
         'direct_answer' => "Em produção de eventos sociais, emoção não acontece por acaso. Ela é construída em camadas, quase como uma trilha invisível que conduz cada olhar, cada surpresa, cada memória que começa a nascer antes mesmo do grande momento.",
         'cover_image_url' => "/blog/producao-eventos-sociais.jpg",
@@ -562,7 +562,7 @@ BODY_309,
         'title' => "Painéis de LED na produção de eventos: impacto visual que muda tudo",
         'slug' => "paineis-de-led-na-producao-de-eventos-impacto-visual-que-muda-tudo",
         'category' => "locacao",
-        'seo_title' => "",
+        'seo_title' => "Painéis de LED em Eventos: Impacto Visual Único | Treme Terra",
         'seo_description' => "Na produção de eventos, existe um momento em que o ambiente deixa de ser apenas um espaço físico e passa a provocar sensação. É quando...",
         'direct_answer' => "Na produção de eventos, existe um momento em que o ambiente deixa de ser apenas um espaço físico e passa a provocar sensação. É quando a técnica encontra a emoção.",
         'cover_image_url' => "/blog/paineis-de-led-producao-eventos.jpg",
@@ -871,4 +871,20 @@ foreach ($seedPosts as $post) {
     ]);
     $inserted = $stmt->rowCount() > 0;
     echo ($inserted ? '[seed] Post criado: ' : '[seed] Já existia, ignorado: ') . $post['slug'] . PHP_EOL;
+}
+
+// Sincroniza o seo_title (meta title curto) nas linhas já existentes que ainda
+// estão sem ele — os posts foram semeados antes com seo_title vazio, então o
+// INSERT OR IGNORE acima não os atualiza. Só preenche quando está vazio/nulo,
+// pra nunca sobrescrever um título ajustado depois pelo admin.
+$syncSeoTitle = $db->prepare(
+    "UPDATE posts SET seo_title = ? WHERE slug = ? AND (seo_title IS NULL OR seo_title = '')"
+);
+foreach ($seedPosts as $post) {
+    if (($post['seo_title'] ?? '') !== '') {
+        $syncSeoTitle->execute([$post['seo_title'], $post['slug']]);
+        if ($syncSeoTitle->rowCount() > 0) {
+            echo '[seed] seo_title aplicado: ' . $post['slug'] . PHP_EOL;
+        }
+    }
 }

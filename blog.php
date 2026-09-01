@@ -43,6 +43,13 @@ $pageBreadcrumbName = 'Blog';
       <p class="eyebrow">Blog <?= htmlspecialchars(SITE_NAME, ENT_QUOTES, 'UTF-8') ?></p>
       <h1>Guias práticos de som, luz e produção de eventos</h1>
       <p>Conteúdo pra te ajudar a planejar seu evento em São Paulo, direto de quem monta e opera todo dia.</p>
+      <p class="blog-intro">
+        Bem-vindo ao canal de conteúdos da <?= htmlspecialchars(SITE_NAME, ENT_QUOTES, 'UTF-8') ?>.
+        Aqui você encontra dicas, tendências e guias práticos sobre produção audiovisual para eventos
+        corporativos, casamentos, formaturas e shows em São Paulo. Explore nossos artigos sobre
+        aluguel de som profissional, projetos de iluminação cênica e painéis de LED para garantir que
+        seu evento tenha o impacto visual e sonoro que ele merece.
+      </p>
     </div>
   </section>
 
@@ -77,6 +84,15 @@ $pageBreadcrumbName = 'Blog';
         <?php endforeach; ?>
       <?php endif; ?>
     </div>
+    <section class="blog-cta">
+      <h2>Precisa de suporte técnico para o seu próximo evento?</h2>
+      <p>
+        A <?= htmlspecialchars(SITE_NAME, ENT_QUOTES, 'UTF-8') ?> oferece soluções completas em
+        sonorização, iluminação, painel de LED e transmissão ao vivo. Fale com a nossa equipe e
+        solicite um orçamento sob medida para o seu evento em São Paulo.
+      </p>
+      <a href="/#contato" class="blog-cta-btn">Solicitar orçamento</a>
+    </section>
   </div>
 
   <footer class="blog-footer">

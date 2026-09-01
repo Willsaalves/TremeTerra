@@ -32,7 +32,10 @@ if (!empty($post['faq_json'])) {
     }
 }
 
-$pageTitle          = ($post['seo_title'] ?: $post['title']) . ' | ' . SITE_NAME;
+// Quando o post tem seo_title, ele já é o meta title completo (com marca e no
+// tamanho ideal de ~60 caracteres) — usa como está. Sem seo_title, monta a
+// partir do título do post + nome do site.
+$pageTitle          = $post['seo_title'] ? $post['seo_title'] : ($post['title'] . ' | ' . SITE_NAME);
 $pageDescription    = (string) ($post['seo_description'] ?: $post['direct_answer'] ?: SITE_DESCRIPTION);
 $pageCanonical      = SITE_URL . '/blog/' . $post['slug'];
 $pageBreadcrumbTrail = [

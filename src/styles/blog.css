@@ -115,6 +115,50 @@ a { color: inherit; text-decoration: none; }
   margin: 0;
 }
 
+.blog-hero .blog-intro {
+  margin-top: 1rem;
+  font-size: 1rem;
+  max-width: 72ch;
+  opacity: 0.92;
+}
+
+.blog-cta {
+  margin: 3.5rem 0 1rem;
+  padding: 2.25rem 2rem;
+  border-radius: var(--radius-lg, 20px);
+  background: hsl(var(--color-treme-terra) / 0.08);
+  border: 1px solid hsl(var(--color-treme-terra) / 0.2);
+  text-align: center;
+}
+
+.blog-cta h2 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.4rem, 3.5vw, 2rem);
+  margin: 0 0 0.75rem;
+}
+
+.blog-cta p {
+  color: hsl(var(--color-mist-on-dark));
+  max-width: 60ch;
+  margin: 0 auto 1.5rem;
+}
+
+.blog-cta-btn {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  padding: 0.85rem 1.75rem;
+  border-radius: 999px;
+  background: hsl(var(--color-treme-terra));
+  color: hsl(var(--color-white));
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.blog-cta-btn:hover {
+  transform: translateY(-2px);
+}
+
 .post-list-filters {
   display: flex;
   flex-wrap: wrap;

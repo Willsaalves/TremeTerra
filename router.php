@@ -77,6 +77,21 @@ if (isset($staticMimes[$ext]) && is_file($path)) {
         : 'public, max-age=2592000'; // public/, sem hash — 30 dias (curto o bastante pra corrigir um upload errado sem esperar muito, longo o bastante pra passar no audit de cache do Lighthouse)
     header('Content-Type: ' . $staticMimes[$ext]);
     header('Cache-Control: ' . $cache);
+
+    // Compressão gzip pros tipos textuais (CSS/JS/SVG/JSON/manifest), quando o
+    // cliente aceita — o servidor embutido do PHP não comprime nada sozinho.
+    // Imagens/fontes já são formatos comprimidos, não entram aqui.
+    $gzippable = in_array($ext, ['css', 'js', 'svg', 'json', 'webmanifest'], true);
+    $acceptsGzip = str_contains($_SERVER['HTTP_ACCEPT_ENCODING'] ?? '', 'gzip');
+    if ($gzippable && $acceptsGzip) {
+        $data = gzencode((string) file_get_contents($path), 6);
+        header('Content-Encoding: gzip');
+        header('Vary: Accept-Encoding');
+        header('Content-Length: ' . (string) strlen($data));
+        echo $data;
+        return true;
+    }
+
     header('Content-Length: ' . (string) filesize($path));
     readfile($path);
     return true;
