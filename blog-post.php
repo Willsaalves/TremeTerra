@@ -16,24 +16,11 @@ $stmt->execute([$slug]);
 $post = $stmt->fetch();
 
 if ($post === false) {
-    http_response_code(404);
-    ?>
-    <!doctype html>
-    <html lang="pt-BR">
-    <head>
-      <meta charset="UTF-8" />
-      <title>Post não encontrado | Blog <?= htmlspecialchars(SITE_NAME, ENT_QUOTES, 'UTF-8') ?></title>
-      <meta name="robots" content="noindex">
-      <link rel="stylesheet" href="/blog.css" />
-    </head>
-    <body>
-      <div class="container" style="padding-block:4rem;text-align:center;">
-        <h1>Post não encontrado</h1>
-        <p><a href="/blog/">Voltar pro blog</a></p>
-      </div>
-    </body>
-    </html>
-    <?php
+    // Post inexistente (inclui os slugs de posts antigos do site anterior,
+    // que foram consolidados): 301 pro índice do blog em vez de 404, pra não
+    // perder o link juice das URLs antigas indexadas.
+    http_response_code(301);
+    header('Location: /blog/');
     exit;
 }
 

@@ -99,6 +99,50 @@ if (preg_match('#^/uploads/([a-zA-Z0-9]+\.(?:jpe?g|png|webp|gif))$#', $uri, $upM
     }
 }
 
+// --- 1d. Redirects 301 de URLs legadas (páginas .php antigas por cidade/
+// estado e taxonomias de blog do site anterior) pras páginas canônicas
+// atuais. Consolida dezenas de URLs de SEO antigas num único destino, sem
+// deixar 404. Casado por prefixo/família — as variantes por cidade/estado e
+// com/sem .php caem todas no mesmo destino. Vem depois de assets estáticos
+// (que já retornaram acima) e antes do roteamento normal. ---
+$legacyRedirects = [
+    // aluguel de som (todas as cidades/estados + "melhor aluguel") -> aluguel-som-profissional
+    '#^/(?:melhor-)?aluguel-de-som-para-eventos#' => '/aluguel-som-profissional/',
+    // banda para eventos corporativos -> shows
+    '#^/banda-para-eventos-corporativos#' => '/shows/',
+    // dj para eventos por cidade/estado -> dj-para-eventos (não pega /dj-para-eventos/ nem /dj-para-casamentos/)
+    '#^/dj-para-eventos-(?:em|no)-#' => '/dj-para-eventos/',
+    // empresa de eventos (+ páginas institucionais antigas) -> empresa-audiovisual
+    '#^/empresa-de-eventos#' => '/empresa-audiovisual/',
+    '#^/sobre-nos(?:\.php)?$#' => '/empresa-audiovisual/',
+    '#^/diferencial(?:\.php)?$#' => '/empresa-audiovisual/',
+    '#^/informacoes(?:\.php)?$#' => '/empresa-audiovisual/',
+    // iluminação para eventos -> iluminacao-para-festas
+    '#^/iluminacao-para-eventos#' => '/iluminacao-para-festas/',
+    // painel de led para eventos -> painel-de-led
+    '#^/painel-de-led-para-eventos#' => '/painel-de-led/',
+    // produtora de eventos (todas as variantes) -> produtora-de-eventos-corporativos
+    '#^/produtora-de-eventos#' => '/produtora-de-eventos-corporativos/',
+    // taxonomias e index antigos do blog (WordPress) -> /blog/
+    '#^/blog/(?:author|category|tag|page)/#' => '/blog/',
+    '#^/blog/home/?$#' => '/blog/',
+];
+
+foreach ($legacyRedirects as $pattern => $target) {
+    if (preg_match($pattern, $uri)) {
+        // Evita redirecionar a própria página canônica pra ela mesma
+        // (ex.: /produtora-de-eventos-corporativos/ casa o prefixo, mas já é
+        // o destino) — deixa o roteamento normal servir.
+        if (rtrim($uri, '/') === rtrim($target, '/')) {
+            break;
+        }
+        $query = $_SERVER['QUERY_STRING'] ?? '';
+        http_response_code(301);
+        header('Location: ' . $target . ($query !== '' ? '?' . $query : ''));
+        return true;
+    }
+}
+
 // --- 2. Home ("/") -> index.php ---
 if ($uri === '/') {
     $indexPath = $root . '/index.php';
