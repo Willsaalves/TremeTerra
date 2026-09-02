@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/lib/db.php';
+require_once __DIR__ . '/lib/mailer.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -53,6 +54,21 @@ try {
     $leadId = (int) $db->lastInsertId();
 } catch (Throwable $e) {
     error_log('[subscribe] Falha ao gravar lead no banco: ' . $e->getMessage());
+}
+
+// Notifica a equipe comercial por e-mail (se o SMTP estiver configurado).
+// Não bloqueia nem derruba a resposta ao visitante — só registra no log.
+try {
+    sendLeadNotification([
+        'nome'        => $nome,
+        'telefone'    => $telefone,
+        'email'       => $email,
+        'tipo_evento' => $tipoEvento,
+        'mensagem'    => $mensagem,
+        'pagina'      => $pagina,
+    ]);
+} catch (Throwable $e) {
+    error_log('[subscribe] Falha ao notificar lead por e-mail: ' . $e->getMessage());
 }
 
 $acApiUrl          = getenv('ACTIVECAMPAIGN_API_URL') ?: ACTIVE_CAMPAIGN_API_URL;
