@@ -2,6 +2,8 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/lib/db.php';
+require_once __DIR__ . '/lib/mailer.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -35,6 +37,38 @@ if ($nome === '' || $telefone === '' || $email === '' || $tipoEvento === '') {
 
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     respond(false, 'E-mail inválido.', 422);
+}
+
+// Grava o lead no banco ANTES de qualquer integração externa. Garante que a
+// solicitação nunca se perca (mesmo com a ActiveCampaign fora do ar) e que dê
+// pra ver todas as submissões no admin (/admin/leads.php). Falha de banco não
+// derruba o restante — só registra no log.
+$leadId = null;
+try {
+    $db = getDb();
+    $stmt = $db->prepare(
+        'INSERT INTO leads (nome, telefone, email, tipo_evento, mensagem, pagina)
+         VALUES (?, ?, ?, ?, ?, ?)'
+    );
+    $stmt->execute([$nome, $telefone, $email, $tipoEvento, $mensagem, $pagina]);
+    $leadId = (int) $db->lastInsertId();
+} catch (Throwable $e) {
+    error_log('[subscribe] Falha ao gravar lead no banco: ' . $e->getMessage());
+}
+
+// Notifica a equipe comercial por e-mail (se o SMTP estiver configurado).
+// Não bloqueia nem derruba a resposta ao visitante — só registra no log.
+try {
+    sendLeadNotification([
+        'nome'        => $nome,
+        'telefone'    => $telefone,
+        'email'       => $email,
+        'tipo_evento' => $tipoEvento,
+        'mensagem'    => $mensagem,
+        'pagina'      => $pagina,
+    ]);
+} catch (Throwable $e) {
+    error_log('[subscribe] Falha ao notificar lead por e-mail: ' . $e->getMessage());
 }
 
 $acApiUrl          = getenv('ACTIVECAMPAIGN_API_URL') ?: ACTIVE_CAMPAIGN_API_URL;
@@ -85,6 +119,16 @@ if (!$syncResult['ok']) {
     error_log('[subscribe] Falha ao sincronizar contato na ActiveCampaign: ' . $syncResult['error']);
     respond(false, 'Não conseguimos concluir seu cadastro agora. Tente novamente em instantes ou chame no '
         . CONTACT_PHONE_DISPLAY . '.', 502);
+}
+
+// Marca o lead como sincronizado com a ActiveCampaign (só pra referência no
+// admin — não afeta a resposta ao visitante).
+if ($leadId !== null) {
+    try {
+        getDb()->prepare('UPDATE leads SET enviado_ac = 1 WHERE id = ?')->execute([$leadId]);
+    } catch (Throwable $e) {
+        error_log('[subscribe] Falha ao marcar lead como enviado à AC: ' . $e->getMessage());
+    }
 }
 
 $contactId = $syncResult['data']['contact']['id'] ?? null;

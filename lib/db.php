@@ -43,6 +43,23 @@ function getDb(): PDO
         )
     ');
 
+    // Toda submissão do formulário de orçamento fica gravada aqui — assim o
+    // lead nunca se perde, mesmo que a ActiveCampaign esteja fora do ar ou
+    // não configurada. Visível no admin em /admin/leads.php.
+    $pdo->exec('
+        CREATE TABLE IF NOT EXISTS leads (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome TEXT NOT NULL,
+            telefone TEXT NOT NULL,
+            email TEXT NOT NULL,
+            tipo_evento TEXT,
+            mensagem TEXT,
+            pagina TEXT,
+            enviado_ac INTEGER NOT NULL DEFAULT 0,
+            created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+        )
+    ');
+
     return $pdo;
 }
 

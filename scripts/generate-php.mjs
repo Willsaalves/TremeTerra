@@ -576,6 +576,7 @@ minifyToDist(path.join('src', 'blog.js'), 'blog.js', 'js');
 copyFileSync(path.join(root, 'lib', 'db.php'), path.join(distDir, 'lib', 'db.php'));
 copyFileSync(path.join(root, 'lib', 'require-admin.php'), path.join(distDir, 'lib', 'require-admin.php'));
 copyFileSync(path.join(root, 'lib', 'uploads.php'), path.join(distDir, 'lib', 'uploads.php'));
+copyFileSync(path.join(root, 'lib', 'mailer.php'), path.join(distDir, 'lib', 'mailer.php'));
 for (const file of readdirSync(path.join(root, 'admin'))) {
   copyFileSync(path.join(root, 'admin', file), path.join(distDir, 'admin', file));
 }
