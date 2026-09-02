@@ -58,7 +58,7 @@ $posts = $db->query('SELECT id, title, slug, category, status, published_at, upd
                   <?= $post['status'] === 'published' ? 'Publicado' : 'Rascunho' ?>
                 </span>
               </td>
-              <td><?= htmlspecialchars($post['updated_at'], ENT_QUOTES, 'UTF-8') ?></td>
+              <td><?= htmlspecialchars(blogDateBR($post['updated_at']), ENT_QUOTES, 'UTF-8') ?></td>
               <td class="admin-table-actions">
                 <a href="/admin/post-form.php?id=<?= (int) $post['id'] ?>">Editar</a>
                 <form method="post" action="/admin/post-delete.php" onsubmit="return confirm('Excluir este post?');">

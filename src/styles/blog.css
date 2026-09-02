@@ -313,6 +313,12 @@ article.post .direct-answer {
   margin-bottom: 2rem;
 }
 
+article.post .post-date {
+  color: hsl(var(--color-mist-on-dark));
+  font-size: 0.9rem;
+  margin: 0 0 1.5rem;
+}
+
 article.post .cover { border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 2rem; }
 article.post .prose { font-size: 1.05rem; }
 article.post .prose p { margin: 0 0 1.25rem; }

@@ -49,8 +49,8 @@ $pagePostSchema = [
     '@id'              => $pageCanonical . '#post',
     'headline'         => $post['title'],
     'description'      => $pageDescription,
-    'datePublished'    => $post['published_at'],
-    'dateModified'     => $post['updated_at'],
+    'datePublished'    => blogDateIso($post['published_at']),
+    'dateModified'     => blogDateIso($post['updated_at'] ?: $post['published_at']),
     'mainEntityOfPage' => $pageCanonical,
     'author'           => ['@id' => SITE_URL . '/#organization'],
     'publisher'        => ['@id' => SITE_URL . '/#organization'],
@@ -85,6 +85,15 @@ if (!empty($post['cover_image_url'])) {
 
       <p class="eyebrow">Blog <?= htmlspecialchars(SITE_NAME, ENT_QUOTES, 'UTF-8') ?></p>
       <h1><?= htmlspecialchars($post['title'], ENT_QUOTES, 'UTF-8') ?></h1>
+
+      <?php if (!empty($post['published_at'])): ?>
+        <p class="post-date">
+          Publicado em
+          <time datetime="<?= htmlspecialchars(blogDateIso($post['published_at']), ENT_QUOTES, 'UTF-8') ?>">
+            <?= htmlspecialchars(blogDateBR($post['published_at'], 'd/m/Y'), ENT_QUOTES, 'UTF-8') ?>
+          </time>
+        </p>
+      <?php endif; ?>
 
       <?php if (!empty($post['direct_answer'])): ?>
         <p class="direct-answer"><?= htmlspecialchars($post['direct_answer'], ENT_QUOTES, 'UTF-8') ?></p>
