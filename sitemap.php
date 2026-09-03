@@ -4,51 +4,39 @@ declare(strict_types=1);
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/lib/db.php';
 
-// URLs estáveis das páginas estáticas do site (mesma lista de canonicalPath
-// já usada em scripts/generate-php.mjs). Não muda a cada build — só quando
-// uma página nova for criada, atualizar aqui também.
-$staticPaths = [
-    '/',
-    '/locacao-equipamentos/',
-    '/produtora-de-eventos-corporativos/',
-    '/montagem-de-palco/',
-    '/dj-para-eventos/',
-    '/aluguel-som-profissional/',
-    '/iluminacao-para-festas/',
-    '/painel-de-led/',
-    '/locacao-painel-led/',
-    '/dj-para-casamentos/',
-    '/dj-para-formatura/',
-    '/casamentos/',
-    '/formaturas/',
-    '/empresa-audiovisual/',
-    '/shows/',
-    '/streaming-para-eventos-corporativos/',
-    '/blog/',
-];
-
+// Índice de sitemaps (/sitemap.xml). Não lista URLs diretamente — aponta pros
+// sitemaps filhos, mantendo o blog APARTADO das páginas:
+//   /pages-sitemap.xml      -> páginas institucionais/de serviço
+//   /blog/page-sitemap.xml  -> blog (índice + posts publicados)
+// O robots.txt aponta pra este índice, e o Google descobre os dois a partir
+// daqui — sem duplicar os posts entre os arquivos.
 $deployDate = gmdate('Y-m-d');
 
-$urls = [];
-foreach ($staticPaths as $path) {
-    $urls[] = ['loc' => SITE_URL . $path, 'lastmod' => $deployDate];
+// lastmod do blog = data do post mais recente atualizado (se houver).
+$blogLastmod = $deployDate;
+try {
+    $db = getDb();
+    $row = $db->query("SELECT MAX(updated_at) AS m FROM posts WHERE status = 'published'")->fetch();
+    if (!empty($row['m'])) {
+        $blogLastmod = substr((string) $row['m'], 0, 10);
+    }
+} catch (Throwable $e) {
+    // banco indisponível: mantém a data do deploy
 }
 
-$db = getDb();
-$posts = $db->query("SELECT slug, updated_at FROM posts WHERE status = 'published' ORDER BY published_at DESC")->fetchAll();
-foreach ($posts as $post) {
-    $lastmod = $post['updated_at'] ? substr((string) $post['updated_at'], 0, 10) : $deployDate;
-    $urls[] = ['loc' => SITE_URL . '/blog/' . $post['slug'], 'lastmod' => $lastmod];
-}
+$sitemaps = [
+    ['loc' => SITE_URL . '/pages-sitemap.xml',     'lastmod' => $deployDate],
+    ['loc' => SITE_URL . '/blog/page-sitemap.xml', 'lastmod' => $blogLastmod],
+];
 
 header('Content-Type: application/xml; charset=UTF-8');
 echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
 ?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-<?php foreach ($urls as $url): ?>
-  <url>
-    <loc><?= htmlspecialchars($url['loc'], ENT_QUOTES | ENT_XML1, 'UTF-8') ?></loc>
-    <lastmod><?= htmlspecialchars($url['lastmod'], ENT_QUOTES | ENT_XML1, 'UTF-8') ?></lastmod>
-  </url>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<?php foreach ($sitemaps as $sm): ?>
+  <sitemap>
+    <loc><?= htmlspecialchars($sm['loc'], ENT_QUOTES | ENT_XML1, 'UTF-8') ?></loc>
+    <lastmod><?= htmlspecialchars($sm['lastmod'], ENT_QUOTES | ENT_XML1, 'UTF-8') ?></lastmod>
+  </sitemap>
 <?php endforeach; ?>
-</urlset>
+</sitemapindex>

@@ -15,6 +15,12 @@ RUN apt-get update \
 WORKDIR /app
 COPY --from=build /app/dist ./dist
 EXPOSE 10000
+# Concorrência do servidor embutido do PHP. Sem isto, o `php -S` roda com UM
+# único processo e atende UMA requisição por vez — enquanto um vídeo está
+# sendo transmitido (streaming/Range segura a conexão), TODAS as outras
+# requisições ficam na fila e o vídeo/página travam. Com vários workers, o
+# servidor bifurca processos e serve vídeo + demais recursos em paralelo.
+ENV PHP_CLI_SERVER_WORKERS=10
 # Config do PHP em produção:
 # - display_errors=0 + log_errors=1: NUNCA mostrar avisos/erros do PHP na
 #   página (em produção). Warnings impressos vazam pro usuário e ainda

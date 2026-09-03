@@ -20,7 +20,7 @@ if (($_GET['export'] ?? '') === 'csv') {
     fputcsv($out, ['Data', 'Nome', 'Telefone', 'E-mail', 'Tipo de evento', 'Mensagem', 'Página', 'Enviado à AC']);
     foreach ($leads as $l) {
         fputcsv($out, [
-            $l['created_at'], $l['nome'], $l['telefone'], $l['email'],
+            blogDateBR((string) $l['created_at']), $l['nome'], $l['telefone'], $l['email'],
             $l['tipo_evento'], $l['mensagem'], $l['pagina'],
             $l['enviado_ac'] ? 'sim' : 'não',
         ]);
@@ -77,7 +77,7 @@ if (($_GET['export'] ?? '') === 'csv') {
           <tbody>
             <?php foreach ($leads as $l): ?>
               <tr>
-                <td style="white-space:nowrap;"><?= htmlspecialchars((string) $l['created_at'], ENT_QUOTES, 'UTF-8') ?></td>
+                <td style="white-space:nowrap;"><?= htmlspecialchars(blogDateBR((string) $l['created_at']), ENT_QUOTES, 'UTF-8') ?></td>
                 <td><?= htmlspecialchars((string) $l['nome'], ENT_QUOTES, 'UTF-8') ?></td>
                 <td>
                   <a href="tel:<?= htmlspecialchars(preg_replace('/\D+/', '', (string) $l['telefone']) ?? '', ENT_QUOTES, 'UTF-8') ?>"><?= htmlspecialchars((string) $l['telefone'], ENT_QUOTES, 'UTF-8') ?></a><br />

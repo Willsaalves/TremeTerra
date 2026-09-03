@@ -105,13 +105,19 @@
   <main id="conteudo">
     <!-- HERO (vídeo institucional em background) -->
     <section class="hero has-video band-dark" id="topo" aria-label="Abertura">
-      <img
+      <video
         class="hero-video-bg"
-        src="/hero-bg.jpg"
-        alt="Palco montado pela Treme Terra para o IPDCON 2026, com iluminação e painel de LED"
-        fetchpriority="high"
-        decoding="async"
-      />
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="auto"
+        poster="/videos/hero-reel.jpg"
+        aria-label="Montagem de eventos produzidos pela Treme Terra: confraternizações, shows, iluminação e palco"
+      >
+        <source src="/videos/hero-reel.webm" type="video/webm" />
+        <source src="/videos/hero-reel.mp4" type="video/mp4" />
+      </video>
       <div class="hero-video-scrim" aria-hidden="true"></div>
       <div class="hero-glow" aria-hidden="true"><span class="g1"></span><span class="g2"></span></div>
       <div class="hero-lightbeams" aria-hidden="true">
@@ -811,7 +817,7 @@
           </select>
         </label>
         <label>Mensagem
-          <textarea name="mensagem" placeholder="Conte um pouco sobre o evento"></textarea>
+          <textarea name="mensagem" required placeholder="Conte um pouco sobre o evento"></textarea>
         </label>
         <p class="contact-form-error" role="alert" hidden></p>
         <button type="submit" class="btn btn-primary">Enviar</button>
