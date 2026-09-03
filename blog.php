@@ -48,13 +48,12 @@ $pageBreadcrumbName = 'Blog';
     <div class="container">
       <p class="eyebrow">Blog <?= htmlspecialchars(SITE_NAME, ENT_QUOTES, 'UTF-8') ?></p>
       <h1>Guias práticos de som, luz e produção de eventos</h1>
-      <p>Conteúdo pra te ajudar a planejar seu evento em São Paulo, direto de quem monta e opera todo dia.</p>
       <p class="blog-intro">
-        Bem-vindo ao canal de conteúdos da <?= htmlspecialchars(SITE_NAME, ENT_QUOTES, 'UTF-8') ?>.
-        Aqui você encontra dicas, tendências e guias práticos sobre produção audiovisual para eventos
-        corporativos, casamentos, formaturas e shows em São Paulo. Explore nossos artigos sobre
-        aluguel de som profissional, projetos de iluminação cênica e painéis de LED para garantir que
-        seu evento tenha o impacto visual e sonoro que ele merece.
+        Conteúdo pra te ajudar a planejar seu evento em São Paulo, direto de quem monta e opera todo
+        dia: aqui você encontra dicas, tendências e guias práticos sobre produção audiovisual para
+        eventos corporativos, casamentos, formaturas e shows — de aluguel de som profissional a
+        projetos de iluminação cênica e painéis de LED, para garantir que seu evento tenha o impacto
+        visual e sonoro que ele merece.
       </p>
     </div>
   </section>
