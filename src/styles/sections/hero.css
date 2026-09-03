@@ -8,7 +8,7 @@
   overflow: hidden;
 }
 
-/* Imagem institucional como plano de fundo do hero.
+/* Vídeo institucional como plano de fundo do hero — autoplay mudo em loop.
    object-fit: cover deixa responsivo: preenche qualquer proporção (desktop
    largo ou mobile alto) recortando o excesso, sem distorcer. */
 .hero-video-bg {
@@ -60,6 +60,18 @@
 
 .hero.has-video .hero-glow {
   opacity: 0.5;
+}
+
+/* Respeita quem pediu menos movimento: esconde o vídeo e mostra só o poster. */
+@media (prefers-reduced-motion: reduce) {
+  .hero.has-video .hero-video-bg {
+    display: none;
+  }
+  .hero.has-video {
+    background-image: url('/videos/hero-reel.jpg');
+    background-size: cover;
+    background-position: center;
+  }
 }
 
 .hero-glow {
