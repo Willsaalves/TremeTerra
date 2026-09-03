@@ -5,6 +5,7 @@ require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../lib/db.php';
 require_once __DIR__ . '/../lib/require-admin.php';
 require_once __DIR__ . '/../lib/uploads.php';
+require_once __DIR__ . '/../lib/backup.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: /admin/index.php');
@@ -109,6 +110,9 @@ try {
     }
     throw $e;
 }
+
+// Snapshot automático dos posts a cada salvamento (não bloqueia o fluxo).
+writePostsSnapshot($db);
 
 header('Location: /admin/index.php');
 exit;

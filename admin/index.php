@@ -23,6 +23,7 @@ $posts = $db->query('SELECT id, title, slug, category, status, published_at, upd
       <strong>Admin do blog</strong>
       <nav>
         <a href="/admin/leads.php">Leads do formulário</a>
+        <a href="/admin/backup.php">Backup</a>
         <a href="/blog/">Ver blog</a>
         <a href="/admin/logout.php">Sair</a>
       </nav>
