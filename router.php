@@ -222,12 +222,20 @@ if (!is_file($path) && preg_match('#^/blog/([^/]+)/?$#', $uri, $matches)) {
     }
 }
 
-// --- 4. /sitemap.xml -> sitemap.php ---
+// --- 4. /sitemap.xml -> sitemap.php (índice) e /pages-sitemap.xml ---
 if ($uri === '/sitemap.xml') {
     $sitemapPath = $root . '/sitemap.php';
     if (is_file($sitemapPath)) {
         chdir($root);
         require $sitemapPath;
+        return true;
+    }
+}
+if ($uri === '/pages-sitemap.xml') {
+    $pagesSitemap = $root . '/pages-sitemap.php';
+    if (is_file($pagesSitemap)) {
+        chdir($root);
+        require $pagesSitemap;
         return true;
     }
 }

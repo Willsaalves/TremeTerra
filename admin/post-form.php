@@ -101,7 +101,10 @@ $pageHeading = $isEdit ? 'Editar post' : 'Novo post';
       <?php endif; ?>
 
       <label>ou cole a URL da imagem de capa
-        <input type="url" name="cover_image_url" value="<?= htmlspecialchars((string) ($post['cover_image_url'] ?? ''), ENT_QUOTES, 'UTF-8') ?>" />
+        <?php /* type="text" (não "url"): imagens enviadas pelo admin ficam com
+           caminho relativo (/uploads/xxx.jpg), que o type="url" rejeitava e
+           travava o salvamento. O servidor aceita URL absoluta ou relativa. */ ?>
+        <input type="text" name="cover_image_url" value="<?= htmlspecialchars((string) ($post['cover_image_url'] ?? ''), ENT_QUOTES, 'UTF-8') ?>" />
       </label>
 
       <label>Texto alternativo da imagem (alt)

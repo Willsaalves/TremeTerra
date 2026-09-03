@@ -5,7 +5,7 @@ require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/lib/db.php';
 
 $db = getDb();
-$posts = $db->query("SELECT title, slug, category, seo_description, direct_answer FROM posts WHERE status = 'published' ORDER BY published_at DESC")->fetchAll();
+$posts = $db->query("SELECT title, slug, category, seo_description, direct_answer, cover_image_url, cover_image_alt, published_at FROM posts WHERE status = 'published' ORDER BY published_at DESC")->fetchAll();
 
 $categoriesPresent = [];
 foreach ($posts as $post) {
@@ -28,6 +28,7 @@ $pageBreadcrumbName = 'Blog';
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Montserrat:wght@400;500;600;700;800&display=swap" />
   <link rel="stylesheet" href="/blog.css" />
+  <noscript><style>.post-card{opacity:1 !important;transform:none !important;}</style></noscript>
 </head>
 <body>
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WQJVN5JZ" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -70,16 +71,42 @@ $pageBreadcrumbName = 'Blog';
           Estamos preparando conteúdo sobre locação de som, iluminação, painel de LED, DJ e produção de eventos.
         </div>
       <?php else: ?>
-        <?php foreach ($posts as $post): ?>
-          <a href="/blog/<?= htmlspecialchars($post['slug'], ENT_QUOTES, 'UTF-8') ?>" class="post-card" data-category="<?= htmlspecialchars((string) $post['category'], ENT_QUOTES, 'UTF-8') ?>">
-            <?php if (!empty($post['category']) && isset(POST_CATEGORIES[$post['category']])): ?>
-              <span class="category"><?= htmlspecialchars(POST_CATEGORIES[$post['category']], ENT_QUOTES, 'UTF-8') ?></span>
-            <?php endif; ?>
-            <h2><?= htmlspecialchars($post['title'], ENT_QUOTES, 'UTF-8') ?></h2>
-            <p><?= htmlspecialchars((string) ($post['seo_description'] ?: $post['direct_answer']), ENT_QUOTES, 'UTF-8') ?></p>
-            <span class="post-card-arrow" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-            </span>
+        <?php foreach ($posts as $i => $post): ?>
+          <?php
+            $catLabel = (!empty($post['category']) && isset(POST_CATEGORIES[$post['category']]))
+                ? POST_CATEGORIES[$post['category']] : '';
+            $excerpt  = (string) ($post['seo_description'] ?: $post['direct_answer']);
+            $cover    = trim((string) ($post['cover_image_url'] ?? ''));
+            $coverAlt = (string) ($post['cover_image_alt'] ?: $post['title']);
+            $featured = $i === 0; // primeiro post em destaque
+          ?>
+          <a href="/blog/<?= htmlspecialchars($post['slug'], ENT_QUOTES, 'UTF-8') ?>"
+             class="post-card<?= $featured ? ' post-card--featured' : '' ?>"
+             data-category="<?= htmlspecialchars((string) $post['category'], ENT_QUOTES, 'UTF-8') ?>">
+            <div class="post-card-cover">
+              <?php if ($cover !== ''): ?>
+                <img src="<?= htmlspecialchars($cover, ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($coverAlt, ENT_QUOTES, 'UTF-8') ?>" loading="lazy" />
+              <?php else: ?>
+                <span class="post-card-cover-fallback" aria-hidden="true">
+                  <?= htmlspecialchars($catLabel !== '' ? $catLabel : SITE_NAME, ENT_QUOTES, 'UTF-8') ?>
+                </span>
+              <?php endif; ?>
+              <?php if ($catLabel !== ''): ?>
+                <span class="category"><?= htmlspecialchars($catLabel, ENT_QUOTES, 'UTF-8') ?></span>
+              <?php endif; ?>
+            </div>
+            <div class="post-card-body">
+              <?php if (!empty($post['published_at'])): ?>
+                <time class="post-card-date" datetime="<?= htmlspecialchars(blogDateIso($post['published_at']), ENT_QUOTES, 'UTF-8') ?>"><?= htmlspecialchars(blogDateBR($post['published_at'], 'd/m/Y'), ENT_QUOTES, 'UTF-8') ?></time>
+              <?php endif; ?>
+              <h2><?= htmlspecialchars($post['title'], ENT_QUOTES, 'UTF-8') ?></h2>
+              <?php if ($excerpt !== ''): ?>
+                <p><?= htmlspecialchars($excerpt, ENT_QUOTES, 'UTF-8') ?></p>
+              <?php endif; ?>
+              <span class="post-card-more">Ler mais
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </span>
+            </div>
           </a>
         <?php endforeach; ?>
       <?php endif; ?>

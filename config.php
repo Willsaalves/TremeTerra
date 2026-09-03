@@ -41,6 +41,53 @@ declare(strict_types=1);
     }
 })();
 
+// Fuso horário da aplicação. O servidor (Render) roda em UTC, então sem isto
+// todo date()/hora aparecia 3h adiantada do horário de São Paulo. Os
+// timestamps continuam GRAVADOS em UTC no banco (gmdate/CURRENT_TIMESTAMP);
+// a conversão pra hora local é só na exibição, via os helpers abaixo.
+const SITE_TIMEZONE = 'America/Sao_Paulo';
+date_default_timezone_set(SITE_TIMEZONE);
+
+/**
+ * Converte um timestamp gravado em UTC ("Y-m-d H:i:s") para ISO 8601 com o
+ * fuso de São Paulo (ex.: 2026-04-22T09:31:24-03:00) — formato válido pro
+ * schema.org (datePublished/dateModified). Devolve o valor original se não
+ * conseguir interpretar.
+ */
+function blogDateIso(?string $utc): string
+{
+    $utc = trim((string) $utc);
+    if ($utc === '') {
+        return '';
+    }
+    try {
+        $dt = new DateTime($utc, new DateTimeZone('UTC'));
+        $dt->setTimezone(new DateTimeZone(SITE_TIMEZONE));
+        return $dt->format('c');
+    } catch (Throwable) {
+        return $utc;
+    }
+}
+
+/**
+ * Converte um timestamp gravado em UTC para exibição legível em horário de
+ * São Paulo (padrão dd/mm/aaaa HH:MM). Usado no admin.
+ */
+function blogDateBR(?string $utc, string $format = 'd/m/Y H:i'): string
+{
+    $utc = trim((string) $utc);
+    if ($utc === '') {
+        return '';
+    }
+    try {
+        $dt = new DateTime($utc, new DateTimeZone('UTC'));
+        $dt->setTimezone(new DateTimeZone(SITE_TIMEZONE));
+        return $dt->format($format);
+    } catch (Throwable) {
+        return $utc;
+    }
+}
+
 const SITE_NAME        = 'Treme Terra Audiovisual';
 const SITE_TITLE       = 'Treme Terra Audiovisual | Som, iluminação e produção para eventos';
 const SITE_DESCRIPTION = 'A Treme Terra Audiovisual entrega sonorização, iluminação, '
