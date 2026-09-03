@@ -27,7 +27,12 @@ $pageBreadcrumbName = 'Blog';
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Montserrat:wght@400;500;600;700;800&display=swap" />
-  <link rel="stylesheet" href="/blog.css" />
+  <?php // ?v= com o mtime do arquivo: quebra o cache do navegador a cada
+        // mudança no CSS (blog.css não tem hash no nome como os assets do Vite,
+        // e é servido com cache de 30 dias). Sem isso, mudanças no visual do
+        // blog não chegam a quem já visitou. ?>
+  <?php $blogCssV = @filemtime(__DIR__ . '/blog.css') ?: 1; ?>
+  <link rel="stylesheet" href="/blog.css?v=<?= $blogCssV ?>" />
   <noscript><style>.post-card{opacity:1 !important;transform:none !important;}</style></noscript>
 </head>
 <body>
@@ -131,6 +136,6 @@ $pageBreadcrumbName = 'Blog';
     </div>
   </footer>
 
-  <script src="/blog.js" defer></script>
+  <script src="/blog.js?v=<?= @filemtime(__DIR__ . '/blog.js') ?: 1 ?>" defer></script>
 </body>
 </html>
