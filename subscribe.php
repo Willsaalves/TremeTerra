@@ -31,8 +31,8 @@ if (trim((string) ($_POST['website'] ?? '')) !== '') {
     respond(true, 'Recebido.');
 }
 
-if ($nome === '' || $telefone === '' || $email === '' || $tipoEvento === '') {
-    respond(false, 'Preencha nome, telefone, e-mail e tipo de evento.', 422);
+if ($nome === '' || $telefone === '' || $email === '' || $tipoEvento === '' || $mensagem === '') {
+    respond(false, 'Preencha todos os campos: nome, telefone, e-mail, tipo de evento e mensagem.', 422);
 }
 
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
