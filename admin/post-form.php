@@ -35,7 +35,7 @@ $pageHeading = $isEdit ? 'Editar post' : 'Novo post';
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title><?= htmlspecialchars($pageHeading, ENT_QUOTES, 'UTF-8') ?> | Admin do blog</title>
   <meta name="robots" content="noindex, nofollow" />
-  <link rel="stylesheet" href="/blog.css" />
+  <link rel="stylesheet" href="/blog.css?v=<?= @filemtime(__DIR__ . "/../blog.css") ?: 1 ?>" />
   <link href="/vendor/quill/quill.snow.css" rel="stylesheet" />
 </head>
 <body class="admin-body">
