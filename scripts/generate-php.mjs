@@ -563,6 +563,7 @@ copyFileSync(path.join(root, 'partials', 'seo-meta.php'), path.join(distDir, 'pa
 copyFileSync(path.join(root, 'subscribe.php'), path.join(distDir, 'subscribe.php'));
 copyFileSync(path.join(root, 'router.php'), path.join(distDir, 'router.php'));
 copyFileSync(path.join(root, 'sitemap.php'), path.join(distDir, 'sitemap.php'));
+copyFileSync(path.join(root, 'pages-sitemap.php'), path.join(distDir, 'pages-sitemap.php'));
 copyFileSync(path.join(root, 'blog-sitemap.php'), path.join(distDir, 'blog-sitemap.php'));
 copyFileSync(path.join(root, '404.php'), path.join(distDir, '404.php'));
 
