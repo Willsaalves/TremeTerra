@@ -77,6 +77,21 @@ if (isset($staticMimes[$ext]) && is_file($path)) {
         : 'public, max-age=2592000'; // public/, sem hash — 30 dias (curto o bastante pra corrigir um upload errado sem esperar muito, longo o bastante pra passar no audit de cache do Lighthouse)
     header('Content-Type: ' . $staticMimes[$ext]);
     header('Cache-Control: ' . $cache);
+
+    // Compressão gzip pros tipos textuais (CSS/JS/SVG/JSON/manifest), quando o
+    // cliente aceita — o servidor embutido do PHP não comprime nada sozinho.
+    // Imagens/fontes já são formatos comprimidos, não entram aqui.
+    $gzippable = in_array($ext, ['css', 'js', 'svg', 'json', 'webmanifest'], true);
+    $acceptsGzip = str_contains($_SERVER['HTTP_ACCEPT_ENCODING'] ?? '', 'gzip');
+    if ($gzippable && $acceptsGzip) {
+        $data = gzencode((string) file_get_contents($path), 6);
+        header('Content-Encoding: gzip');
+        header('Vary: Accept-Encoding');
+        header('Content-Length: ' . (string) strlen($data));
+        echo $data;
+        return true;
+    }
+
     header('Content-Length: ' . (string) filesize($path));
     readfile($path);
     return true;
@@ -95,6 +110,50 @@ if (preg_match('#^/uploads/([a-zA-Z0-9]+\.(?:jpe?g|png|webp|gif))$#', $uri, $upM
         header('Cache-Control: public, max-age=2592000');
         header('Content-Length: ' . (string) filesize($uploadPath));
         readfile($uploadPath);
+        return true;
+    }
+}
+
+// --- 1d. Redirects 301 de URLs legadas (páginas .php antigas por cidade/
+// estado e taxonomias de blog do site anterior) pras páginas canônicas
+// atuais. Consolida dezenas de URLs de SEO antigas num único destino, sem
+// deixar 404. Casado por prefixo/família — as variantes por cidade/estado e
+// com/sem .php caem todas no mesmo destino. Vem depois de assets estáticos
+// (que já retornaram acima) e antes do roteamento normal. ---
+$legacyRedirects = [
+    // aluguel de som (todas as cidades/estados + "melhor aluguel") -> aluguel-som-profissional
+    '#^/(?:melhor-)?aluguel-de-som-para-eventos#' => '/aluguel-som-profissional/',
+    // banda para eventos corporativos -> shows
+    '#^/banda-para-eventos-corporativos#' => '/shows/',
+    // dj para eventos por cidade/estado -> dj-para-eventos (não pega /dj-para-eventos/ nem /dj-para-casamentos/)
+    '#^/dj-para-eventos-(?:em|no)-#' => '/dj-para-eventos/',
+    // empresa de eventos (+ páginas institucionais antigas) -> empresa-audiovisual
+    '#^/empresa-de-eventos#' => '/empresa-audiovisual/',
+    '#^/sobre-nos(?:\.php)?$#' => '/empresa-audiovisual/',
+    '#^/diferencial(?:\.php)?$#' => '/empresa-audiovisual/',
+    '#^/informacoes(?:\.php)?$#' => '/empresa-audiovisual/',
+    // iluminação para eventos -> iluminacao-para-festas
+    '#^/iluminacao-para-eventos#' => '/iluminacao-para-festas/',
+    // painel de led para eventos -> painel-de-led
+    '#^/painel-de-led-para-eventos#' => '/painel-de-led/',
+    // produtora de eventos (todas as variantes) -> produtora-de-eventos-corporativos
+    '#^/produtora-de-eventos#' => '/produtora-de-eventos-corporativos/',
+    // taxonomias e index antigos do blog (WordPress) -> /blog/
+    '#^/blog/(?:author|category|tag|page)/#' => '/blog/',
+    '#^/blog/home/?$#' => '/blog/',
+];
+
+foreach ($legacyRedirects as $pattern => $target) {
+    if (preg_match($pattern, $uri)) {
+        // Evita redirecionar a própria página canônica pra ela mesma
+        // (ex.: /produtora-de-eventos-corporativos/ casa o prefixo, mas já é
+        // o destino) — deixa o roteamento normal servir.
+        if (rtrim($uri, '/') === rtrim($target, '/')) {
+            break;
+        }
+        $query = $_SERVER['QUERY_STRING'] ?? '';
+        http_response_code(301);
+        header('Location: ' . $target . ($query !== '' ? '?' . $query : ''));
         return true;
     }
 }
@@ -133,6 +192,18 @@ if ($uri !== '/' && !is_file($path) && pathinfo($path, PATHINFO_EXTENSION) === '
     if (is_file($phpPath)) {
         chdir(dirname($phpPath));
         require $phpPath;
+        return true;
+    }
+}
+
+// --- 2c. Sitemap do blog: /blog/page-sitemap.xml -> blog-sitemap.php ---
+// Precisa vir ANTES da regra de /blog/{slug} abaixo, senão o slug capturaria
+// "page-sitemap.xml" e cairia no blog-post.php (404).
+if ($uri === '/blog/page-sitemap.xml') {
+    $blogSitemap = $root . '/blog-sitemap.php';
+    if (is_file($blogSitemap)) {
+        chdir($root);
+        require $blogSitemap;
         return true;
     }
 }

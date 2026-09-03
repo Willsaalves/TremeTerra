@@ -141,6 +141,19 @@
     transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
   }
 
+  /* Ponte invisível cobrindo o vão de 0.85rem entre o gatilho "Locação" e o
+     menu. Sem ela, ao descer o mouse pro menu o cursor cruza um espaço vazio,
+     o :hover do .nav-item se perde e o dropdown some antes de ser clicado.
+     Como o ::after pertence ao .nav-item, passar por ele mantém o :hover. */
+  .nav-item.has-dropdown::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 1rem;
+  }
+
   .nav-item.has-dropdown:hover .nav-dropdown,
   .nav-item.has-dropdown:focus-within .nav-dropdown,
   .nav-item.has-dropdown.is-open .nav-dropdown {

@@ -1,38 +1,19 @@
 <?php
 declare(strict_types=1);
 
+// Sitemap dedicado do blog, servido em /blog/page-sitemap.xml (o router
+// roteia essa URL pra cá). Lista a página do blog + todos os posts
+// publicados, gerado dinamicamente a partir do banco. Os mesmos posts
+// também aparecem no /sitemap.xml geral — este é um sitemap extra, no
+// formato de caminho que algumas ferramentas de SEO esperam.
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/lib/db.php';
 
-// URLs estáveis das páginas estáticas do site (mesma lista de canonicalPath
-// já usada em scripts/generate-php.mjs). Não muda a cada build — só quando
-// uma página nova for criada, atualizar aqui também.
-$staticPaths = [
-    '/',
-    '/locacao-equipamentos/',
-    '/produtora-de-eventos-corporativos/',
-    '/montagem-de-palco/',
-    '/dj-para-eventos/',
-    '/aluguel-som-profissional/',
-    '/iluminacao-para-festas/',
-    '/painel-de-led/',
-    '/locacao-painel-led/',
-    '/dj-para-casamentos/',
-    '/dj-para-formatura/',
-    '/casamentos/',
-    '/formaturas/',
-    '/empresa-audiovisual/',
-    '/shows/',
-    '/streaming-para-eventos-corporativos/',
-    '/blog/',
-];
-
 $deployDate = gmdate('Y-m-d');
 
-$urls = [];
-foreach ($staticPaths as $path) {
-    $urls[] = ['loc' => SITE_URL . $path, 'lastmod' => $deployDate];
-}
+$urls = [
+    ['loc' => SITE_URL . '/blog/', 'lastmod' => $deployDate],
+];
 
 $db = getDb();
 $posts = $db->query("SELECT slug, updated_at FROM posts WHERE status = 'published' ORDER BY published_at DESC")->fetchAll();

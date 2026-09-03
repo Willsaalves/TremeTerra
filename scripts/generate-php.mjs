@@ -5,6 +5,16 @@
 import { readFileSync, writeFileSync, mkdirSync, copyFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import { transformSync } from 'esbuild';
+
+// Minifica um arquivo-fonte (CSS/JS) e grava no dist/. Usado pros assets do
+// blog (blog.css/blog.js), que não passam pelo bundler do Vite e antes iam
+// crus pro dist — o audit de SEO apontava esses dois como não minificados.
+function minifyToDist(srcRel, outName, loader) {
+  const code = readFileSync(path.join(root, srcRel), 'utf8');
+  const { code: min } = transformSync(code, { loader, minify: true });
+  writeFileSync(path.join(distDir, outName), min);
+}
 
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const distDir = path.join(root, 'dist');
@@ -106,6 +116,32 @@ const pages = [
       ['Produzem com antecedência mínima?', 'Com 45–60 dias para eventos grandes; 30 dias para eventos menores.'],
       ['Produzem para todos os portes?', 'Sim, de startups até grandes corporações.'],
       ['Quais são as referências da Treme Terra Audiovisual?', 'Cases documentados com CPS, ATLAS LIVE e outros.'],
+    ],
+  },
+  {
+    htmlFile: 'montagem-de-palco.html',
+    phpFile: 'montagem-de-palco.php',
+    pageTitleExpr: "'Montagem de Palco | ' . SITE_NAME",
+    pageDescriptionExpr: "'Empresa de montagem de palco e locação de estrutura para eventos, shows e convenções em SP. Aluguel de palco pequeno ou grande porte. Peça seu orçamento!'",
+    canonicalPath: '/montagem-de-palco/',
+    breadcrumbNameExpr: "'Montagem de Palco'",
+    schemaVar: `[
+    '@context'    => 'https://schema.org',
+    '@type'       => 'Service',
+    '@id'         => SITE_URL . '/montagem-de-palco#service',
+    'name'        => 'Montagem de Palco e Locação de Estrutura para Eventos',
+    'serviceType' => 'Montagem e locação de palco e estrutura para eventos',
+    'description' => 'Empresa de montagem de palco e locação de estrutura para eventos, shows e convenções em São Paulo. Aluguel de palco pequeno ou de grande porte, com estruturas modulares e coberturas.',
+    'provider'    => ['@id' => SITE_URL . '/#organization'],
+    'areaServed'  => 'BR',
+]`,
+    faqItems: [
+      ['Quanto custa o aluguel de palco para eventos?', 'O valor do aluguel de palco varia conforme o tamanho da estrutura (ex.: montagem de palco pequeno vs. palco coberto para festival), tempo de uso, localidade e necessidade de coberturas ou rampas. Entre em contato para um orçamento sob medida.'],
+      ['Qual a diferença entre locação de palco simples e locação de estrutura para eventos?', 'Na locação de palco simples, fornecemos os praticáveis e a montagem da plataforma. Já na locação de estrutura para eventos, incluímos coberturas, grids de iluminação, praticáveis, torres de som e painéis de LED integrados.'],
+      ['Vocês realizam a montagem de palco para show ao ar livre?', 'Sim! Somos uma empresa de montagem de palco especializada em eventos abertos. A montagem de palco para show ao ar livre inclui cobertura impermeável, nivelamento para pisos irregulares e sistemas de ancoragem contra ventos.'],
+      ['Vocês oferecem aluguel de palco para eventos pequenos e fechados?', 'Sim! O aluguel de palco para eventos pequenos é perfeito para salões de festas, auditórios, hotéis e casamentos. Utilizamos praticáveis modulares de baixa altura com acabamento impecável.'],
+      ['Quanto tempo leva o processo de montagem do palco?', 'A montagem do palco varia de 4 a 6 horas para estruturas compactas e de 8 a 12 horas para o aluguel de palco para show de grande porte com cobertura e iluminação.'],
+      ['Por que contratar a Treme Terra para a montagem e aluguel de estrutura para eventos?', 'Desde 2011, a Treme Terra Audiovisual combina equipamentos de ponta, pontualidade e conformidade técnica para garantir o sucesso e a segurança da sua montagem de palco.'],
     ],
   },
   {
@@ -527,6 +563,7 @@ copyFileSync(path.join(root, 'partials', 'seo-meta.php'), path.join(distDir, 'pa
 copyFileSync(path.join(root, 'subscribe.php'), path.join(distDir, 'subscribe.php'));
 copyFileSync(path.join(root, 'router.php'), path.join(distDir, 'router.php'));
 copyFileSync(path.join(root, 'sitemap.php'), path.join(distDir, 'sitemap.php'));
+copyFileSync(path.join(root, 'blog-sitemap.php'), path.join(distDir, 'blog-sitemap.php'));
 copyFileSync(path.join(root, '404.php'), path.join(distDir, '404.php'));
 
 // Blog (páginas públicas + admin) — não passa pelo Vite, é PHP dinâmico
@@ -534,11 +571,12 @@ copyFileSync(path.join(root, '404.php'), path.join(distDir, '404.php'));
 copyFileSync(path.join(root, 'blog.php'), path.join(distDir, 'blog.php'));
 copyFileSync(path.join(root, 'blog-post.php'), path.join(distDir, 'blog-post.php'));
 copyFileSync(path.join(root, 'seed-blog-posts.php'), path.join(distDir, 'seed-blog-posts.php'));
-copyFileSync(path.join(root, 'src', 'styles', 'blog.css'), path.join(distDir, 'blog.css'));
-copyFileSync(path.join(root, 'src', 'blog.js'), path.join(distDir, 'blog.js'));
+minifyToDist(path.join('src', 'styles', 'blog.css'), 'blog.css', 'css');
+minifyToDist(path.join('src', 'blog.js'), 'blog.js', 'js');
 copyFileSync(path.join(root, 'lib', 'db.php'), path.join(distDir, 'lib', 'db.php'));
 copyFileSync(path.join(root, 'lib', 'require-admin.php'), path.join(distDir, 'lib', 'require-admin.php'));
 copyFileSync(path.join(root, 'lib', 'uploads.php'), path.join(distDir, 'lib', 'uploads.php'));
+copyFileSync(path.join(root, 'lib', 'mailer.php'), path.join(distDir, 'lib', 'mailer.php'));
 for (const file of readdirSync(path.join(root, 'admin'))) {
   copyFileSync(path.join(root, 'admin', file), path.join(distDir, 'admin', file));
 }

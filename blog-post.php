@@ -16,24 +16,11 @@ $stmt->execute([$slug]);
 $post = $stmt->fetch();
 
 if ($post === false) {
-    http_response_code(404);
-    ?>
-    <!doctype html>
-    <html lang="pt-BR">
-    <head>
-      <meta charset="UTF-8" />
-      <title>Post não encontrado | Blog <?= htmlspecialchars(SITE_NAME, ENT_QUOTES, 'UTF-8') ?></title>
-      <meta name="robots" content="noindex">
-      <link rel="stylesheet" href="/blog.css" />
-    </head>
-    <body>
-      <div class="container" style="padding-block:4rem;text-align:center;">
-        <h1>Post não encontrado</h1>
-        <p><a href="/blog/">Voltar pro blog</a></p>
-      </div>
-    </body>
-    </html>
-    <?php
+    // Post inexistente (inclui os slugs de posts antigos do site anterior,
+    // que foram consolidados): 301 pro índice do blog em vez de 404, pra não
+    // perder o link juice das URLs antigas indexadas.
+    http_response_code(301);
+    header('Location: /blog/');
     exit;
 }
 
@@ -45,7 +32,10 @@ if (!empty($post['faq_json'])) {
     }
 }
 
-$pageTitle          = ($post['seo_title'] ?: $post['title']) . ' | ' . SITE_NAME;
+// Quando o post tem seo_title, ele já é o meta title completo (com marca e no
+// tamanho ideal de ~60 caracteres) — usa como está. Sem seo_title, monta a
+// partir do título do post + nome do site.
+$pageTitle          = $post['seo_title'] ? $post['seo_title'] : ($post['title'] . ' | ' . SITE_NAME);
 $pageDescription    = (string) ($post['seo_description'] ?: $post['direct_answer'] ?: SITE_DESCRIPTION);
 $pageCanonical      = SITE_URL . '/blog/' . $post['slug'];
 $pageBreadcrumbTrail = [
@@ -101,13 +91,30 @@ if (!empty($post['cover_image_url'])) {
       <?php endif; ?>
 
       <?php if (!empty($post['cover_image_url'])): ?>
-        <?php $coverWebp = preg_replace('/\.(jpe?g|png)$/i', '.webp', (string) $post['cover_image_url']); ?>
+        <?php
+        $coverUrl  = (string) $post['cover_image_url'];
+        $coverWebp = preg_replace('/\.(jpe?g|png)$/i', '.webp', $coverUrl);
+        // Só oferece a variante .webp quando o arquivo realmente existe. O
+        // <picture> escolhe a <source> webp pelo suporte do navegador (não pela
+        // disponibilidade), e NÃO cai pro <img> se a webp der 404 — então uma
+        // webp inexistente (caso das imagens enviadas pelo admin, que só geram
+        // o original) quebrava a imagem de capa. Ver blog-post.php.
+        $coverHasWebp = false;
+        if ($coverWebp !== $coverUrl) {
+            if (str_starts_with($coverUrl, '/uploads/')) {
+                require_once __DIR__ . '/lib/uploads.php';
+                $coverHasWebp = is_file(blogUploadDir() . '/' . basename($coverWebp));
+            } elseif (str_starts_with($coverUrl, '/')) {
+                $coverHasWebp = is_file(__DIR__ . $coverWebp);
+            }
+        }
+        ?>
         <div class="cover">
           <picture>
-            <?php if ($coverWebp !== $post['cover_image_url']): ?>
+            <?php if ($coverHasWebp): ?>
               <source srcset="<?= htmlspecialchars($coverWebp, ENT_QUOTES, 'UTF-8') ?>" type="image/webp" />
             <?php endif; ?>
-            <img src="<?= htmlspecialchars($post['cover_image_url'], ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars((string) ($post['cover_image_alt'] ?: $post['title']), ENT_QUOTES, 'UTF-8') ?>" loading="lazy" />
+            <img src="<?= htmlspecialchars($coverUrl, ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars((string) ($post['cover_image_alt'] ?: $post['title']), ENT_QUOTES, 'UTF-8') ?>" loading="lazy" />
           </picture>
         </div>
       <?php endif; ?>

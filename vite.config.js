@@ -7,6 +7,7 @@ export default {
         main: resolve(__dirname, 'index.html'),
         locacao: resolve(__dirname, 'locacao-equipamentos.html'),
         corporativos: resolve(__dirname, 'produtora-de-eventos-corporativos.html'),
+        montagemPalco: resolve(__dirname, 'montagem-de-palco.html'),
         djEventos: resolve(__dirname, 'dj-para-eventos.html'),
         aluguelSom: resolve(__dirname, 'aluguel-som-profissional.html'),
         iluminacaoFestas: resolve(__dirname, 'iluminacao-para-festas.html'),
