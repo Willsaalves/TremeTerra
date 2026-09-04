@@ -1,0 +1,1241 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Save the Med</title>
+<meta name="description" content="Plataforma que transforma estoque próximo do vencimento em venda: a farmácia recupera capital parado, o consumidor paga menos e o desperdício cai.">
+<meta property="og:title" content="Save the Med">
+<meta property="og:description" content="A plataforma de recuperação de estoque das farmácias. Reserve e retire, com desconto, perto de você.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* ---------- tokens ---------- */
+:root{
+  --paper:#F2F5F0; --surface:#FFFFFF; --surface-2:#E8EDE5; --surface-3:#DDE4D9;
+  --ink:#0F201B; --ink-2:#4B5B53; --ink-3:#71827A;
+  --line:#D2DACD; --line-strong:#B6C2B2;
+  --brand:#0F6B52; --brand-2:#0A4B3A; --on-brand:#F2F5F0;
+  --accent:#C4661F;
+  --ok:#2F7D53; --warn:#A97C10; --promo:#C4661F; --crit:#B23A2B;
+  --ok-bg:#DDEBE0; --warn-bg:#F4EBD2; --promo-bg:#F6E3D3; --crit-bg:#F4DDD8;
+  --shadow:0 1px 2px rgba(15,32,27,.05), 0 8px 24px -16px rgba(15,32,27,.35);
+  --maxw:1120px;
+  --f-display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#0A1411; --surface:#101D18; --surface-2:#16241E; --surface-3:#1D2E26;
+    --ink:#E9EFE9; --ink-2:#9CADA4; --ink-3:#7D8E86;
+    --line:#233229; --line-strong:#31463A;
+    --brand:#3ECFA1; --brand-2:#8FE8C7; --on-brand:#06110D;
+    --accent:#EE9A55;
+    --ok:#4FBE83; --warn:#D9B14A; --promo:#EE9A55; --crit:#E4705E;
+    --ok-bg:#12291F; --warn-bg:#2A2413; --promo-bg:#2C1E13; --crit-bg:#2C1715;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -18px rgba(0,0,0,.9);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0A1411; --surface:#101D18; --surface-2:#16241E; --surface-3:#1D2E26;
+  --ink:#E9EFE9; --ink-2:#9CADA4; --ink-3:#7D8E86;
+  --line:#233229; --line-strong:#31463A;
+  --brand:#3ECFA1; --brand-2:#8FE8C7; --on-brand:#06110D;
+  --accent:#EE9A55;
+  --ok:#4FBE83; --warn:#D9B14A; --promo:#EE9A55; --crit:#E4705E;
+  --ok-bg:#12291F; --warn-bg:#2A2413; --promo-bg:#2C1E13; --crit-bg:#2C1715;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -18px rgba(0,0,0,.9);
+}
+
+/* ---------- base ---------- */
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:var(--f-body); font-size:17px; line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%}
+h1,h2,h3,h4{font-family:var(--f-display); font-weight:700; line-height:1.08; text-wrap:balance; margin:0}
+h1{font-size:clamp(2.3rem,4.6vw,3.5rem); letter-spacing:-.025em; font-weight:800}
+h2{font-size:clamp(1.8rem,3.4vw,2.6rem); letter-spacing:-.02em}
+h3{font-size:1.16rem; letter-spacing:-.01em}
+p{margin:0}
+a{color:inherit}
+ul{margin:0; padding:0; list-style:none}
+strong{font-weight:600}
+:focus-visible{outline:2px solid var(--brand); outline-offset:3px; border-radius:2px}
+
+.wrap{width:100%; max-width:var(--maxw); margin-inline:auto; padding-inline:24px}
+.prose{max-width:63ch}
+.mono{font-family:var(--f-mono); font-variant-numeric:tabular-nums}
+
+/* section rhythm */
+.sec{padding-block:clamp(56px,7vw,92px); border-top:1px solid var(--line)}
+.sec--plain{border-top:0}
+.sec-head{display:flex; flex-direction:column; gap:14px; margin-bottom:38px; max-width:64ch}
+.eyebrow{
+  font-family:var(--f-mono); font-size:.72rem; font-weight:500; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--ink-3); display:flex; align-items:center; gap:10px;
+}
+.eyebrow::before{content:""; width:22px; height:1px; background:var(--line-strong)}
+.lead{color:var(--ink-2); font-size:1.06rem}
+
+/* ---------- nav ---------- */
+.nav{
+  position:sticky; top:0; z-index:50; background:color-mix(in srgb,var(--paper) 88%,transparent);
+  backdrop-filter:blur(10px); border-bottom:1px solid var(--line);
+}
+.nav-in{display:flex; align-items:center; gap:24px; height:62px}
+.brand{display:flex; align-items:center; gap:10px; font-family:var(--f-display); font-weight:700; letter-spacing:-.02em; text-decoration:none}
+.brand-mark{
+  width:26px; height:26px; border-radius:7px; background:var(--brand); color:var(--on-brand);
+  display:grid; place-items:center; font-family:var(--f-mono); font-size:.8rem; font-weight:600;
+}
+.brand-tag{font-family:var(--f-mono); font-size:.62rem; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--ink-3); border:1px solid var(--line-strong); padding:2px 6px; border-radius:4px}
+.nav-links{display:none; gap:22px; margin-left:auto; font-size:.9rem; color:var(--ink-2)}
+.nav-links a{text-decoration:none}
+.nav-links a:hover{color:var(--ink)}
+.nav .btn{margin-left:auto}
+@media(min-width:900px){ .nav-links{display:flex} .nav .btn{margin-left:0} }
+
+/* ---------- buttons ---------- */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  font-family:var(--f-body); font-size:.92rem; font-weight:600; text-decoration:none;
+  padding:11px 18px; border-radius:6px; border:1px solid transparent; cursor:pointer;
+  transition:transform .15s ease, background .15s ease, border-color .15s ease;
+}
+.btn--primary{background:var(--brand); color:var(--on-brand)}
+.btn--primary:hover{transform:translateY(-1px)}
+.btn--ghost{border-color:var(--line-strong); color:var(--ink); background:transparent}
+.btn--ghost:hover{border-color:var(--brand); color:var(--brand)}
+@media(prefers-reduced-motion:reduce){ .btn{transition:none} .btn--primary:hover{transform:none} }
+
+/* ---------- hazard rule (faixa de advertência de bula) ---------- */
+.hazard{
+  height:8px;
+  background:repeating-linear-gradient(45deg,
+    color-mix(in srgb,var(--accent) 55%,transparent) 0 7px,
+    transparent 7px 15px);
+}
+
+/* ---------- hero ---------- */
+.hero{padding-top:clamp(46px,6vw,76px); padding-bottom:clamp(46px,6vw,76px)}
+.hero-grid{display:grid; gap:44px; align-items:start}
+@media(min-width:980px){ .hero-grid{grid-template-columns:1.08fr .92fr; gap:56px} }
+.hero h1 em{font-style:normal; color:var(--brand); }
+.hero-sub{margin-top:20px; font-size:1.12rem; color:var(--ink-2); max-width:52ch}
+.hero-cta{display:flex; flex-wrap:wrap; gap:12px; margin-top:26px}
+.hero-note{margin-top:16px; font-size:.84rem; color:var(--ink-3); font-family:var(--f-mono)}
+.hero-stats{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; margin-top:38px;
+  background:var(--line); border:1px solid var(--line); border-radius:8px; overflow:hidden}
+.hero-stats div{background:var(--paper); padding:14px 16px}
+.hero-stats dt{font-size:.76rem; color:var(--ink-3); font-family:var(--f-mono); letter-spacing:.04em}
+.hero-stats dd{margin:4px 0 0; font-family:var(--f-display); font-weight:700; font-size:1.32rem; letter-spacing:-.02em}
+
+/* ---------- product cards (oferta) ---------- */
+.offer{
+  background:var(--surface); border:1px solid var(--line); border-radius:12px;
+  box-shadow:var(--shadow); overflow:hidden;
+}
+.offer-top{display:flex; align-items:center; justify-content:space-between; gap:12px;
+  padding:12px 16px; border-bottom:1px solid var(--line); background:var(--surface-2)}
+.offer-app{font-family:var(--f-mono); font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3)}
+.offer-body{padding:18px 16px 16px; display:grid; gap:14px}
+.offer-title{display:flex; justify-content:space-between; align-items:flex-start; gap:12px}
+.offer-name{font-family:var(--f-display); font-weight:700; font-size:1.28rem; letter-spacing:-.015em}
+.offer-form{font-size:.86rem; color:var(--ink-2)}
+.price-row{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap}
+.price-now{font-family:var(--f-display); font-weight:800; font-size:2rem; letter-spacing:-.03em; color:var(--brand)}
+.price-was{font-family:var(--f-mono); color:var(--ink-3); text-decoration:line-through; font-size:.95rem}
+.badge{
+  font-family:var(--f-mono); font-size:.72rem; font-weight:600; letter-spacing:.04em;
+  padding:3px 8px; border-radius:999px; white-space:nowrap;
+}
+.badge--off{background:var(--promo-bg); color:var(--promo)}
+.badge--ok{background:var(--ok-bg); color:var(--ok)}
+.badge--warn{background:var(--warn-bg); color:var(--warn)}
+.badge--promo{background:var(--promo-bg); color:var(--promo)}
+.badge--crit{background:var(--crit-bg); color:var(--crit)}
+.spec{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px 14px;
+  border-top:1px dashed var(--line-strong); border-bottom:1px dashed var(--line-strong); padding:14px 0}
+.spec div{display:flex; flex-direction:column; gap:2px}
+.spec dt{font-size:.7rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); font-family:var(--f-mono)}
+.spec dd{margin:0; font-family:var(--f-mono); font-size:.92rem; font-weight:500}
+
+/* shelf-life meter */
+.meter{display:grid; gap:6px}
+.meter-track{height:7px; border-radius:4px; overflow:hidden;
+  background:linear-gradient(90deg,var(--crit) 0%,var(--promo) 26%,var(--warn) 52%,var(--ok) 100%); position:relative}
+.meter-track::after{content:""; position:absolute; inset:0 0 0 var(--pos,60%); background:var(--surface-3)}
+.meter-labels{display:flex; justify-content:space-between; font-family:var(--f-mono); font-size:.7rem; color:var(--ink-3)}
+.offer-actions{display:flex; gap:10px; align-items:center}
+.offer-actions .btn{flex:1}
+.qr{width:44px; height:44px; border-radius:6px; border:1px solid var(--line-strong);
+  background:
+    conic-gradient(from 0deg,var(--ink) 25%,transparent 0 50%,var(--ink) 0 75%,transparent 0) 0 0/10px 10px,
+    var(--surface); opacity:.8}
+
+/* ---------- generic grid + card ---------- */
+.grid{display:grid; gap:18px}
+.g2{grid-template-columns:1fr}
+.g3{grid-template-columns:1fr}
+.g4{grid-template-columns:repeat(2,1fr)}
+@media(min-width:760px){ .g2{grid-template-columns:repeat(2,1fr)} .g3{grid-template-columns:repeat(3,1fr)} .g4{grid-template-columns:repeat(4,1fr)} }
+.card{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:20px}
+.card h3{margin-bottom:8px}
+.card p{color:var(--ink-2); font-size:.95rem}
+.card-num{font-family:var(--f-mono); font-size:.72rem; color:var(--ink-3); letter-spacing:.1em; display:block; margin-bottom:10px}
+
+/* bullets */
+.ticks{display:grid; gap:9px; font-size:.95rem; color:var(--ink-2)}
+.ticks li{display:flex; gap:10px; align-items:flex-start}
+.ticks li::before{content:"—"; color:var(--brand); font-family:var(--f-mono); flex:none}
+.crosses li::before{content:"×"; color:var(--crit); font-weight:600}
+
+/* ---------- problem: two sides ---------- */
+.sides{display:grid; gap:0; border:1px solid var(--line); border-radius:12px; overflow:hidden; background:var(--line)}
+@media(min-width:860px){ .sides{grid-template-columns:1fr 1fr; gap:1px} }
+.side{background:var(--surface); padding:26px 24px; display:grid; gap:16px; align-content:start}
+.side-tag{font-family:var(--f-mono); font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3)}
+.side h3{font-size:1.35rem}
+
+/* ---------- steps ---------- */
+.steps{counter-reset:s; display:grid; gap:14px}
+@media(min-width:900px){ .steps{grid-template-columns:repeat(4,1fr)} }
+.step{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:18px; display:grid; gap:8px; align-content:start}
+.step-i{font-family:var(--f-mono); font-size:.74rem; color:var(--brand); letter-spacing:.1em}
+.step h3{font-size:1.02rem}
+.step p{font-size:.9rem; color:var(--ink-2)}
+
+/* ---------- dashboard ---------- */
+.dash{background:var(--surface); border:1px solid var(--line); border-radius:12px; overflow:hidden; box-shadow:var(--shadow)}
+.dash-top{display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between;
+  padding:14px 18px; border-bottom:1px solid var(--line); background:var(--surface-2)}
+.dash-top h3{font-size:1rem}
+.kpis{display:grid; grid-template-columns:repeat(2,1fr); gap:1px; background:var(--line)}
+@media(min-width:760px){ .kpis{grid-template-columns:repeat(3,1fr)} }
+.kpi{background:var(--surface); padding:16px 18px}
+.kpi dt{font-size:.72rem; font-family:var(--f-mono); letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3)}
+.kpi dd{margin:6px 0 0; font-family:var(--f-display); font-weight:700; font-size:1.6rem; letter-spacing:-.025em; font-variant-numeric:tabular-nums}
+.kpi--hero dd{color:var(--brand)}
+.tablewrap{overflow-x:auto}
+table{width:100%; border-collapse:collapse; font-size:.9rem}
+th,td{text-align:left; padding:11px 18px; border-top:1px solid var(--line); white-space:nowrap}
+th{font-family:var(--f-mono); font-size:.7rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); font-weight:500}
+td.num{font-family:var(--f-mono); font-variant-numeric:tabular-nums}
+tbody tr:hover{background:var(--surface-2)}
+
+/* semáforo legend */
+.legend{display:grid; gap:10px; margin-top:22px}
+@media(min-width:760px){ .legend{grid-template-columns:repeat(4,1fr)} }
+.leg{border:1px solid var(--line); border-radius:9px; padding:14px; display:grid; gap:6px; background:var(--surface)}
+.leg-d{font-family:var(--f-mono); font-size:1.4rem; font-weight:600; letter-spacing:-.02em}
+.leg small{color:var(--ink-2); font-size:.85rem}
+.leg--ok{border-left:3px solid var(--ok)} .leg--ok .leg-d{color:var(--ok)}
+.leg--warn{border-left:3px solid var(--warn)} .leg--warn .leg-d{color:var(--warn)}
+.leg--promo{border-left:3px solid var(--promo)} .leg--promo .leg-d{color:var(--promo)}
+.leg--crit{border-left:3px solid var(--crit)} .leg--crit .leg-d{color:var(--crit)}
+
+/* ---------- smart expiry ---------- */
+.se{display:grid; gap:26px; align-items:center}
+@media(min-width:900px){ .se{grid-template-columns:1fr 1fr; gap:44px} }
+.formula{font-family:var(--f-mono); font-size:.88rem; color:var(--ink-2); background:var(--surface-2);
+  border:1px solid var(--line); border-radius:8px; padding:14px 16px; line-height:1.9}
+.gauge{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:22px; display:grid; gap:16px; box-shadow:var(--shadow)}
+.gauge-score{display:flex; align-items:baseline; gap:12px}
+.gauge-score b{font-family:var(--f-display); font-size:3.4rem; font-weight:800; letter-spacing:-.04em; color:var(--crit); line-height:1}
+.gauge-bar{height:10px; border-radius:5px; background:var(--surface-3); overflow:hidden}
+.gauge-fill{height:100%; width:87%; background:linear-gradient(90deg,var(--warn),var(--crit))}
+.gauge-rec{border-top:1px solid var(--line); padding-top:14px; font-size:.95rem; color:var(--ink-2)}
+.gauge-rec b{color:var(--ink); font-weight:600}
+
+/* ---------- phases ---------- */
+.phases{display:grid; gap:12px}
+@media(min-width:900px){ .phases{grid-template-columns:repeat(4,1fr)} }
+.phase{border:1px solid var(--line); border-radius:10px; padding:18px; background:var(--surface); display:grid; gap:10px; align-content:start}
+.phase-h{display:flex; align-items:center; justify-content:space-between; gap:8px}
+.phase-n{font-family:var(--f-mono); font-size:.72rem; letter-spacing:.12em; color:var(--ink-3)}
+.phase h3{font-size:1.02rem}
+.phase p{font-size:.88rem; color:var(--ink-2)}
+.phase--now{border-color:var(--brand); box-shadow:0 0 0 1px var(--brand) inset}
+.phase--out{opacity:.72; border-style:dashed}
+
+/* ---------- pricing ---------- */
+.plans{display:grid; gap:16px}
+@media(min-width:860px){ .plans{grid-template-columns:repeat(3,1fr)} }
+.plan{border:1px solid var(--line); border-radius:12px; padding:22px; background:var(--surface); display:grid; gap:14px; align-content:start}
+.plan--feat{border-color:var(--brand); background:var(--surface)}
+.plan-name{font-family:var(--f-mono); font-size:.76rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3)}
+.plan-price{font-family:var(--f-display); font-weight:800; font-size:2rem; letter-spacing:-.03em}
+.plan-price span{display:block; margin-top:5px; font-family:var(--f-body); font-size:.88rem; font-weight:400; color:var(--ink-2); letter-spacing:0}
+.split{border:1px solid var(--line); border-radius:10px; overflow:hidden; background:var(--line);
+  display:grid; grid-template-columns:repeat(3,1fr); gap:1px; margin-top:20px}
+.split div{background:var(--surface); padding:14px 16px}
+.split dt{font-family:var(--f-mono); font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3)}
+.split dd{margin:5px 0 0; font-family:var(--f-display); font-size:1.3rem; font-weight:700; letter-spacing:-.02em}
+
+/* ---------- scenario ---------- */
+.calc{display:grid; gap:14px}
+@media(min-width:860px){ .calc{grid-template-columns:repeat(4,1fr)} }
+.calc-cell{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:18px; display:grid; gap:6px}
+.calc-cell dt{font-size:.78rem; color:var(--ink-3); font-family:var(--f-mono); letter-spacing:.06em}
+.calc-cell dd{margin:0; font-family:var(--f-display); font-weight:700; font-size:1.5rem; letter-spacing:-.025em; font-variant-numeric:tabular-nums}
+.calc-cell--out{background:var(--brand); border-color:var(--brand); color:var(--on-brand)}
+.calc-cell--out dt{color:color-mix(in srgb,var(--on-brand) 72%,transparent)}
+
+/* ---------- scorecard ---------- */
+.score{display:grid; gap:12px; max-width:640px}
+.score-row{display:grid; grid-template-columns:minmax(150px,1fr) 1fr 42px; gap:14px; align-items:center; font-size:.92rem}
+.score-bar{height:9px; border-radius:5px; background:var(--surface-3); overflow:hidden}
+.score-bar i{display:block; height:100%; background:var(--brand)}
+.score-bar i.low{background:var(--crit)}
+.score-bar i.mid{background:var(--warn)}
+.score-val{font-family:var(--f-mono); font-variant-numeric:tabular-nums; text-align:right; color:var(--ink-2); font-size:.86rem}
+.score-scale{font-family:var(--f-mono); font-size:.72rem; color:var(--ink-3); letter-spacing:.06em; margin-bottom:4px}
+
+/* ---------- timeline ---------- */
+.weeks{display:grid; gap:0; border-left:2px solid var(--line-strong); margin-left:6px}
+.week{padding:0 0 26px 24px; position:relative}
+.week:last-child{padding-bottom:0}
+.week::before{content:""; position:absolute; left:-7px; top:6px; width:12px; height:12px; border-radius:50%;
+  background:var(--brand); border:2px solid var(--paper)}
+.week-n{font-family:var(--f-mono); font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3)}
+.week h3{font-size:1.05rem; margin:4px 0 6px}
+.week p{font-size:.94rem; color:var(--ink-2)}
+
+/* ---------- stack ---------- */
+.chips{display:flex; flex-wrap:wrap; gap:8px}
+.chip{font-family:var(--f-mono); font-size:.78rem; padding:6px 11px; border-radius:6px;
+  border:1px solid var(--line-strong); color:var(--ink-2); background:var(--surface)}
+.arch{font-family:var(--f-mono); font-size:.8rem; line-height:1.75; color:var(--ink-2);
+  background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:18px; overflow-x:auto; white-space:pre}
+
+/* ---------- CTA form ---------- */
+.cta{background:var(--surface-2); border-top:1px solid var(--line)}
+.cta-grid{display:grid; gap:34px}
+@media(min-width:940px){ .cta-grid{grid-template-columns:1fr 1fr; gap:56px} }
+form{display:grid; gap:14px}
+.field{display:grid; gap:6px}
+.field label{font-family:var(--f-mono); font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3)}
+.field input,.field select,.field textarea{
+  font-family:var(--f-body); font-size:.98rem; color:var(--ink); background:var(--surface);
+  border:1px solid var(--line-strong); border-radius:7px; padding:11px 13px; width:100%;
+}
+.field textarea{resize:vertical; min-height:84px}
+.row2{display:grid; gap:14px}
+@media(min-width:620px){ .row2{grid-template-columns:1fr 1fr} }
+.form-note{font-size:.8rem; color:var(--ink-3)}
+.form-ok{display:none; border:1px solid var(--brand); background:var(--surface); border-radius:10px; padding:20px; gap:8px}
+.form-ok.on{display:grid}
+.form-ok h3{color:var(--brand)}
+.form-ok p{font-size:.94rem; color:var(--ink-2)}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line); padding-block:34px; font-size:.86rem; color:var(--ink-3)}
+.foot-grid{display:grid; gap:22px}
+@media(min-width:860px){ .foot-grid{grid-template-columns:1.4fr 1fr; align-items:start} }
+.disclaimer{font-size:.82rem; line-height:1.65; color:var(--ink-3); max-width:70ch}
+.disclaimer b{color:var(--ink-2); font-weight:600}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap nav-in">
+    <a class="brand" href="#topo">
+      <span class="brand-mark" aria-hidden="true">S+</span>
+      Save the Med
+      <span class="brand-tag">nome provisório</span>
+    </a>
+    <div class="nav-links">
+      <a href="#problema">Problema</a>
+      <a href="#produto">Produto</a>
+      <a href="#regulatorio">Regulatório</a>
+      <a href="#modelo">Modelo</a>
+      <a href="#mvp">MVP</a>
+    </div>
+    <a class="btn btn--primary" href="#participar">Quero participar</a>
+  </div>
+</nav>
+
+<header class="hero wrap" id="topo">
+  <div class="hero-grid">
+    <div>
+      <p class="eyebrow">Plataforma de recuperação de estoque · Brasília</p>
+      <h1 style="margin-top:16px">O estoque que vence é <em>dinheiro parado</em> na prateleira.</h1>
+      <p class="hero-sub">
+        Save the Med conecta farmácias com produtos próximos do vencimento a consumidores
+        que procuram o mesmo item mais barato, perto de casa. A farmácia recupera capital,
+        o consumidor economiza e menos produto vira perda.
+      </p>
+      <div class="hero-cta">
+        <a class="btn btn--primary" href="#participar">Quero participar como farmácia</a>
+        <a class="btn btn--ghost" href="#como-funciona">Ver como funciona</a>
+      </div>
+      <p class="hero-note">Reserve e retire · sem entrega no MVP · sem medicamentos controlados</p>
+
+      <dl class="hero-stats">
+        <div>
+          <dt>Posicionamento</dt>
+          <dd>Economize.<br>Evite desperdício.</dd>
+        </div>
+        <div>
+          <dt>Modelo</dt>
+          <dd>Marketplace<br>B2B2C</dd>
+        </div>
+        <div>
+          <dt>Métrica principal</dt>
+          <dd>R$ de estoque<br>recuperado</dd>
+        </div>
+      </dl>
+    </div>
+
+    <div class="offer" aria-label="Exemplo de oferta no aplicativo do consumidor">
+      <div class="offer-top">
+        <span class="offer-app">Ofertas perto de você · Brasília</span>
+        <span class="badge badge--off">38% OFF</span>
+      </div>
+      <div class="offer-body">
+        <div class="offer-title">
+          <div>
+            <div class="offer-name">Dipirona 500 mg</div>
+            <div class="offer-form">20 comprimidos · caixa lacrada</div>
+          </div>
+        </div>
+        <div class="price-row">
+          <span class="price-now">R$ 6,90</span>
+          <span class="price-was">R$ 11,20</span>
+          <span class="badge badge--ok">Venda livre</span>
+        </div>
+        <dl class="spec">
+          <div><dt>Validade</dt><dd>11/2026</dd></div>
+          <div><dt>Lote</dt><dd>B4721A</dd></div>
+          <div><dt>Farmácia</dt><dd>1,2 km</dd></div>
+          <div><dt>Disponível</dt><dd>4 unidades</dd></div>
+        </dl>
+        <div class="meter">
+          <div class="meter-track" style="--pos:58%"></div>
+          <div class="meter-labels"><span>30 dias</span><span>faltam 72 dias</span><span>120 dias</span></div>
+        </div>
+        <div class="offer-actions">
+          <a class="btn btn--primary" href="#como-funciona">Reservar</a>
+          <div class="qr" aria-hidden="true"></div>
+        </div>
+        <p style="font-size:.78rem;color:var(--ink-3)">
+          Reserva confirmada gera um código para retirada na farmácia. Interface ilustrativa.
+        </p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="hazard" role="presentation"></div>
+
+<!-- 1. PROBLEMA -->
+<section class="sec sec--plain" id="problema">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">01 · O problema</p>
+      <h2>Dois lados que hoje não se encontram</h2>
+      <p class="lead">
+        De um lado, capital parado numa prateleira com prazo. Do outro, alguém procurando
+        exatamente aquele produto por menos. Falta a ponte.
+      </p>
+    </div>
+
+    <div class="sides">
+      <div class="side">
+        <span class="side-tag">Lado farmácia</span>
+        <h3>Estoque que caminha para virar prejuízo</h3>
+        <ul class="ticks">
+          <li>Medicamentos com baixa saída</li>
+          <li>Produtos sazonais fora de época</li>
+          <li>Excesso de compra e estoque parado</li>
+          <li>Produtos próximos do vencimento</li>
+          <li>Cosméticos e dermocosméticos encalhados</li>
+          <li>Itens que dificilmente serão vendidos antes de perder valor comercial</li>
+        </ul>
+        <p style="color:var(--ink-2);font-size:.95rem">
+          A pergunta que abre a conversa comercial não é “quer anunciar no nosso aplicativo?”.
+          É <strong>“quanto dinheiro está parado no seu estoque?”</strong>
+        </p>
+      </div>
+      <div class="side">
+        <span class="side-tag">Lado consumidor</span>
+        <h3>Procura preço, mas quer procedência</h3>
+        <ul class="ticks">
+          <li>Preço menor no mesmo produto</li>
+          <li>Farmácia próxima, a pé ou a poucos minutos</li>
+          <li>Disponibilidade imediata para retirar hoje</li>
+          <li>Produto regular, com lote e validade visíveis</li>
+        </ul>
+        <p style="color:var(--ink-2);font-size:.95rem">
+          O produto não é “vencido”. É um produto regular, dentro da validade,
+          com desconto porque a farmácia prefere vender agora a perder depois.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. POSICIONAMENTO -->
+<section class="sec" id="posicionamento">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">02 · Posicionamento</p>
+      <h2>Não é “remédio barato”. É recuperação de estoque.</h2>
+      <p class="lead">
+        A mesma operação vendida de duas formas diferentes gera dois negócios diferentes.
+        Vender desconto atrai comparação de preço. Vender recuperação de estoque atrai a farmácia,
+        que é quem paga a conta.
+      </p>
+    </div>
+    <div class="grid g3">
+      <div class="card">
+        <span class="card-num">GANHO 01</span>
+        <h3>A farmácia recupera</h3>
+        <p>Estoque parado vira desconto, desconto vira venda, venda devolve parte do capital que estava preso na prateleira.</p>
+      </div>
+      <div class="card">
+        <span class="card-num">GANHO 02</span>
+        <h3>O consumidor economiza</h3>
+        <p>Produto regular, dentro da validade, com preço menor e retirada numa farmácia perto de onde ele já está.</p>
+      </div>
+      <div class="card">
+        <span class="card-num">GANHO 03</span>
+        <h3>A plataforma monetiza</h3>
+        <p>Comissão sobre a venda realizada e, adiante, assinatura do painel de gestão de estoque para redes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. COMO FUNCIONA -->
+<section class="sec" id="como-funciona">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">03 · Como funciona</p>
+      <h2>Reserve e retire, em quatro passos</h2>
+      <p class="lead">
+        O MVP começa sem entrega. Reserva e retirada na farmácia reduzem drasticamente
+        a complexidade operacional, logística e regulatória do primeiro ano.
+      </p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <span class="step-i">PASSO 1</span>
+        <h3>A farmácia cadastra</h3>
+        <p>Produto, quantidade, lote, validade, preço original, preço promocional, horário de retirada e condições de venda.</p>
+      </div>
+      <div class="step">
+        <span class="step-i">PASSO 2</span>
+        <h3>O sistema calcula</h3>
+        <p>“Faltam 72 dias para vencer.” E sugere um desconto — 25%, por exemplo — que a farmácia aceita ou altera dentro das regras aplicáveis.</p>
+      </div>
+      <div class="step">
+        <span class="step-i">PASSO 3</span>
+        <h3>O consumidor reserva</h3>
+        <p>Busca por localização, categoria, preço ou distância, escolhe a quantidade e recebe um código de reserva.</p>
+      </div>
+      <div class="step">
+        <span class="step-i">PASSO 4</span>
+        <h3>A retirada confirma a venda</h3>
+        <p>A farmácia separa, o consumidor apresenta o código, a farmácia confirma no painel e a venda é concluída.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. PRODUTO / PAINEL DA FARMÁCIA -->
+<section class="sec" id="produto">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">04 · Produto</p>
+      <h2>O painel da farmácia é o produto mais importante</h2>
+      <p class="lead">
+        O aplicativo do consumidor gera a venda. O painel da farmácia gera a assinatura.
+        É ele que transforma a plataforma de marketplace em ferramenta de gestão de estoque.
+      </p>
+    </div>
+
+    <div class="dash">
+      <div class="dash-top">
+        <h3>Drogaria Exemplo · Asa Norte</h3>
+        <span class="badge badge--warn">48 produtos próximos do vencimento</span>
+      </div>
+      <dl class="kpis">
+        <div class="kpi kpi--hero"><dt>Estoque recuperado</dt><dd>R$ 12.480</dd></div>
+        <div class="kpi"><dt>Desperdício evitado</dt><dd>R$ 8.920</dd></div>
+        <div class="kpi"><dt>Receita gerada</dt><dd>R$ 10.300</dd></div>
+        <div class="kpi"><dt>Produtos vendidos</dt><dd>382</dd></div>
+        <div class="kpi"><dt>Taxa de conversão</dt><dd>17,4%</dd></div>
+        <div class="kpi"><dt>Comissão da plataforma</dt><dd>R$ 2.180</dd></div>
+      </dl>
+      <div class="tablewrap">
+        <table>
+          <caption class="mono" style="text-align:left;padding:14px 18px 0;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)">Estoque elegível</caption>
+          <thead>
+            <tr><th>Produto</th><th>Lote</th><th>Qtd.</th><th>Vence em</th><th>Desconto</th><th>Situação</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Produto A · dermocosmético</td><td class="num">B4721A</td><td class="num">12</td><td class="num">60 dias</td><td class="num">20%</td><td><span class="badge badge--promo">Promoção sugerida</span></td></tr>
+            <tr><td>Produto B · higiene</td><td class="num">C1180K</td><td class="num">5</td><td class="num">45 dias</td><td class="num">30%</td><td><span class="badge badge--promo">Promoção sugerida</span></td></tr>
+            <tr><td>Produto C · venda livre</td><td class="num">A9032F</td><td class="num">8</td><td class="num">90 dias</td><td class="num">15%</td><td><span class="badge badge--warn">Atenção</span></td></tr>
+            <tr><td>Produto D · infantil</td><td class="num">D2265L</td><td class="num">21</td><td class="num">28 dias</td><td class="num">45%</td><td><span class="badge badge--crit">Ação necessária</span></td></tr>
+            <tr><td>Produto E · vitamina</td><td class="num">E7714B</td><td class="num">9</td><td class="num">128 dias</td><td class="num">—</td><td><span class="badge badge--ok">Normal</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="legend" aria-label="Semáforo de validade">
+      <div class="leg leg--ok"><span class="leg-d">120 dias</span><small>Normal. O produto segue no giro comum da loja.</small></div>
+      <div class="leg leg--warn"><span class="leg-d">90 dias</span><small>Atenção. Entra no acompanhamento do painel.</small></div>
+      <div class="leg leg--promo"><span class="leg-d">60 dias</span><small>Promoção sugerida pelo sistema.</small></div>
+      <div class="leg leg--crit"><span class="leg-d">30 dias</span><small>Ação necessária. Última janela útil de venda.</small></div>
+    </div>
+    <p class="disclaimer" style="margin-top:18px">
+      O semáforo é um instrumento de gestão, não uma autorização de venda.
+      A elegibilidade de cada categoria e o prazo mínimo aceito são definidos previamente
+      pela análise regulatória e jurídica, e o sistema só publica o que estiver dentro dessas regras.
+    </p>
+  </div>
+</section>
+
+<!-- 5. SMART EXPIRY -->
+<section class="sec" id="smart-expiry">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">05 · Diferencial</p>
+      <h2>Smart Expiry, o índice de risco de perda</h2>
+      <p class="lead">
+        Um marketplace mostra ofertas. O Smart Expiry diz para a farmácia o que fazer,
+        com quanto e quando — e é isso que sustenta a cobrança de assinatura mais adiante.
+      </p>
+    </div>
+    <div class="se">
+      <div>
+        <div class="formula">
+          risco = velocidade de venda<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;× estoque disponível<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;× dias até a validade<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;× preço praticado<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;× demanda local
+        </div>
+        <ul class="ticks" style="margin-top:20px">
+          <li>Entra depois do MVP, quando já houver histórico de vendas para treinar</li>
+          <li>Transforma o produto em SaaS de gestão de estoque somado ao marketplace</li>
+          <li>É o que permite cobrar mensalidade de rede, e não só comissão por venda</li>
+        </ul>
+      </div>
+      <div class="gauge">
+        <span class="eyebrow">Produto D · lote D2265L</span>
+        <div class="gauge-score">
+          <b>87</b>
+          <div>
+            <div style="font-family:var(--f-mono);font-size:.8rem;color:var(--ink-3)">de 100 · risco de perda</div>
+            <span class="badge badge--crit" style="margin-top:6px;display:inline-block">Crítico</span>
+          </div>
+        </div>
+        <div class="gauge-bar"><div class="gauge-fill"></div></div>
+        <p class="gauge-rec">
+          <b>Recomendação:</b> promover 12 unidades com 45% de desconto.
+          Baixa velocidade de venda e 28 dias de validade restantes, dentro das regras aplicáveis à categoria.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. REGULATÓRIO -->
+<section class="sec" id="regulatorio">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">06 · Regulatório</p>
+      <h2>Entrada por fases, começando pelo que é mais simples</h2>
+      <p class="lead">
+        Medicamento não é alimento perto do vencimento. A operação precisa nascer considerando
+        as regras sanitárias de dispensação, rastreabilidade, lote, validade e armazenamento,
+        e por isso a plataforma abre categorias em ordem crescente de complexidade.
+      </p>
+    </div>
+    <div class="phases">
+      <div class="phase phase--now">
+        <div class="phase-h"><span class="phase-n">FASE 1</span><span class="badge badge--ok">MVP</span></div>
+        <h3>Menor complexidade regulatória</h3>
+        <p>Cosméticos, dermocosméticos, higiene, cuidados pessoais, produtos infantis, primeiros socorros e demais itens permitidos.</p>
+      </div>
+      <div class="phase">
+        <div class="phase-h"><span class="phase-n">FASE 2</span></div>
+        <h3>Venda livre elegível</h3>
+        <p>Medicamentos isentos de prescrição cuja comercialização e dispensação sejam operacionalizáveis dentro das regras aplicáveis.</p>
+      </div>
+      <div class="phase">
+        <div class="phase-h"><span class="phase-n">FASE 3</span></div>
+        <h3>Sujeitos a prescrição</h3>
+        <p>Exigem validação de receita e cumprimento integral das regras de dispensação, com fluxo próprio no aplicativo.</p>
+      </div>
+      <div class="phase phase--out">
+        <div class="phase-h"><span class="phase-n">FASE 4</span><span class="badge badge--crit">Fora do MVP</span></div>
+        <h3>Controle especial</h3>
+        <p>Receita, retenção e rastreabilidade com requisitos específicos, incluindo integrações com sistemas de prescrição eletrônica.</p>
+      </div>
+    </div>
+    <p class="disclaimer" style="margin-top:20px">
+      <b>Nada de medicamento controlado no MVP.</b> A entrada em cada fase depende de parecer
+      regulatório e jurídico prévio, de farmácias regularizadas e de controle de lote,
+      validade, armazenamento e regras de dispensação. A plataforma é canal de descoberta
+      e comercialização: não recomenda tratamento, não substitui orientação profissional
+      e não faz diagnóstico.
+    </p>
+  </div>
+</section>
+
+<!-- 7. MODELO DE NEGÓCIO -->
+<section class="sec" id="modelo">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">07 · Modelo de negócio</p>
+      <h2>Comissão primeiro, assinatura depois</h2>
+      <p class="lead">
+        No começo, sem mensalidade: a farmácia só paga quando vende. Isso derruba a barreira
+        de entrada. Com a base formada, a comissão cai e a assinatura do painel entra no lugar.
+      </p>
+    </div>
+
+    <div>
+      <p class="eyebrow">Divisão de uma venda de R$ 50 com comissão de 10%</p>
+      <dl class="split">
+        <div><dt>Venda</dt><dd>R$ 50,00</dd></div>
+        <div><dt>Farmácia recebe</dt><dd>R$ 45,00</dd></div>
+        <div><dt>Plataforma</dt><dd>R$ 5,00</dd></div>
+      </dl>
+    </div>
+
+    <div class="plans" style="margin-top:34px">
+      <div class="plan">
+        <span class="plan-name">Starter</span>
+        <div class="plan-price">12% <span>por venda</span></div>
+        <ul class="ticks">
+          <li>Até 100 produtos publicados</li>
+          <li>Painel básico de estoque e validade</li>
+          <li>Relatórios essenciais</li>
+          <li>Sem mensalidade</li>
+        </ul>
+      </div>
+      <div class="plan plan--feat">
+        <span class="plan-name">Professional</span>
+        <div class="plan-price">R$ 249 <span>/mês + 7% por venda</span></div>
+        <ul class="ticks">
+          <li>Gestão de estoque completa</li>
+          <li>Smart Expiry e sugestão de desconto</li>
+          <li>Promoções, analytics e relatórios</li>
+          <li>Alertas de risco de perda</li>
+        </ul>
+      </div>
+      <div class="plan">
+        <span class="plan-name">Enterprise</span>
+        <div class="plan-price">R$ 799+ <span>/mês, sob negociação</span></div>
+        <ul class="ticks">
+          <li>Múltiplas lojas e gestão centralizada</li>
+          <li>Integração com ERP e API</li>
+          <li>BI e visão consolidada de rede</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="grid g3" style="margin-top:30px">
+      <div class="card">
+        <span class="card-num">FARMÁCIAS 0–20</span>
+        <h3>Grátis</h3>
+        <p>Objetivo único: validar o produto e provar que a farmácia quer vender esse estoque.</p>
+      </div>
+      <div class="card">
+        <span class="card-num">FARMÁCIAS 20–100</span>
+        <h3>Comissão reduzida</h3>
+        <p>Densidade em Brasília, para que o consumidor sempre encontre algo perto dele.</p>
+      </div>
+      <div class="card">
+        <span class="card-num">FARMÁCIAS 100+</span>
+        <h3>Planos pagos</h3>
+        <p>Assinatura do painel entra em cena, com a comissão recuando na mesma medida.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 8. CENÁRIO -->
+<section class="sec" id="cenario">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">08 · Cenário ilustrativo</p>
+      <h2>O tamanho que 500 farmácias teriam</h2>
+      <p class="lead">
+        Exercício de ordem de grandeza, não projeção financeira: 500 farmácias vendendo
+        R$ 5.000 por mês cada uma na plataforma, com comissão média de 8%.
+      </p>
+    </div>
+    <dl class="calc">
+      <div class="calc-cell"><dt>Farmácias ativas</dt><dd>500</dd></div>
+      <div class="calc-cell"><dt>Venda média por farmácia</dt><dd>R$ 5 mil/mês</dd></div>
+      <div class="calc-cell"><dt>GMV</dt><dd>R$ 2,5 mi/mês</dd></div>
+      <div class="calc-cell calc-cell--out"><dt>Comissão a 8%</dt><dd>R$ 200 mil/mês</dd></div>
+    </dl>
+    <p class="disclaimer" style="margin-top:16px">
+      Equivale a R$ 2,4 milhões por ano <b>antes</b> de custos, impostos, processamento de
+      pagamentos, suporte e aquisição de clientes. Serve para dimensionar a oportunidade,
+      não como promessa de resultado.
+    </p>
+
+    <div class="grid g2" style="margin-top:34px">
+      <div class="card">
+        <span class="card-num">EXEMPLO NA LOJA</span>
+        <h3>100 unidades a R$ 20 que não vão girar</h3>
+        <p style="margin-top:10px">
+          A farmácia coloca 40 unidades na plataforma a R$ 13. São R$ 520 recuperados
+          sobre unidades que, caso se tornassem inviáveis para comercialização,
+          não devolveriam nada. Perde margem, reduz perda potencial.
+        </p>
+      </div>
+      <div class="card">
+        <span class="card-num">EXPANSÃO GEOGRÁFICA</span>
+        <h3>Brasília primeiro, densidade antes de alcance</h3>
+        <p style="margin-top:10px">
+          Mil farmácias espalhadas pelo Brasil deixam o usuário sem nada por perto.
+          Cem farmácias concentradas em Brasília fazem o aplicativo parecer cheio.
+          Depois: Goiás, São Paulo e expansão nacional.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 9. MVP -->
+<section class="sec" id="mvp">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">09 · Escopo</p>
+      <h2>O MVP é menor do que parece</h2>
+      <p class="lead">
+        Três aplicações enxutas e nenhuma inteligência artificial complexa no início.
+        A primeira coisa a provar é simples: farmácias querem vender esse estoque.
+      </p>
+    </div>
+    <div class="grid g3">
+      <div class="card">
+        <span class="card-num">APP DO CONSUMIDOR</span>
+        <ul class="ticks">
+          <li>Cadastro e localização</li>
+          <li>Mapa de farmácias próximas</li>
+          <li>Busca por produto e categoria</li>
+          <li>Lista de ofertas e página do produto</li>
+          <li>Reserva com código de retirada</li>
+          <li>Histórico de compras</li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="card-num">PAINEL DA FARMÁCIA</span>
+        <ul class="ticks">
+          <li>Cadastro da loja</li>
+          <li>Produtos, lote, validade e quantidade</li>
+          <li>Preço original e promocional</li>
+          <li>Fila de pedidos e confirmação de retirada</li>
+          <li>Dashboard de estoque recuperado</li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="card-num">ADMINISTRAÇÃO</span>
+        <ul class="ticks">
+          <li>Farmácias e usuários</li>
+          <li>Produtos e pedidos</li>
+          <li>Comissões</li>
+          <li>Denúncias</li>
+          <li>Relatórios operacionais</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:22px;border-color:var(--line-strong)">
+      <span class="card-num">FORA DO MVP, DE PROPÓSITO</span>
+      <ul class="ticks crosses" style="grid-template-columns:1fr">
+        <li>Entrega própria</li>
+        <li>Programa de fidelidade complexo</li>
+        <li>Assinatura paga</li>
+        <li>Inteligência artificial avançada</li>
+        <li>Integração com dezenas de ERPs</li>
+        <li>Marketplace nacional</li>
+        <li>Medicamentos controlados</li>
+        <li>Telemedicina, consulta médica ou diagnóstico</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 10. VALIDAÇÃO -->
+<section class="sec" id="validacao">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">10 · Validação</p>
+      <h2>Quatro semanas antes de contratar desenvolvimento</h2>
+      <p class="lead">
+        Protótipo mais operação manual custa entre R$ 3 mil e R$ 10 mil, contra
+        R$ 40 mil a R$ 80 mil de um MVP enxuto desenvolvido, R$ 80 mil a R$ 150 mil de um
+        MVP profissional e R$ 150 mil a R$ 300 mil ou mais de uma plataforma completa.
+        Estimativas de mercado, não orçamento fechado.
+      </p>
+    </div>
+    <div class="grid g2">
+      <div class="weeks">
+        <div class="week">
+          <span class="week-n">Semana 1</span>
+          <h3>Landing page no ar</h3>
+          <p>Uma pergunta e um botão: “sua farmácia tem estoque próximo do vencimento?” e “quero participar”. É exatamente esta página.</p>
+        </div>
+        <div class="week">
+          <span class="week-n">Semana 2</span>
+          <h3>Visitar 30 farmácias</h3>
+          <p>Quanto estoque próximo do vencimento existe, como lidam com isso hoje, quanto representa em reais, dariam desconto, usariam uma plataforma e quanto pagariam.</p>
+        </div>
+        <div class="week">
+          <span class="week-n">Semana 3</span>
+          <h3>Cadastrar 10 farmácias na mão</h3>
+          <p>Página simples de ofertas, planilha e processo manual. Nenhuma linha de aplicativo ainda.</p>
+        </div>
+        <div class="week">
+          <span class="week-n">Semana 4</span>
+          <h3>Buscar consumidores</h3>
+          <p>Se as pessoas visualizam, reservam e compram, existe sinal inicial de encaixe entre produto e mercado. Só então se investe em desenvolvimento.</p>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <span class="card-num">MÉTRICAS QUE IMPORTAM</span>
+          <ul class="ticks">
+            <li>Farmácias cadastradas e farmácias ativas</li>
+            <li>Produtos publicados e ofertas visualizadas</li>
+            <li>Reservas e vendas concluídas</li>
+            <li>GMV e comissão gerada</li>
+            <li>Taxa de conversão de oferta em reserva</li>
+            <li>Economia gerada para o consumidor</li>
+          </ul>
+          <p style="margin-top:16px;font-size:.95rem;color:var(--ink-2)">
+            A métrica central é <strong>R$ de estoque recuperado</strong>, porque é
+            exatamente o problema que a plataforma existe para resolver.
+          </p>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <span class="card-num">AQUISIÇÃO DE CONSUMIDOR</span>
+          <ul class="ticks">
+            <li>Busca no Google por farmácia barata perto de mim</li>
+            <li>Conteúdo de economia em Instagram e TikTok</li>
+            <li>Alertas por WhatsApp de oferta próxima</li>
+            <li>Notificação quando surgir oferta a menos de 1 km</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 11. TECNOLOGIA -->
+<section class="sec" id="tecnologia">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">11 · Tecnologia</p>
+      <h2>Arquitetura de partida</h2>
+      <p class="lead">
+        Uma base de código para Android e iOS, backend único e banco relacional.
+        A integração com o ERP da farmácia é a vantagem competitiva de médio prazo:
+        produto, lote, quantidade, validade e preço chegam sem digitação.
+      </p>
+    </div>
+    <div class="grid g2">
+      <div>
+        <div class="chips">
+          <span class="chip">Flutter ou React Native</span>
+          <span class="chip">Node.js / NestJS ou Python</span>
+          <span class="chip">PostgreSQL</span>
+          <span class="chip">AWS, Google Cloud ou Azure</span>
+          <span class="chip">Gateway de pagamento brasileiro</span>
+          <span class="chip">Google Maps</span>
+          <span class="chip">Firebase (notificações)</span>
+          <span class="chip">Mixpanel / Firebase Analytics</span>
+        </div>
+        <p style="margin-top:18px;color:var(--ink-2);font-size:.95rem" class="prose">
+          O produto é B2B2C: farmácia, sistema de gestão, consumidor. Não apenas
+          farmácia e consumidor. É essa camada do meio que permite cobrar da farmácia
+          e, depois, vender software de gestão de estoque, analytics e previsão de perdas.
+        </p>
+      </div>
+      <div class="arch" aria-label="Diagrama de arquitetura">     APP CONSUMIDOR
+            │
+            ▼
+       API / BACKEND
+       /     │     \
+      ▼      ▼      ▼
+ PostgreSQL  IA  Pagamentos
+      │
+      ▼
+ PAINEL DA FARMÁCIA
+      │
+  ┌───┴────┐
+  ▼        ▼
+Estoque  Pedidos
+  │
+  ▼
+ERP / API</div>
+    </div>
+  </div>
+</section>
+
+<!-- 12. AVALIAÇÃO -->
+<section class="sec" id="avaliacao">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">12 · Avaliação honesta</p>
+      <h2>Nota geral 8,5. O que derruba é a regulação.</h2>
+      <p class="lead">
+        O problema é real e o potencial business-to-business é o maior ativo da ideia.
+        A complexidade sanitária é o risco central, e é por isso que a plataforma
+        não começa tentando ser o app de medicamentos vencendo.
+      </p>
+    </div>
+    <p class="score-scale">ESCALA 0 A 10</p>
+    <div class="score">
+      <div class="score-row"><span>Potencial B2B</span><span class="score-bar"><i style="width:100%"></i></span><span class="score-val">10</span></div>
+      <div class="score-row"><span>Problema real</span><span class="score-bar"><i style="width:90%"></i></span><span class="score-val">9</span></div>
+      <div class="score-row"><span>Potencial de mercado</span><span class="score-bar"><i style="width:90%"></i></span><span class="score-val">9</span></div>
+      <div class="score-row"><span>Potencial de escala</span><span class="score-bar"><i style="width:90%"></i></span><span class="score-val">9</span></div>
+      <div class="score-row"><span>Receita recorrente</span><span class="score-bar"><i style="width:90%"></i></span><span class="score-val">9</span></div>
+      <div class="score-row"><span>Diferenciação</span><span class="score-bar"><i style="width:80%"></i></span><span class="score-val">8</span></div>
+      <div class="score-row"><span>Facilidade de desenvolvimento</span><span class="score-bar"><i class="mid" style="width:60%"></i></span><span class="score-val">6</span></div>
+      <div class="score-row"><span>Complexidade regulatória</span><span class="score-bar"><i class="low" style="width:30%"></i></span><span class="score-val">3</span></div>
+    </div>
+    <p class="disclaimer" style="margin-top:20px">
+      Nota mais baixa significa maior dificuldade. A complexidade regulatória é o item
+      que exige assessoria especializada antes de qualquer lançamento com medicamentos.
+    </p>
+  </div>
+</section>
+
+<div class="hazard" role="presentation"></div>
+
+<!-- 13. CTA -->
+<section class="sec sec--plain cta" id="participar">
+  <div class="wrap cta-grid">
+    <div>
+      <p class="eyebrow">Piloto em Brasília</p>
+      <h2 style="margin-top:14px">Sua farmácia tem estoque próximo do vencimento?</h2>
+      <p class="lead" style="margin-top:16px">
+        As primeiras 20 farmácias entram sem custo e sem comissão. O objetivo dessa
+        primeira turma não é faturar: é descobrir quanto capital está parado na prateleira
+        e quanto dele dá para recuperar.
+      </p>
+      <ul class="ticks" style="margin-top:22px">
+        <li>Sem mensalidade e sem exclusividade</li>
+        <li>Você define quais produtos entram e com qual desconto</li>
+        <li>Reserva e retirada na sua loja, sem entrega</li>
+        <li>Fase 1 sem medicamentos controlados</li>
+      </ul>
+      <p class="disclaimer" style="margin-top:22px">
+        Participação sujeita a análise de regularidade sanitária da farmácia e às
+        regras aplicáveis a cada categoria de produto.
+      </p>
+    </div>
+
+    <div>
+      <!--
+        Destino dos leads: ajuste CONFIG no script no fim deste arquivo.
+        Sem endpoint configurado, o formulário guarda os envios em localStorage
+        (chave "stm_leads") e apenas exibe a confirmação — configure antes de publicar.
+      -->
+      <form id="lead-form" novalidate>
+        <div class="row2">
+          <div class="field">
+            <label for="nome">Seu nome</label>
+            <input id="nome" name="nome" type="text" autocomplete="name" required>
+          </div>
+          <div class="field">
+            <label for="farmacia">Farmácia</label>
+            <input id="farmacia" name="farmacia" type="text" autocomplete="organization" required>
+          </div>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label for="whatsapp">WhatsApp</label>
+            <input id="whatsapp" name="whatsapp" type="tel" inputmode="tel" placeholder="(61) 90000-0000" autocomplete="tel" required>
+          </div>
+          <div class="field">
+            <label for="cidade">Cidade ou região</label>
+            <input id="cidade" name="cidade" type="text" value="Brasília" autocomplete="address-level2" required>
+          </div>
+        </div>
+        <div class="field">
+          <label for="estoque">Estoque parado hoje, por estimativa</label>
+          <select id="estoque" name="estoque">
+            <option value="ate-2k">Até R$ 2 mil</option>
+            <option value="2k-10k" selected>Entre R$ 2 mil e R$ 10 mil</option>
+            <option value="10k-30k">Entre R$ 10 mil e R$ 30 mil</option>
+            <option value="acima-30k">Acima de R$ 30 mil</option>
+            <option value="nao-sei">Ainda não sei medir</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="obs">O que costuma encalhar na sua loja</label>
+          <textarea id="obs" name="obs" placeholder="Dermocosméticos, sazonais, itens infantis..."></textarea>
+        </div>
+        <button class="btn btn--primary" type="submit" style="justify-self:start">Quero participar do piloto</button>
+        <p class="form-note">
+          Usamos seus dados apenas para o contato do piloto. Sem envio para terceiros.
+        </p>
+      </form>
+
+      <div class="form-ok" id="lead-ok" role="status" aria-live="polite">
+        <h3>Interesse registrado</h3>
+        <p id="lead-ok-msg">
+          Vamos entrar em contato pelo WhatsApp informado para agendar a visita e
+          levantar, junto com você, quanto do seu estoque dá para recuperar.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-grid">
+    <div>
+      <a class="brand" href="#topo" style="text-decoration:none">
+        <span class="brand-mark" aria-hidden="true">S+</span> Save the Med
+      </a>
+      <p class="disclaimer" style="margin-top:14px">
+        <b>Aviso.</b> Esta página apresenta um projeto em fase de validação. A plataforma é
+        canal de descoberta e comercialização entre farmácias regularizadas e consumidores:
+        não recomenda tratamento, não substitui orientação profissional e não realiza
+        diagnóstico. Todo produto anunciado é regular e está dentro do prazo de validade.
+        A entrada de medicamentos ocorre por fases, mediante parecer regulatório e jurídico,
+        respeitando as regras sanitárias de dispensação, rastreabilidade, lote, validade e
+        armazenamento. Medicamentos sujeitos a controle especial não fazem parte do MVP.
+        Valores, planos, telas e indicadores são ilustrativos.
+      </p>
+    </div>
+    <div>
+      <p class="eyebrow">Nome provisório</p>
+      <p style="margin-top:10px;color:var(--ink-2);font-size:.9rem">
+        Save the Med é um nome de trabalho. MedSave, FarmSave, MedPerto e MedResgate seguem
+        em avaliação, com pesquisa de marca e domínio pendente antes de qualquer investimento
+        em identidade.
+      </p>
+      <p class="mono" style="margin-top:16px;font-size:.8rem">Brasília · Goiás · São Paulo · nacional</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  /* Configure o destino dos leads antes de publicar. */
+  var CONFIG = {
+    endpoint: "",  // ex.: "https://formspree.io/f/xxxx" ou sua própria API
+    whatsapp: "",  // ex.: "5561900000000" — usado se não houver endpoint
+    email: ""      // ex.: "contato@savethemed.com.br" — último recurso
+  };
+
+  var form = document.getElementById("lead-form");
+  var ok = document.getElementById("lead-ok");
+  var okMsg = document.getElementById("lead-ok-msg");
+  if (!form) return;
+
+  function texto(lead) {
+    return [
+      "Quero participar do piloto Save the Med.",
+      "Nome: " + lead.nome,
+      "Farmácia: " + lead.farmacia,
+      "WhatsApp: " + lead.whatsapp,
+      "Cidade: " + lead.cidade,
+      "Estoque parado: " + lead.estoque,
+      "Observações: " + (lead.obs || "-")
+    ].join("\n");
+  }
+
+  function guardar(lead) {
+    try {
+      var chave = "stm_leads";
+      var atual = JSON.parse(localStorage.getItem(chave) || "[]");
+      atual.push(lead);
+      localStorage.setItem(chave, JSON.stringify(atual));
+    } catch (e) { /* modo privado ou storage bloqueado */ }
+  }
+
+  function concluir(mensagem) {
+    if (mensagem) okMsg.textContent = mensagem;
+    form.hidden = true;
+    ok.classList.add("on");
+    ok.scrollIntoView({ block: "center", behavior: "smooth" });
+  }
+
+  form.addEventListener("submit", function (ev) {
+    ev.preventDefault();
+
+    var obrigatorios = ["nome", "farmacia", "whatsapp", "cidade"];
+    for (var i = 0; i < obrigatorios.length; i++) {
+      var campo = form.elements[obrigatorios[i]];
+      if (!campo.value.trim()) {
+        campo.focus();
+        campo.style.borderColor = "var(--crit)";
+        return;
+      }
+    }
+
+    var lead = {
+      nome: form.elements.nome.value.trim(),
+      farmacia: form.elements.farmacia.value.trim(),
+      whatsapp: form.elements.whatsapp.value.trim(),
+      cidade: form.elements.cidade.value.trim(),
+      estoque: form.elements.estoque.value,
+      obs: form.elements.obs.value.trim(),
+      origem: location.href,
+      enviadoEm: new Date().toISOString()
+    };
+
+    guardar(lead);
+
+    if (CONFIG.endpoint) {
+      fetch(CONFIG.endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(lead)
+      }).then(function () {
+        concluir();
+      }).catch(function () {
+        concluir("Não conseguimos enviar agora. Chame no WhatsApp informado na página que retomamos o cadastro por lá.");
+      });
+      return;
+    }
+
+    if (CONFIG.whatsapp) {
+      window.open("https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent(texto(lead)), "_blank", "noopener");
+      concluir("Abrimos o WhatsApp com seus dados. É só enviar a mensagem para confirmar a inscrição.");
+      return;
+    }
+
+    if (CONFIG.email) {
+      window.location.href = "mailto:" + CONFIG.email +
+        "?subject=" + encodeURIComponent("Piloto Save the Med - " + lead.farmacia) +
+        "&body=" + encodeURIComponent(texto(lead));
+      concluir("Abrimos seu e-mail com os dados preenchidos. É só enviar para confirmar a inscrição.");
+      return;
+    }
+
+    concluir();
+  });
+})();
+</script>
+</body>
+</html>
