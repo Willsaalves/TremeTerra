@@ -16,10 +16,19 @@ arquitetura e avaliação da ideia — terminando no formulário de captação d
 
 ## Como abrir
 
-Basta abrir `save-the-med/index.html` no navegador. Para servir localmente:
+Basta abrir `save-the-med/index.html` no navegador, com dois cliques mesmo — a página
+não depende de servidor. Para servir localmente em http://localhost:8081:
+
+```
+npm run serve:save-the-med
+```
+
+Sem Node instalado, o equivalente direto:
 
 ```
 php -S localhost:8081 -t save-the-med
+# ou, sem PHP:
+python3 -m http.server 8081 --directory save-the-med
 ```
 
 A página é independente do site da Treme Terra: não entra no build do Vite, não aparece no

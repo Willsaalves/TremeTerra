@@ -8,7 +8,8 @@
     "build": "vite build",
     "build:php": "vite build && node scripts/generate-php.mjs",
     "preview": "vite preview",
-    "serve:php": "php -S localhost:8080 -t dist dist/router.php"
+    "serve:php": "php -S localhost:8080 -t dist dist/router.php",
+    "serve:save-the-med": "php -S localhost:8081 -t save-the-med"
   },
   "devDependencies": {
     "vite": "^5.4.10"
