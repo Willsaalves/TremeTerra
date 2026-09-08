@@ -15,7 +15,7 @@ $posts = $db->query('SELECT id, title, slug, category, status, published_at, upd
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Posts | Admin do blog — <?= htmlspecialchars(SITE_NAME, ENT_QUOTES, 'UTF-8') ?></title>
   <meta name="robots" content="noindex, nofollow" />
-  <link rel="stylesheet" href="/blog.css" />
+  <link rel="stylesheet" href="/blog.css?v=<?= @filemtime(__DIR__ . "/../blog.css") ?: 1 ?>" />
 </head>
 <body class="admin-body">
   <header class="admin-header">

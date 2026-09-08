@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Login | Admin do blog — <?= htmlspecialchars(SITE_NAME, ENT_QUOTES, 'UTF-8') ?></title>
   <meta name="robots" content="noindex, nofollow" />
-  <link rel="stylesheet" href="/blog.css" />
+  <link rel="stylesheet" href="/blog.css?v=<?= @filemtime(__DIR__ . "/../blog.css") ?: 1 ?>" />
 </head>
 <body class="admin-body">
   <main class="admin-login">

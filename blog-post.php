@@ -66,7 +66,7 @@ if (!empty($post['cover_image_url'])) {
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Montserrat:wght@400;500;600;700;800&display=swap" />
-  <link rel="stylesheet" href="/blog.css" />
+  <link rel="stylesheet" href="/blog.css?v=<?= @filemtime(__DIR__ . '/blog.css') ?: 1 ?>" />
 </head>
 <body>
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WQJVN5JZ" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
