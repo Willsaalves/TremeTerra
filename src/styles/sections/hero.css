@@ -8,38 +8,44 @@
   overflow: hidden;
 }
 
-/* Vídeo de abertura em SEÇÃO PRÓPRIA (não é mais fundo do hero). Mostra o
-   vídeo inteiro, em largura total, sem recorte — o texto vem na seção logo
-   abaixo. Autoplay mudo em loop. */
+/* Vídeo de abertura em seção própria: começa abaixo do header e preenche
+   o restante da viewport (cover), sem faixas pretas. */
 .hero-video-solo {
   position: relative;
+  display: flex;
+  flex-direction: column;
   width: 100%;
+  height: 100svh;
+  padding-top: var(--header-height);
   overflow: hidden;
-  line-height: 0; /* remove o respiro embaixo do <video> inline */
-  background: hsl(var(--color-ink, 222 47% 6%));
+  background: hsl(var(--color-black));
+}
+
+.hero-video-solo.band-dark::before,
+.hero-video-solo::before {
+  display: none;
 }
 
 .hero-video-solo-media {
   display: block;
+  flex: 1 1 auto;
+  min-height: 0;
   width: 100%;
-  height: auto;      /* mantém a proporção real do vídeo (16:9), sem cortar */
-  max-height: 88svh; /* trava a altura em telas muito largas */
+  height: 100%;
   object-fit: cover;
-  margin-inline: auto;
+  object-position: center center;
 }
 
-/* Escurecido sutil no topo do vídeo, atrás do header, pra o menu ficar
-   legível sobre qualquer quadro do vídeo. */
-.hero-video-solo::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 140px;
-  z-index: 1;
-  pointer-events: none;
-  background: linear-gradient(to bottom, hsl(var(--color-black) / 0.55), transparent);
+@media (prefers-reduced-motion: reduce) {
+  .hero-video-solo-media {
+    display: none;
+  }
+  .hero-video-solo {
+    background-image: url('/videos/hero-reel.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
 }
 
 .hero-glow {
