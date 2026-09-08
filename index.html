@@ -103,24 +103,30 @@
   </header>
 
   <main id="conteudo">
-    <!-- VÍDEO DE ABERTURA (seção própria, não é mais background) -->
-    <section class="hero-video-solo band-dark" id="topo" aria-label="Vídeo de abertura">
-      <video
-        class="hero-video-solo-media"
-        autoplay
-        muted
-        loop
-        playsinline
-        preload="auto"
-        poster="/videos/hero-reel.jpg"
-        aria-label="Montagem de eventos produzidos pela Treme Terra: confraternizações, shows, iluminação e palco"
-      >
-        <source src="/videos/hero-reel.webm" type="video/webm" />
-        <source src="/videos/hero-reel.mp4" type="video/mp4" />
-      </video>
+    <!-- VÍDEO DE ABERTURA: seção própria, abaixo do header -->
+    <section class="hero-video band-dark" id="topo" aria-label="Vídeo de abertura">
+      <div class="hero-video-stage">
+        <video
+          class="hero-video-bg"
+          autoplay
+          muted
+          loop
+          playsinline
+          webkit-playsinline
+          preload="auto"
+          width="1920"
+          height="1080"
+          poster="/videos/hero-reel.jpg"
+          aria-label="Montagem de eventos produzidos pela Treme Terra: confraternizações, shows, iluminação e palco"
+        >
+          <source src="/videos/hero-reel.mp4" type="video/mp4" />
+          <source src="/videos/hero-reel.webm" type="video/webm" />
+        </video>
+      </div>
+      <div class="hero-video-fade" aria-hidden="true"></div>
     </section>
 
-    <!-- HERO (texto, logo abaixo do vídeo) -->
+    <!-- HERO -->
     <section class="hero band-dark" id="intro" aria-label="Abertura">
       <div class="hero-glow" aria-hidden="true"><span class="g1"></span><span class="g2"></span></div>
       <div class="hero-lightbeams" aria-hidden="true">
