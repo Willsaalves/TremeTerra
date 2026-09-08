@@ -16,15 +16,15 @@
   width: 100%;
   overflow: hidden;
   line-height: 0; /* remove o respiro embaixo do <video> inline */
-  background: hsl(var(--color-ink, 222 47% 6%));
+  background: hsl(var(--color-graphite-900));
 }
 
+/* Vídeo INTEIRO: largura total na proporção real, sem recorte nem corte de
+   altura. */
 .hero-video-solo-media {
   display: block;
   width: 100%;
-  height: auto;      /* mantém a proporção real do vídeo (16:9), sem cortar */
-  max-height: 88svh; /* trava a altura em telas muito largas */
-  object-fit: cover;
+  height: auto;
   margin-inline: auto;
 }
 
@@ -40,6 +40,20 @@
   z-index: 1;
   pointer-events: none;
   background: linear-gradient(to bottom, hsl(var(--color-black) / 0.55), transparent);
+}
+
+/* Transição suave: o fim do vídeo funde na cor escura da seção seguinte
+   (band-dark = graphite-900), sem corte seco entre as seções. */
+.hero-video-solo::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 28%;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent, hsl(var(--color-graphite-900)));
 }
 
 .hero-glow {
