@@ -103,10 +103,10 @@
   </header>
 
   <main id="conteudo">
-    <!-- HERO (vídeo institucional em background) -->
-    <section class="hero has-video band-dark" id="topo" aria-label="Abertura">
+    <!-- VÍDEO DE ABERTURA (seção própria, não é mais background) -->
+    <section class="hero-video-solo band-dark" id="topo" aria-label="Vídeo de abertura">
       <video
-        class="hero-video-bg"
+        class="hero-video-solo-media"
         autoplay
         muted
         loop
@@ -118,7 +118,10 @@
         <source src="/videos/hero-reel.webm" type="video/webm" />
         <source src="/videos/hero-reel.mp4" type="video/mp4" />
       </video>
-      <div class="hero-video-scrim" aria-hidden="true"></div>
+    </section>
+
+    <!-- HERO (texto, logo abaixo do vídeo) -->
+    <section class="hero band-dark" id="intro" aria-label="Abertura">
       <div class="hero-glow" aria-hidden="true"><span class="g1"></span><span class="g2"></span></div>
       <div class="hero-lightbeams" aria-hidden="true">
         <span class="beam beam-1"></span>

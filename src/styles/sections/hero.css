@@ -8,70 +8,38 @@
   overflow: hidden;
 }
 
-/* Vídeo institucional como plano de fundo do hero — autoplay mudo em loop.
-   object-fit: cover deixa responsivo: preenche qualquer proporção (desktop
-   largo ou mobile alto) recortando o excesso, sem distorcer. */
-.hero-video-bg {
-  position: absolute;
-  inset: 0;
+/* Vídeo de abertura em SEÇÃO PRÓPRIA (não é mais fundo do hero). Mostra o
+   vídeo inteiro, em largura total, sem recorte — o texto vem na seção logo
+   abaixo. Autoplay mudo em loop. */
+.hero-video-solo {
+  position: relative;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: 0;
+  overflow: hidden;
+  line-height: 0; /* remove o respiro embaixo do <video> inline */
+  background: hsl(var(--color-ink, 222 47% 6%));
+}
+
+.hero-video-solo-media {
   display: block;
+  width: 100%;
+  height: auto;      /* mantém a proporção real do vídeo (16:9), sem cortar */
+  max-height: 88svh; /* trava a altura em telas muito largas */
+  object-fit: cover;
+  margin-inline: auto;
 }
 
-/* Escurece o vídeo para o texto branco ficar legível: um véu geral + reforço
-   no topo (atrás do header) e na base (números + transição para a próxima
-   seção). Ajustado por breakpoint mais abaixo. */
-.hero-video-scrim {
+/* Escurecido sutil no topo do vídeo, atrás do header, pra o menu ficar
+   legível sobre qualquer quadro do vídeo. */
+.hero-video-solo::before {
+  content: '';
   position: absolute;
-  inset: 0;
-  z-index: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 140px;
+  z-index: 1;
   pointer-events: none;
-  background:
-    linear-gradient(to bottom,
-      hsl(var(--color-black) / 0.6) 0%,
-      hsl(var(--color-black) / 0.3) 32%,
-      hsl(var(--color-black) / 0.4) 60%,
-      hsl(var(--color-black) / 0.82) 100%);
-}
-
-/* No mobile o texto é mais longo e a coluna mais estreita: um véu mais forte
-   garante contraste em qualquer frame do vídeo. */
-@media (max-width: 640px) {
-  .hero-video-scrim {
-    background:
-      linear-gradient(to bottom,
-        hsl(var(--color-black) / 0.72) 0%,
-        hsl(var(--color-black) / 0.55) 40%,
-        hsl(var(--color-black) / 0.6) 70%,
-        hsl(var(--color-black) / 0.88) 100%);
-  }
-}
-
-/* Com vídeo de fundo, os enfeites animados (feixes de luz e partículas)
-   competem com a imagem — some com eles e suaviza o glow para o vídeo
-   respirar. */
-.hero.has-video .hero-lightbeams,
-.hero.has-video .hero-particles {
-  display: none;
-}
-
-.hero.has-video .hero-glow {
-  opacity: 0.5;
-}
-
-/* Respeita quem pediu menos movimento: esconde o vídeo e mostra só o poster. */
-@media (prefers-reduced-motion: reduce) {
-  .hero.has-video .hero-video-bg {
-    display: none;
-  }
-  .hero.has-video {
-    background-image: url('/videos/hero-reel.jpg');
-    background-size: cover;
-    background-position: center;
-  }
+  background: linear-gradient(to bottom, hsl(var(--color-black) / 0.55), transparent);
 }
 
 .hero-glow {
