@@ -103,7 +103,7 @@
   </header>
 
   <main id="conteudo">
-    <!-- VÍDEO DE ABERTURA (seção própria, não é mais background) -->
+    <!-- VÍDEO DE ABERTURA: abaixo do header, preenche o restante da seção -->
     <section class="hero-video-solo band-dark" id="topo" aria-label="Vídeo de abertura">
       <video
         class="hero-video-solo-media"
@@ -111,12 +111,15 @@
         muted
         loop
         playsinline
+        webkit-playsinline
         preload="auto"
+        width="1920"
+        height="1080"
         poster="/videos/hero-reel.jpg"
         aria-label="Montagem de eventos produzidos pela Treme Terra: confraternizações, shows, iluminação e palco"
       >
-        <source src="/videos/hero-reel.webm" type="video/webm" />
         <source src="/videos/hero-reel.mp4" type="video/mp4" />
+        <source src="/videos/hero-reel.webm" type="video/webm" />
       </video>
     </section>
 
