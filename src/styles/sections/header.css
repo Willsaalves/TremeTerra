@@ -7,6 +7,12 @@
   transition: background-color 0.4s var(--ease-soft), backdrop-filter 0.4s var(--ease-soft), box-shadow 0.4s var(--ease-soft);
 }
 
+/* Header numa barra própria, separado do vídeo (não flutua por cima). */
+body:has(.hero-video) .site-header {
+  background: hsl(var(--color-black) / 0.96);
+  box-shadow: 0 1px 0 hsl(var(--color-white) / 0.08);
+}
+
 .site-header.is-scrolled {
   background: hsl(var(--color-black) / 0.72);
   backdrop-filter: blur(14px) saturate(140%);

@@ -57,6 +57,9 @@
   --container-max: 1320px;
   --container-pad: clamp(1.25rem, 4vw, 3rem);
 
+  /* Altura do header fixo + folga, para o vídeo/hero começarem abaixo dele */
+  --header-height: 4.75rem;
+
   --radius-sm: 10px;
   --radius-md: 18px;
   --radius-lg: 28px;
