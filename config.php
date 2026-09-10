@@ -119,20 +119,15 @@ const FOUNDING_YEAR = 2011;
 // string em duas linguagens (HTML estático + schema PHP) se mudar de novo.
 const FLAGSHIP_PRODUCT_NAME = 'Innova Show';
 
-// Integração ActiveCampaign (usada por subscribe.php) — todo valor real
-// deve vir de variável de ambiente do servidor (getenv), NUNCA commitado
-// em texto no repositório. As constantes abaixo são só o fallback vazio
-// para ambiente local sem as env vars configuradas — nesse caso
-// subscribe.php cai em "modo desenvolvimento" (loga o payload, não
-// inventa um sucesso real da API).
+// Integração ActiveCampaign (usada por subscribe.php). A chave (API_KEY)
+// deve vir de variável de ambiente / .env — NUNCA commitada no repositório.
+// URL, tag e IDs de campo abaixo são defaults da conta All Party / Treme Terra.
 //
-// Onde achar cada valor no painel ActiveCampaign:
-//   URL/Chave  -> Settings > Developer
-//   Lista      -> Lists > (a lista) > o ID aparece na URL
-//   Campos     -> Settings > Manage Fields > o ID aparece ao editar o campo
-const ACTIVE_CAMPAIGN_API_URL          = ''; // TODO: ex. https://SUACONTA.api-us1.com
-const ACTIVE_CAMPAIGN_API_KEY          = ''; // TODO: token real — usar getenv('ACTIVECAMPAIGN_API_KEY') em produção
-const ACTIVE_CAMPAIGN_LIST_ID          = ''; // TODO: ID numérico da lista de destino
-const ACTIVE_CAMPAIGN_FIELD_EVENT_TYPE = ''; // TODO: ID do campo customizado "Tipo de evento"
-const ACTIVE_CAMPAIGN_FIELD_MESSAGE    = ''; // TODO: ID do campo customizado "Mensagem"
-const ACTIVE_CAMPAIGN_FIELD_PAGE       = ''; // TODO: ID do campo customizado "Página de origem"
+// Fluxo: POST /contact/sync  →  POST /contactTags (tag "Treme Terra - Lead Site").
+const ACTIVE_CAMPAIGN_API_URL          = 'https://jessicaallparty.api-us1.com';
+const ACTIVE_CAMPAIGN_API_KEY          = '';
+const ACTIVE_CAMPAIGN_TAG_ID           = '14'; // tag "Treme Terra - Lead Site"
+const ACTIVE_CAMPAIGN_LIST_ID          = '';
+const ACTIVE_CAMPAIGN_FIELD_EVENT_TYPE = '5';  // perstag TIPO_DE_EVENTO
+const ACTIVE_CAMPAIGN_FIELD_MESSAGE    = '';
+const ACTIVE_CAMPAIGN_FIELD_PAGE       = '';
