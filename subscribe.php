@@ -71,12 +71,13 @@ try {
     error_log('[subscribe] Falha ao notificar lead por e-mail: ' . $e->getMessage());
 }
 
-$acApiUrl          = getenv('ACTIVECAMPAIGN_API_URL') ?: ACTIVE_CAMPAIGN_API_URL;
-$acApiKey          = getenv('ACTIVECAMPAIGN_API_KEY') ?: ACTIVE_CAMPAIGN_API_KEY;
-$acListId          = getenv('ACTIVECAMPAIGN_LIST_ID') ?: ACTIVE_CAMPAIGN_LIST_ID;
-$acFieldEventType  = getenv('ACTIVECAMPAIGN_FIELD_EVENT_TYPE') ?: ACTIVE_CAMPAIGN_FIELD_EVENT_TYPE;
-$acFieldMessage    = getenv('ACTIVECAMPAIGN_FIELD_MESSAGE') ?: ACTIVE_CAMPAIGN_FIELD_MESSAGE;
-$acFieldPage       = getenv('ACTIVECAMPAIGN_FIELD_PAGE') ?: ACTIVE_CAMPAIGN_FIELD_PAGE;
+$acApiUrl          = acBaseUrl(acEnv('ACTIVECAMPAIGN_API_URL', ACTIVE_CAMPAIGN_API_URL));
+$acApiKey          = acEnv('ACTIVECAMPAIGN_API_KEY', ACTIVE_CAMPAIGN_API_KEY);
+$acTagId           = acEnv('ACTIVECAMPAIGN_TAG_ID', ACTIVE_CAMPAIGN_TAG_ID);
+$acListId          = acEnv('ACTIVECAMPAIGN_LIST_ID', ACTIVE_CAMPAIGN_LIST_ID);
+$acFieldEventType  = acEnv('ACTIVECAMPAIGN_FIELD_EVENT_TYPE', ACTIVE_CAMPAIGN_FIELD_EVENT_TYPE);
+$acFieldMessage    = acEnv('ACTIVECAMPAIGN_FIELD_MESSAGE', ACTIVE_CAMPAIGN_FIELD_MESSAGE);
+$acFieldPage       = acEnv('ACTIVECAMPAIGN_FIELD_PAGE', ACTIVE_CAMPAIGN_FIELD_PAGE);
 
 $nameParts = preg_split('/\s+/', $nome, 2) ?: [$nome];
 $firstName = $nameParts[0];
@@ -115,10 +116,17 @@ if ($acApiUrl === '' || $acApiKey === '') {
 
 $syncResult = acRequest($acApiUrl, $acApiKey, '/api/3/contact/sync', $contactPayload);
 
+if (!$syncResult['ok'] && $fieldValues !== []) {
+    // Campo customizado inválido (ID errado no env) não pode impedir o cadastro.
+    unset($contactPayload['contact']['fieldValues']);
+    $syncResult = acRequest($acApiUrl, $acApiKey, '/api/3/contact/sync', $contactPayload);
+}
+
 if (!$syncResult['ok']) {
+    // O lead já está no banco (e o e-mail comercial, se SMTP estiver ok).
+    // Não devolve 502 pro visitante — ele veria erro mesmo com a solicitação salva.
     error_log('[subscribe] Falha ao sincronizar contato na ActiveCampaign: ' . $syncResult['error']);
-    respond(false, 'Não conseguimos concluir seu cadastro agora. Tente novamente em instantes ou chame no '
-        . CONTACT_PHONE_DISPLAY . '.', 502);
+    respond(true, 'Recebemos sua solicitação. Em breve um consultor entra em contato.');
 }
 
 // Marca o lead como sincronizado com a ActiveCampaign (só pra referência no
@@ -133,6 +141,21 @@ if ($leadId !== null) {
 
 $contactId = $syncResult['data']['contact']['id'] ?? null;
 
+// Passo 2: aplica a tag "Treme Terra - Lead Site" (ID 14) para disparar
+// automações da conta. Falha aqui não derruba o cadastro — o contato já
+// existe no passo 1; o erro fica só no log.
+if ($contactId !== null && $acTagId !== '') {
+    $tagResult = acRequest($acApiUrl, $acApiKey, '/api/3/contactTags', [
+        'contactTag' => [
+            'contact' => (string) $contactId,
+            'tag'     => (string) $acTagId,
+        ],
+    ]);
+    if (!$tagResult['ok']) {
+        error_log('[subscribe] Falha ao aplicar tag ActiveCampaign (id ' . $acTagId . '): ' . $tagResult['error']);
+    }
+}
+
 if ($contactId !== null && $acListId !== '') {
     acRequest($acApiUrl, $acApiKey, '/api/3/contactLists', [
         'contactList' => [
@@ -141,20 +164,33 @@ if ($contactId !== null && $acListId !== '') {
             'status'  => 1, // 1 = subscribed
         ],
     ]);
-    // Falha em inscrever na lista não derruba o cadastro do contato em
-    // si — o contato já foi criado/atualizado no passo acima, então
-    // respondemos sucesso pro visitante de qualquer forma e deixamos o
-    // erro (se houver) só no log.
 }
 
 respond(true, 'Recebemos sua solicitação. Em breve um consultor entra em contato.');
 
-/**
- * @param array<string, mixed> $payload
- * @return array{ok: bool, data: array<string, mixed>, error: string}
- */
+function acEnv(string $name, string $fallback = ''): string
+{
+    foreach ([getenv($name), $_ENV[$name] ?? null, $_SERVER[$name] ?? null] as $value) {
+        if (is_string($value) && trim($value) !== '') {
+            return trim($value);
+        }
+    }
+    return $fallback;
+}
+
+/** Aceita URL com ou sem /api/3 no final (erro comum no painel do Render). */
+function acBaseUrl(string $url): string
+{
+    $url = rtrim($url, '/');
+    return (string) preg_replace('#/api/3$#', '', $url);
+}
+
 function acRequest(string $apiUrl, string $apiKey, string $path, array $payload): array
 {
+    if (!function_exists('curl_init')) {
+        return ['ok' => false, 'data' => [], 'error' => 'extensão curl ausente no PHP'];
+    }
+
     $ch = curl_init(rtrim($apiUrl, '/') . $path);
     curl_setopt_array($ch, [
         CURLOPT_RETURNTRANSFER => true,
@@ -164,14 +200,15 @@ function acRequest(string $apiUrl, string $apiKey, string $path, array $payload)
             'Content-Type: application/json',
             'Api-Token: ' . $apiKey,
         ],
-        CURLOPT_TIMEOUT => 10,
+        CURLOPT_CONNECTTIMEOUT => 8,
+        CURLOPT_TIMEOUT        => 15,
     ]);
     $response   = curl_exec($ch);
-    $httpStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $httpStatus = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $curlError  = curl_error($ch);
     curl_close($ch);
 
-    if ($response === false || $httpStatus >= 400) {
+    if ($response === false || $httpStatus < 200 || $httpStatus >= 300) {
         return ['ok' => false, 'data' => [], 'error' => $curlError !== '' ? $curlError : ('HTTP ' . $httpStatus . ': ' . (string) $response)];
     }
 
