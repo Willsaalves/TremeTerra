@@ -56,8 +56,13 @@ try {
     error_log('[subscribe] Falha ao gravar lead no banco: ' . $e->getMessage());
 }
 
-// Notifica a equipe comercial por e-mail (se o SMTP estiver configurado).
-// Não bloqueia nem derruba a resposta ao visitante — só registra no log.
+// Confirma o envio pro visitante ANTES de SMTP/ActiveCampaign. Se a API
+// travar, o Render devolve 502 no gateway — mesmo com o lead já gravado.
+// flush + Connection: close deixa o browser receber o 200; timeouts curtos
+// abaixo evitam o script estourar o limite do proxy.
+$okMessage = 'Recebemos sua solicitação. Em breve um consultor entra em contato.';
+respondAndContinue($okMessage);
+
 try {
     sendLeadNotification([
         'nome'        => $nome,
@@ -105,28 +110,23 @@ $contactPayload = [
 ];
 
 if ($acApiUrl === '' || $acApiKey === '') {
-    // ActiveCampaign ainda não configurado neste ambiente. Não inventa um
-    // "sucesso" da API — loga o payload que seria enviado pra dar pra
-    // testar o formulário de ponta a ponta antes das credenciais reais
-    // existirem, e avisa isso explicitamente pro time técnico no log.
     error_log('[subscribe] ActiveCampaign não configurado (ACTIVECAMPAIGN_API_URL/KEY ausentes). '
         . 'Payload que seria enviado: ' . json_encode($contactPayload, JSON_UNESCAPED_UNICODE));
-    respond(true, 'Recebemos sua solicitação. Em breve um consultor entra em contato.');
+    exit;
 }
 
 $syncResult = acRequest($acApiUrl, $acApiKey, '/api/3/contact/sync', $contactPayload);
 
-if (!$syncResult['ok'] && $fieldValues !== []) {
+if (!$syncResult['ok'] && $fieldValues !== [] && str_starts_with($syncResult['error'], 'HTTP ')) {
     // Campo customizado inválido (ID errado no env) não pode impedir o cadastro.
+    // Não retenta em timeout — isso é o que virava 502 no Render.
     unset($contactPayload['contact']['fieldValues']);
     $syncResult = acRequest($acApiUrl, $acApiKey, '/api/3/contact/sync', $contactPayload);
 }
 
 if (!$syncResult['ok']) {
-    // O lead já está no banco (e o e-mail comercial, se SMTP estiver ok).
-    // Não devolve 502 pro visitante — ele veria erro mesmo com a solicitação salva.
     error_log('[subscribe] Falha ao sincronizar contato na ActiveCampaign: ' . $syncResult['error']);
-    respond(true, 'Recebemos sua solicitação. Em breve um consultor entra em contato.');
+    exit;
 }
 
 // Marca o lead como sincronizado com a ActiveCampaign (só pra referência no
@@ -166,7 +166,26 @@ if ($contactId !== null && $acListId !== '') {
     ]);
 }
 
-respond(true, 'Recebemos sua solicitação. Em breve um consultor entra em contato.');
+exit;
+
+function respondAndContinue(string $message): void
+{
+    $json = json_encode(['success' => true, 'message' => $message], JSON_UNESCAPED_UNICODE);
+    http_response_code(200);
+    header('Content-Type: application/json; charset=utf-8');
+    header('Connection: close');
+    header('Content-Length: ' . (string) strlen($json));
+    echo $json;
+    ignore_user_abort(true);
+    if (function_exists('fastcgi_finish_request')) {
+        fastcgi_finish_request();
+        return;
+    }
+    while (ob_get_level() > 0) {
+        ob_end_flush();
+    }
+    flush();
+}
 
 function acEnv(string $name, string $fallback = ''): string
 {
@@ -200,8 +219,8 @@ function acRequest(string $apiUrl, string $apiKey, string $path, array $payload)
             'Content-Type: application/json',
             'Api-Token: ' . $apiKey,
         ],
-        CURLOPT_CONNECTTIMEOUT => 8,
-        CURLOPT_TIMEOUT        => 15,
+        CURLOPT_CONNECTTIMEOUT => 3,
+        CURLOPT_TIMEOUT        => 8,
     ]);
     $response   = curl_exec($ch);
     $httpStatus = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
