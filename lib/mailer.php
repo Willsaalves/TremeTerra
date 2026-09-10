@@ -93,11 +93,11 @@ function smtpSend(
 ): bool {
     $transport = $secure === 'ssl' ? "ssl://{$host}:{$port}" : "tcp://{$host}:{$port}";
     $ctx = stream_context_create(['ssl' => ['verify_peer' => true, 'verify_peer_name' => true, 'SNI_enabled' => true]]);
-    $fp = @stream_socket_client($transport, $errno, $errstr, 15, STREAM_CLIENT_CONNECT, $ctx);
+    $fp = @stream_socket_client($transport, $errno, $errstr, 8, STREAM_CLIENT_CONNECT, $ctx);
     if ($fp === false) {
         throw new RuntimeException("conexão SMTP falhou ({$errno}): {$errstr}");
     }
-    stream_set_timeout($fp, 15);
+    stream_set_timeout($fp, 8);
 
     $read = static function () use ($fp): array {
         $data = '';

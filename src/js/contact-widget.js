@@ -53,6 +53,19 @@ export function initContactWidget() {
         errorEl.hidden = true;
         errorEl.textContent = '';
       }
+
+      const payload = new FormData(form);
+      const requiredFields = ['nome', 'telefone', 'email', 'tipo_evento', 'mensagem'];
+      const missing = requiredFields.some((name) => !String(payload.get(name) || '').trim());
+      if (missing) {
+        if (errorEl) {
+          errorEl.textContent = 'Preencha todos os campos: nome, telefone, e-mail, tipo de evento e mensagem.';
+          errorEl.hidden = false;
+        }
+        form.reportValidity();
+        return;
+      }
+
       if (submitBtn) {
         submitBtn.disabled = true;
         submitBtn.textContent = 'Enviando…';
@@ -61,7 +74,7 @@ export function initContactWidget() {
       try {
         const response = await fetch(form.action, {
           method: 'POST',
-          body: new FormData(form),
+          body: payload,
           headers: { Accept: 'application/json' },
         });
         const data = await response.json().catch(() => null);

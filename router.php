@@ -138,9 +138,12 @@ $legacyRedirects = [
     '#^/painel-de-led-para-eventos#' => '/painel-de-led/',
     // produtora de eventos (todas as variantes) -> produtora-de-eventos-corporativos
     '#^/produtora-de-eventos#' => '/produtora-de-eventos-corporativos/',
-    // taxonomias e index antigos do blog (WordPress) -> /blog/
+    // taxonomias, feeds RSS, comments e wp-admin/login do WordPress antigo -> /blog/
     '#^/blog/(?:author|category|tag|page)/#' => '/blog/',
     '#^/blog/home/?$#' => '/blog/',
+    '#^/blog/.+/feed/?$#' => '/blog/',
+    '#^/blog/feed/?$#' => '/blog/',
+    '#^/blog/wp-(?:admin|login|includes|content)#' => '/blog/',
 ];
 
 foreach ($legacyRedirects as $pattern => $target) {
@@ -152,6 +155,10 @@ foreach ($legacyRedirects as $pattern => $target) {
             break;
         }
         $query = $_SERVER['QUERY_STRING'] ?? '';
+        // wp-login/wp-admin trazem redirect_to=... — não reencaminha lixo do WordPress
+        if (str_contains($uri, '/wp-login') || str_contains($uri, '/wp-admin')) {
+            $query = '';
+        }
         http_response_code(301);
         header('Location: ' . $target . ($query !== '' ? '?' . $query : ''));
         return true;
