@@ -129,5 +129,5 @@ const ACTIVE_CAMPAIGN_API_KEY          = '';
 const ACTIVE_CAMPAIGN_TAG_ID           = '14'; // tag "Treme Terra - Lead Site"
 const ACTIVE_CAMPAIGN_LIST_ID          = '';
 const ACTIVE_CAMPAIGN_FIELD_EVENT_TYPE = '5';  // perstag TIPO_DE_EVENTO
-const ACTIVE_CAMPAIGN_FIELD_MESSAGE    = '';
+const ACTIVE_CAMPAIGN_FIELD_MESSAGE    = '6';  // perstag MENSAGEM — ID no JSON tem que ser string
 const ACTIVE_CAMPAIGN_FIELD_PAGE       = '';

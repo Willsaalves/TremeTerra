@@ -211,6 +211,17 @@
   padding: 0.7rem 0.85rem;
 }
 
+/* A lista nativa do Windows herda a cor clara do <select> e cai em fundo
+   branco — sem isso as opções ficam ilegíveis. O campo fechado continua claro. */
+.contact-form select option {
+  color: hsl(var(--color-ink));
+  background-color: hsl(var(--color-surface));
+}
+
+.contact-form select option:disabled {
+  color: hsl(var(--color-mist));
+}
+
 .contact-form textarea {
   resize: vertical;
   min-height: 4.5rem;
