@@ -77,7 +77,7 @@ try {
 }
 
 $acApiUrl          = acBaseUrl(acEnv('ACTIVECAMPAIGN_API_URL', ACTIVE_CAMPAIGN_API_URL));
-$acApiKey          = acEnv('ACTIVECAMPAIGN_API_KEY', ACTIVE_CAMPAIGN_API_KEY);
+$acApiKey          = acToken();
 $acTagId           = acEnv('ACTIVECAMPAIGN_TAG_ID', ACTIVE_CAMPAIGN_TAG_ID);
 $acListId          = acEnv('ACTIVECAMPAIGN_LIST_ID', ACTIVE_CAMPAIGN_LIST_ID);
 $acFieldEventType  = acEnv('ACTIVECAMPAIGN_FIELD_EVENT_TYPE', ACTIVE_CAMPAIGN_FIELD_EVENT_TYPE);
@@ -87,31 +87,36 @@ $acFieldPage       = acEnv('ACTIVECAMPAIGN_FIELD_PAGE', ACTIVE_CAMPAIGN_FIELD_PA
 $nameParts = preg_split('/\s+/', $nome, 2) ?: [$nome];
 $firstName = $nameParts[0];
 $lastName  = $nameParts[1] ?? '';
+$phoneAc   = acPhoneDigits($telefone);
 
 $fieldValues = [];
 if ($acFieldEventType !== '') {
-    $fieldValues[] = ['field' => $acFieldEventType, 'value' => $tipoEvento];
+    $fieldValues[] = ['field' => (string) $acFieldEventType, 'value' => $tipoEvento];
 }
-if ($acFieldMessage !== '' && $mensagem !== '') {
-    $fieldValues[] = ['field' => $acFieldMessage, 'value' => $mensagem];
+if ($acFieldMessage !== '') {
+    $mensagemAc = $mensagem !== ''
+        ? $mensagem
+        : ('Treme Terra — Tipo: ' . $tipoEvento . ($pagina !== '' ? ' | Página: ' . $pagina : ''));
+    $fieldValues[] = ['field' => (string) $acFieldMessage, 'value' => $mensagemAc];
 }
 if ($acFieldPage !== '' && $pagina !== '') {
-    $fieldValues[] = ['field' => $acFieldPage, 'value' => $pagina];
+    $fieldValues[] = ['field' => (string) $acFieldPage, 'value' => $pagina];
 }
 
-$contactPayload = [
-    'contact' => array_filter([
-        'email'       => $email,
-        'firstName'   => $firstName,
-        'lastName'    => $lastName,
-        'phone'       => $telefone,
-        'fieldValues' => $fieldValues !== [] ? $fieldValues : null,
-    ], static fn ($value): bool => $value !== null),
-];
+$contact = array_filter([
+    'email'     => $email,
+    'firstName' => $firstName,
+    'lastName'  => $lastName !== '' ? $lastName : null,
+    'phone'     => $phoneAc !== '' ? $phoneAc : null,
+], static fn ($value): bool => $value !== null && $value !== '');
+if ($fieldValues !== []) {
+    $contact['fieldValues'] = $fieldValues;
+}
+$contactPayload = ['contact' => $contact];
 
 if ($acApiUrl === '' || $acApiKey === '') {
-    error_log('[subscribe] ActiveCampaign não configurado (ACTIVECAMPAIGN_API_URL/KEY ausentes). '
-        . 'Payload que seria enviado: ' . json_encode($contactPayload, JSON_UNESCAPED_UNICODE));
+    error_log('[subscribe] ActiveCampaign não configurado (URL/token ausentes). '
+        . 'Payload que seria enviado: ' . json_encode($contactPayload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
     exit;
 }
 
@@ -151,7 +156,7 @@ if ($contactId !== null && $acTagId !== '') {
             'tag'     => (string) $acTagId,
         ],
     ]);
-    if (!$tagResult['ok']) {
+    if (!$tagResult['ok'] && !str_contains($tagResult['error'], 'HTTP 422')) {
         error_log('[subscribe] Falha ao aplicar tag ActiveCampaign (id ' . $acTagId . '): ' . $tagResult['error']);
     }
 }
@@ -197,6 +202,24 @@ function acEnv(string $name, string $fallback = ''): string
     return $fallback;
 }
 
+function acToken(): string
+{
+    foreach (['ACTIVECAMPAIGN_API_KEY', 'ACTIVE_CAMPAIGN_API_TOKEN', 'ACTIVECAMPAIGN_API_TOKEN'] as $name) {
+        $value = acEnv($name);
+        if ($value !== '') {
+            return $value;
+        }
+    }
+    return ACTIVE_CAMPAIGN_API_KEY;
+}
+
+function acPhoneDigits(string $raw): string
+{
+    $digits = preg_replace('/\D+/', '', $raw) ?? '';
+    $len = strlen($digits);
+    return ($len >= 10 && $len <= 13) ? $digits : '';
+}
+
 /** Aceita URL com ou sem /api/3 no final (erro comum no painel do Render). */
 function acBaseUrl(string $url): string
 {
@@ -214,9 +237,10 @@ function acRequest(string $apiUrl, string $apiKey, string $path, array $payload)
     curl_setopt_array($ch, [
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_POST           => true,
-        CURLOPT_POSTFIELDS     => json_encode($payload, JSON_UNESCAPED_UNICODE),
+        CURLOPT_POSTFIELDS     => json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
         CURLOPT_HTTPHEADER     => [
             'Content-Type: application/json',
+            'Accept: application/json',
             'Api-Token: ' . $apiKey,
         ],
         CURLOPT_CONNECTTIMEOUT => 3,
