@@ -118,6 +118,7 @@ window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-69W8DMGG3B');
+gtag('config', 'AW-18372754195');
 
 (function () {
   var loaded = false;
@@ -161,6 +162,8 @@ gtag('config', 'G-69W8DMGG3B');
 <meta name="theme-color" content="<?= SITE_THEME_COLOR ?>">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="google-site-verification" content="pHi-v91cKn-ivnHsdtA3NgLyzyruSTyWVTUwJsW3M9k">
+<!-- Verificação do Bing Webmaster Tools — NÃO remover, mesmo após verificado. -->
+<meta name="msvalidate.01" content="0B61C235B353230680234033AEC209C1">
 <link rel="canonical" href="<?= htmlspecialchars($pageCanonical, ENT_QUOTES, 'UTF-8') ?>">
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 
