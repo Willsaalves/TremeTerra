@@ -103,31 +103,8 @@
   </header>
 
   <main id="conteudo">
-    <!-- VÍDEO DE ABERTURA: seção própria, abaixo do header -->
-    <section class="hero-video band-dark" id="topo" aria-label="Vídeo de abertura">
-      <div class="hero-video-stage">
-        <video
-          class="hero-video-bg"
-          autoplay
-          muted
-          loop
-          playsinline
-          webkit-playsinline
-          preload="auto"
-          width="1920"
-          height="1080"
-          poster="/videos/hero-reel.jpg"
-          aria-label="Montagem de eventos produzidos pela Treme Terra: confraternizações, shows, iluminação e palco"
-        >
-          <source src="/videos/hero-reel.mp4" type="video/mp4" />
-          <source src="/videos/hero-reel.webm" type="video/webm" />
-        </video>
-      </div>
-      <div class="hero-video-fade" aria-hidden="true"></div>
-    </section>
-
-    <!-- HERO -->
-    <section class="hero band-dark" id="intro" aria-label="Abertura">
+    <!-- HERO: texto à esquerda, vídeo de abertura à direita -->
+    <section class="hero band-dark" id="topo" aria-label="Abertura">
       <div class="hero-glow" aria-hidden="true"><span class="g1"></span><span class="g2"></span></div>
       <div class="hero-lightbeams" aria-hidden="true">
         <span class="beam beam-1"></span>
@@ -135,7 +112,7 @@
         <span class="beam beam-3"></span>
       </div>
       <canvas class="hero-particles" id="hero-particles" aria-hidden="true"></canvas>
-      <div class="container">
+      <div class="container hero-grid">
         <div class="hero-content">
           <p class="eyebrow hero-eyebrow">Treme Terra Audiovisual</p>
           <h1 class="hero-title" data-split-reveal>
@@ -167,6 +144,26 @@
               <strong data-count-to="4" data-count-suffix="">0</strong>
               <span>Frentes de atuação</span>
             </div>
+          </div>
+        </div>
+        <div class="hero-media">
+          <div class="hero-media-frame">
+            <video
+              class="hero-media-video"
+              autoplay
+              muted
+              loop
+              playsinline
+              webkit-playsinline
+              preload="auto"
+              width="1280"
+              height="720"
+              poster="/videos/hero-reel.jpg"
+              aria-label="Montagem de eventos produzidos pela Treme Terra: confraternizações, shows, iluminação e palco"
+            >
+              <source src="/videos/hero-reel.mp4" type="video/mp4" />
+              <source src="/videos/hero-reel.webm" type="video/webm" />
+            </video>
           </div>
         </div>
       </div>
