@@ -5,10 +5,12 @@ import { initCounters } from './js/counter.js';
 import { initHeader, initFooterYear } from './js/nav.js';
 import { initContactWidget } from './js/contact-widget.js';
 import { initButtonGlow } from './js/button-glow.js';
+import { initHeroVideo } from './js/hero-video.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   initSmoothScroll();
   initHeader();
+  initHeroVideo();
   initFooterYear();
   initReveal();
   initTilt();

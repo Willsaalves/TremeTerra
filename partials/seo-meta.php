@@ -107,7 +107,7 @@ $breadcrumbSchema = [
 ];
 ?>
 <meta charset="UTF-8">
-<!-- Google Tag Manager + GA4 — o dataLayer/gtag() ficam prontos na hora
+<!-- Google Tag Manager + GA4 + Google Ads — o dataLayer/gtag() ficam prontos na hora
      (qualquer evento chamado antes do script físico carregar só fica na
      fila), mas o carregamento de verdade dos scripts do GTM/GA (que
      brigam por banda/conexão com o CSS bem na hora crítica da primeira

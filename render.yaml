@@ -21,6 +21,8 @@ services:
         sync: false
       - key: ACTIVECAMPAIGN_API_KEY
         sync: false
+      - key: ACTIVECAMPAIGN_TAG_ID
+        sync: false
       - key: ACTIVECAMPAIGN_LIST_ID
         sync: false
       - key: ACTIVECAMPAIGN_FIELD_EVENT_TYPE

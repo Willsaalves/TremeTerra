@@ -28,7 +28,12 @@ ENV PHP_CLI_SERVER_WORKERS=10
 # - upload_max_filesize/post_max_size com folga: o app é a fonte de verdade
 #   do tamanho (5 MB por imagem); o post_max_size grande evita estourar o
 #   POST quando o corpo tem várias imagens/URLs.
-CMD php dist/seed-blog-posts.php && php \
+# IMPORTANTE: o seed roda com "|| echo ..." (não "&&"). Se o seed falhar por
+# qualquer motivo (permissão no disco persistente, erro de banco), o servidor
+# PRECISA subir mesmo assim — senão o site inteiro cai com 503. O "; " garante
+# que o php -S sempre execute.
+CMD php dist/seed-blog-posts.php || echo "[boot] seed falhou; subindo o servidor mesmo assim"; \
+    php \
     -d display_errors=0 -d log_errors=1 \
     -d upload_max_filesize=15M -d post_max_size=25M \
     -S 0.0.0.0:${PORT:-10000} -t dist dist/router.php
