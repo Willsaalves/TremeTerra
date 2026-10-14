@@ -9,9 +9,8 @@ $posts = $db->query("SELECT title, slug, category, seo_description, direct_answe
 
 $categoriesPresent = [];
 foreach ($posts as $post) {
-    $cat = $post['category'];
-    if ($cat && isset(POST_CATEGORIES[$cat]) && !isset($categoriesPresent[$cat])) {
-        $categoriesPresent[$cat] = POST_CATEGORIES[$cat];
+    foreach (postCategoryLabels($post['category'] ?? null) as $slug => $label) {
+        $categoriesPresent[$slug] = $label;
     }
 }
 
@@ -77,8 +76,9 @@ $pageBreadcrumbName = 'Blog';
       <?php else: ?>
         <?php foreach ($posts as $i => $post): ?>
           <?php
-            $catLabel = (!empty($post['category']) && isset(POST_CATEGORIES[$post['category']]))
-                ? POST_CATEGORIES[$post['category']] : '';
+            $catLabels = postCategoryLabels($post['category'] ?? null);
+            $catSlugs  = array_keys($catLabels);
+            $firstCat  = $catLabels === [] ? '' : reset($catLabels); // rótulo principal (1ª categoria)
             $excerpt  = (string) ($post['seo_description'] ?: $post['direct_answer']);
             $cover    = trim((string) ($post['cover_image_url'] ?? ''));
             $coverAlt = (string) ($post['cover_image_alt'] ?: $post['title']);
@@ -86,17 +86,21 @@ $pageBreadcrumbName = 'Blog';
           ?>
           <a href="/blog/<?= htmlspecialchars($post['slug'], ENT_QUOTES, 'UTF-8') ?>"
              class="post-card<?= $featured ? ' post-card--featured' : '' ?>"
-             data-category="<?= htmlspecialchars((string) $post['category'], ENT_QUOTES, 'UTF-8') ?>">
+             data-category="<?= htmlspecialchars(implode(' ', $catSlugs), ENT_QUOTES, 'UTF-8') ?>">
             <div class="post-card-cover">
               <?php if ($cover !== ''): ?>
                 <img src="<?= htmlspecialchars($cover, ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($coverAlt, ENT_QUOTES, 'UTF-8') ?>" loading="lazy" />
               <?php else: ?>
                 <span class="post-card-cover-fallback" aria-hidden="true">
-                  <?= htmlspecialchars($catLabel !== '' ? $catLabel : SITE_NAME, ENT_QUOTES, 'UTF-8') ?>
+                  <?= htmlspecialchars($firstCat !== '' ? $firstCat : SITE_NAME, ENT_QUOTES, 'UTF-8') ?>
                 </span>
               <?php endif; ?>
-              <?php if ($catLabel !== ''): ?>
-                <span class="category"><?= htmlspecialchars($catLabel, ENT_QUOTES, 'UTF-8') ?></span>
+              <?php if ($catLabels !== []): ?>
+                <span class="post-card-cats">
+                  <?php foreach ($catLabels as $label): ?>
+                    <span class="category"><?= htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?></span>
+                  <?php endforeach; ?>
+                </span>
               <?php endif; ?>
             </div>
             <div class="post-card-body">

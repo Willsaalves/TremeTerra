@@ -66,16 +66,18 @@ $pageHeading = $isEdit ? 'Editar post' : 'Novo post';
         <input type="text" name="slug" id="field-slug" required value="<?= htmlspecialchars((string) ($post['slug'] ?? ''), ENT_QUOTES, 'UTF-8') ?>" />
       </label>
 
-      <label>Categoria
-        <select name="category">
-          <option value="">Selecione</option>
+      <?php $selectedCats = postCategories($post['category'] ?? null); ?>
+      <fieldset class="admin-cat-fieldset">
+        <legend>Categorias <span class="admin-cat-hint">(pode marcar mais de uma)</span></legend>
+        <div class="admin-cat-options">
           <?php foreach (POST_CATEGORIES as $value => $label): ?>
-            <option value="<?= htmlspecialchars($value, ENT_QUOTES, 'UTF-8') ?>" <?= ($post['category'] ?? '') === $value ? 'selected' : '' ?>>
-              <?= htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?>
-            </option>
+            <label class="admin-cat-option">
+              <input type="checkbox" name="category[]" value="<?= htmlspecialchars($value, ENT_QUOTES, 'UTF-8') ?>" <?= in_array($value, $selectedCats, true) ? 'checked' : '' ?> />
+              <span><?= htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?></span>
+            </label>
           <?php endforeach; ?>
-        </select>
-      </label>
+        </div>
+      </fieldset>
 
       <label>Title tag (SEO, até 60 caracteres — sem precisar incluir "Treme Terra", isso é adicionado automaticamente)
         <input type="text" name="seo_title" maxlength="70" value="<?= htmlspecialchars((string) ($post['seo_title'] ?? ''), ENT_QUOTES, 'UTF-8') ?>" />
