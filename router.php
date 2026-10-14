@@ -175,6 +175,26 @@ if ($uri === '/') {
     }
 }
 
+// --- 2-dir. Diretório com index.php (ex.: /admin/ e /admin -> admin/index.php).
+// O servidor embutido do PHP não resolve o index de um diretório sozinho
+// quando há um router script, então /admin/ caía no 404 personalizado. ---
+if ($uri !== '/' && is_dir($path)) {
+    $dirIndex = rtrim($path, '/') . '/index.php';
+    if (is_file($dirIndex)) {
+        // Sem barra final (/admin) -> 301 pra versão com barra (/admin/),
+        // pra os links/relativos e o cookie de sessão baterem num caminho só.
+        if (!str_ends_with($uri, '/')) {
+            $query = $_SERVER['QUERY_STRING'] ?? '';
+            http_response_code(301);
+            header('Location: ' . $uri . '/' . ($query !== '' ? '?' . $query : ''));
+            return true;
+        }
+        chdir(dirname($dirIndex));
+        require $dirIndex;
+        return true;
+    }
+}
+
 // --- 2a. URL canônica com barra final: se a URL limpa (sem extensão, sem
 // barra no final) corresponde a uma página real, redireciona 301 pra versão
 // com barra — a mesma que os links internos (nav/footer) e o <link
