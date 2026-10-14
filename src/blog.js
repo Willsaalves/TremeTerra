@@ -14,7 +14,8 @@ function initFilters() {
       filters.forEach((c) => c.classList.toggle('is-active', c === chip));
 
       cards.forEach((card) => {
-        const matches = target === 'all' || card.dataset.category === target;
+        const cats = (card.dataset.category || '').split(' ').filter(Boolean);
+        const matches = target === 'all' || cats.includes(target);
         card.hidden = !matches;
       });
     });

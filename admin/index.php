@@ -53,7 +53,7 @@ $posts = $db->query('SELECT id, title, slug, category, status, published_at, upd
           <?php foreach ($posts as $post): ?>
             <tr>
               <td><?= htmlspecialchars($post['title'], ENT_QUOTES, 'UTF-8') ?></td>
-              <td><?= htmlspecialchars(POST_CATEGORIES[$post['category']] ?? (string) $post['category'], ENT_QUOTES, 'UTF-8') ?></td>
+              <td><?php $labels = postCategoryLabels($post['category'] ?? null); echo htmlspecialchars($labels === [] ? (string) $post['category'] : implode(', ', $labels), ENT_QUOTES, 'UTF-8'); ?></td>
               <td>
                 <span class="admin-status admin-status-<?= htmlspecialchars($post['status'], ENT_QUOTES, 'UTF-8') ?>">
                   <?= $post['status'] === 'published' ? 'Publicado' : 'Rascunho' ?>
