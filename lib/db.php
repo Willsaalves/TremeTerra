@@ -68,6 +68,7 @@ const POST_CATEGORIES = [
     'corporativo' => 'Eventos corporativos',
     'social'      => 'Casamentos e formaturas',
     'producao'    => 'Produção e shows',
+    'convidados'  => 'Convidados',
 ];
 
 function slugify(string $text): string
