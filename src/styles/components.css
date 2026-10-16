@@ -120,6 +120,18 @@
   font-size: 0.95rem;
 }
 
+/* Botão de ação dentro de um tile (ex.: "Cotar palco") — empurra pro rodapé
+   do card pra os botões alinharem quando os textos têm alturas diferentes. */
+.tile--cta {
+  display: flex;
+  flex-direction: column;
+}
+
+.tile-cta {
+  margin-top: auto;
+  padding-top: var(--space-md);
+}
+
 .tile--featured {
   background: hsl(var(--color-graphite-900));
   color: hsl(var(--color-white));
