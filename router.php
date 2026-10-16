@@ -47,6 +47,35 @@ $uri = $uri !== false && $uri !== null ? urldecode($uri) : '/';
 $path = $root . $uri;
 $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
 
+// --- 0b. Bloqueio de bots indesejados por User-Agent (403) ---
+// robots.txt é só uma recomendação — crawlers abusivos ignoram. Aqui o
+// bloqueio é de verdade: crawlers de SEO/scraping agressivos e coletores
+// que só geram carga (e ajudam a derrubar o app) levam 403 e nem chegam a
+// servir a página. NÃO entram nesta lista buscadores legítimos (Googlebot,
+// Bingbot, DuckDuckBot), redes sociais (facebookexternalhit, WhatsApp,
+// Twitterbot, LinkedInBot) nem o User-Agent vazio (health check do Render),
+// pra não bloquear tráfego bom nem o monitoramento. Casado como substring,
+// sem diferenciar maiúsc./minúsc.
+$blockedBots = [
+    'ahrefsbot', 'semrushbot', 'mj12bot', 'dotbot', 'dataforseobot',
+    'petalbot', 'bytespider', 'barkrowler', 'blexbot', 'seekportbot',
+    'megaindex', 'serpstatbot', 'zoominfobot', 'mauibot', 'seznambot',
+    'magpie-crawler', 'dataprovider', 'semanticbot', 'linkfluence',
+    'scrapy', 'python-requests', 'go-http-client', 'masscan', 'zgrab',
+];
+$ua = strtolower($_SERVER['HTTP_USER_AGENT'] ?? '');
+if ($ua !== '') {
+    foreach ($blockedBots as $bot) {
+        if (str_contains($ua, $bot)) {
+            http_response_code(403);
+            header('Content-Type: text/plain; charset=UTF-8');
+            header('Cache-Control: no-store');
+            echo "403 Forbidden";
+            return true;
+        }
+    }
+}
+
 // Default: conteúdo dinâmico (HTML/PHP) sem cache. As rotas de vídeo e de
 // arquivo estático abaixo sobrescrevem com seus próprios Cache-Control.
 header('Cache-Control: no-cache');

@@ -6,10 +6,29 @@ export function initContactWidget() {
   const panel = widget.querySelector('.contact-widget-panel');
   const form = document.getElementById('contact-form');
 
-  const openWidget = () => {
+  const openWidget = (prefill) => {
     widget.classList.add('is-open');
     toggle.setAttribute('aria-expanded', 'true');
     panel.setAttribute('aria-hidden', 'false');
+
+    // Pré-preenche a mensagem (e opcionalmente o tipo de evento) quando o
+    // botão que abriu o widget pediu — ex.: "Cotar Palco 260" já deixa a
+    // mensagem pronta pro lead só completar.
+    if (prefill && form) {
+      if (prefill.message) {
+        const msg = form.querySelector('[name="mensagem"]');
+        if (msg && !msg.value.trim()) msg.value = prefill.message;
+      }
+      if (prefill.tipo) {
+        const tipo = form.querySelector('[name="tipo_evento"]');
+        if (tipo && !tipo.value) {
+          const opt = [...tipo.options].find((o) => o.value === prefill.tipo);
+          if (opt) tipo.value = prefill.tipo;
+        }
+      }
+      const nome = form.querySelector('[name="nome"]');
+      if (nome) window.setTimeout(() => nome.focus(), 120);
+    }
   };
 
   const closeWidget = () => {
@@ -37,7 +56,10 @@ export function initContactWidget() {
   document.querySelectorAll('[data-open-contact]').forEach((btn) => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
-      openWidget();
+      openWidget({
+        message: btn.getAttribute('data-prefill-message') || '',
+        tipo: btn.getAttribute('data-prefill-tipo') || '',
+      });
     });
   });
 
