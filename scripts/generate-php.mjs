@@ -239,25 +239,13 @@ const pages = [
     'provider'    => ['@id' => SITE_URL . '/#organization'],
     'areaServed'  => 'BR',
 ]`,
-    productSchemaVar: `[
-    '@context'   => 'https://schema.org',
-    '@type'      => 'Product',
-    'name'       => 'Painel de LED para Eventos',
-    'description' => 'Painéis de LED modulares P2, P3, P5 e 4K para locação em eventos, indoor e outdoor.',
-    'brand'      => ['@type' => 'Brand', 'name' => SITE_NAME],
-    'additionalProperty' => [
-        ['@type' => 'PropertyValue', 'name' => 'P2', 'value' => 'Indoor premium, 2–8 m'],
-        ['@type' => 'PropertyValue', 'name' => 'P3', 'value' => 'Versátil, 3–15 m'],
-        ['@type' => 'PropertyValue', 'name' => 'P5', 'value' => 'Outdoor, 5–30 m'],
-        ['@type' => 'PropertyValue', 'name' => '4K', 'value' => 'Ultra HD, sob medida'],
-    ],
-    'offers' => [
-        '@type'         => 'Offer',
-        'priceCurrency' => 'BRL',
-        'availability'  => 'https://schema.org/InStock',
-        'url'           => SITE_URL . '/painel-de-led',
-    ],
-]`,
+    // Sem schema de Product aqui: a locação de painel de LED é orçada "sob
+    // medida" (sem preço fixo), então um Product/Offer sem `price` nem
+    // `image` é reprovado pelo Google Search Console ("campo image/price não
+    // encontrado") e não rende rich result. O schema de Service acima já
+    // descreve corretamente a oferta (serviceType = locação de painéis de
+    // LED), sem exigir preço/imagem. Os detalhes P2/P3/P5/4K continuam no
+    // conteúdo da página.
     faqItems: [
       ['Qual tamanho preciso do painel de led para eventos?', 'Depende da distância. Até 10m: P2/P3. 10–20m: P3/P5. +20m: P5.'],
       ['Funciona ao ar livre?', 'Sim. IP65 contra chuva e poeira.'],
