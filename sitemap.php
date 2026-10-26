@@ -16,7 +16,7 @@ $deployDate = gmdate('Y-m-d');
 $blogLastmod = $deployDate;
 try {
     $db = getDb();
-    $row = $db->query("SELECT MAX(updated_at) AS m FROM posts WHERE status = 'published'")->fetch();
+    $row = $db->query("SELECT MAX(updated_at) AS m FROM posts WHERE " . livePostsSql())->fetch();
     if (!empty($row['m'])) {
         $blogLastmod = substr((string) $row['m'], 0, 10);
     }

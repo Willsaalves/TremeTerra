@@ -16,7 +16,7 @@ $urls = [
 ];
 
 $db = getDb();
-$posts = $db->query("SELECT slug, updated_at FROM posts WHERE status = 'published' ORDER BY published_at DESC")->fetchAll();
+$posts = $db->query("SELECT slug, updated_at FROM posts WHERE " . livePostsSql() . " ORDER BY published_at DESC")->fetchAll();
 foreach ($posts as $post) {
     $lastmod = $post['updated_at'] ? substr((string) $post['updated_at'], 0, 10) : $deployDate;
     $urls[] = ['loc' => SITE_URL . '/blog/' . $post['slug'], 'lastmod' => $lastmod];

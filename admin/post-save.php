@@ -37,11 +37,22 @@ try {
     exit($e->getMessage());
 }
 $bodyHtml       = (string) ($_POST['body_html'] ?? '');
-$status         = ($_POST['status'] ?? 'draft') === 'published' ? 'published' : 'draft';
+$statusInput    = (string) ($_POST['status'] ?? 'draft');
+$status         = in_array($statusInput, ['published', 'scheduled'], true) ? $statusInput : 'draft';
 
 if ($title === '' || $slug === '') {
     http_response_code(422);
     exit('Título e slug são obrigatórios.');
+}
+
+// Agendamento: converte a data/hora digitada (horário de São Paulo) pra UTC.
+$scheduledUtc = null;
+if ($status === 'scheduled') {
+    $scheduledUtc = parseScheduledToUtc((string) ($_POST['scheduled_for'] ?? ''));
+    if ($scheduledUtc === null) {
+        http_response_code(422);
+        exit('Para agendar, informe uma data e hora válidas de publicação.');
+    }
 }
 
 $questions = $_POST['faq_question'] ?? [];
@@ -71,8 +82,17 @@ try {
         }
 
         $publishedAt = $row['published_at'];
-        if ($status === 'published' && $publishedAt === null) {
-            $publishedAt = $now;
+        if ($status === 'draft') {
+            $publishedAt = null;
+        } elseif ($status === 'scheduled') {
+            $publishedAt = $scheduledUtc;
+        } elseif ($status === 'published') {
+            // "Publicado (agora)": se não tinha data ou estava agendado pro
+            // futuro, publica agora; se já tinha data passada, preserva a
+            // data real da primeira publicação.
+            if ($publishedAt === null || $publishedAt > $now) {
+                $publishedAt = $now;
+            }
         }
 
         $stmt = $db->prepare('
@@ -88,7 +108,11 @@ try {
             $faqJson, $status, $publishedAt, $now, $id,
         ]);
     } else {
-        $publishedAt = $status === 'published' ? $now : null;
+        $publishedAt = match ($status) {
+            'scheduled' => $scheduledUtc,
+            'published' => $now,
+            default     => null,
+        };
 
         $stmt = $db->prepare('
             INSERT INTO posts (

@@ -5,7 +5,7 @@ require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/lib/db.php';
 
 $db = getDb();
-$posts = $db->query("SELECT title, slug, category, seo_description, direct_answer, cover_image_url, cover_image_alt, published_at FROM posts WHERE status = 'published' ORDER BY published_at DESC")->fetchAll();
+$posts = $db->query("SELECT title, slug, category, seo_description, direct_answer, cover_image_url, cover_image_alt, published_at FROM posts WHERE " . livePostsSql() . " ORDER BY published_at DESC")->fetchAll();
 
 $categoriesPresent = [];
 foreach ($posts as $post) {
