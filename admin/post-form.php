@@ -135,10 +135,24 @@ $pageHeading = $isEdit ? 'Editar post' : 'Novo post';
       </fieldset>
 
       <label>Status
-        <select name="status">
+        <select name="status" id="field-status">
           <option value="draft" <?= ($post['status'] ?? 'draft') === 'draft' ? 'selected' : '' ?>>Rascunho</option>
-          <option value="published" <?= ($post['status'] ?? '') === 'published' ? 'selected' : '' ?>>Publicado</option>
+          <option value="published" <?= ($post['status'] ?? '') === 'published' ? 'selected' : '' ?>>Publicado (agora)</option>
+          <option value="scheduled" <?= ($post['status'] ?? '') === 'scheduled' ? 'selected' : '' ?>>Agendado</option>
         </select>
+      </label>
+
+      <?php
+        // Pré-preenche a data/hora de agendamento: se o post já está agendado,
+        // usa o published_at salvo (convertido pra horário de SP). O campo só
+        // aparece quando o status é "Agendado" (controlado por JS abaixo).
+        $scheduledInput = ($post['status'] ?? '') === 'scheduled'
+            ? utcToLocalInput($post['published_at'] ?? null) : '';
+      ?>
+      <label id="field-scheduled-wrap"<?= ($post['status'] ?? '') === 'scheduled' ? '' : ' hidden' ?>>
+        Publicar em (data e hora — horário de Brasília/São Paulo)
+        <input type="datetime-local" name="scheduled_for" id="field-scheduled" value="<?= htmlspecialchars($scheduledInput, ENT_QUOTES, 'UTF-8') ?>" />
+        <small class="admin-field-hint">O post vai ao ar sozinho nesse horário. Não precisa de mais nada.</small>
       </label>
 
       <button type="submit" class="btn-admin">Salvar</button>
@@ -291,6 +305,25 @@ $pageHeading = $isEdit ? 'Editar post' : 'Novo post';
     document.getElementById('post-form').addEventListener('submit', () => {
       document.getElementById('field-body-html').value = quill.root.innerHTML;
     });
+
+    // ---- Agendamento: mostra o campo de data/hora só no status "Agendado" ----
+    const statusField = document.getElementById('field-status');
+    const scheduledWrap = document.getElementById('field-scheduled-wrap');
+    const scheduledInput = document.getElementById('field-scheduled');
+    function syncScheduledField() {
+      const isScheduled = statusField.value === 'scheduled';
+      scheduledWrap.hidden = !isScheduled;
+      scheduledInput.required = isScheduled;
+      // Sugere um horário padrão (agora + 1h) se o campo estiver vazio.
+      if (isScheduled && !scheduledInput.value) {
+        const d = new Date(Date.now() + 60 * 60 * 1000);
+        d.setMinutes(0, 0, 0);
+        const pad = (n) => String(n).padStart(2, '0');
+        scheduledInput.value = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+      }
+    }
+    statusField.addEventListener('change', syncScheduledField);
+    syncScheduledField();
 
     // ---- Inserir tabela (botão + mini-formulário) ----
     const tableModal = document.getElementById('table-modal');

@@ -125,6 +125,84 @@ function normalizePostCategories(mixed $input): string
     return implode(',', postCategories($raw));
 }
 
+/**
+ * Condição SQL para os posts que estão "no ar": não-rascunho E cujo horário
+ * de publicação já chegou. `published_at` é gravado em UTC (gmdate); o
+ * `datetime('now')` do SQLite também é UTC, e os dois têm o mesmo formato
+ * "Y-m-d H:i:s", então a comparação textual funciona direto — sem parâmetro.
+ *
+ * É isto que faz o AGENDAMENTO funcionar SEM cron: um post agendado tem
+ * `published_at` no futuro, então fica de fora até a hora chegar; assim que
+ * `datetime('now')` passa do horário, ele entra sozinho na listagem.
+ *
+ * A string é constante (sem entrada do usuário), segura pra interpolar no SQL.
+ */
+function livePostsSql(): string
+{
+    return "status != 'draft' AND published_at IS NOT NULL AND published_at <= datetime('now')";
+}
+
+/**
+ * Status "efetivo" de um post pra exibição no admin, considerando o relógio:
+ * - 'draft'     → rascunho
+ * - 'scheduled' com horário ainda no futuro → agendado
+ * - caso contrário (publicado, ou agendado cujo horário já passou) → publicado
+ */
+function effectivePostStatus(array $post): string
+{
+    $status = (string) ($post['status'] ?? 'draft');
+    if ($status === 'draft') {
+        return 'draft';
+    }
+    $publishedAt = trim((string) ($post['published_at'] ?? ''));
+    if ($publishedAt === '') {
+        return 'draft';
+    }
+    if ($publishedAt > gmdate('Y-m-d H:i:s')) {
+        return 'scheduled';
+    }
+    return 'published';
+}
+
+/**
+ * Converte um datetime-local do admin (digitado em horário de São Paulo, ex.:
+ * "2026-11-05T14:30") para o timestamp UTC "Y-m-d H:i:s" que o banco guarda.
+ * Devolve null se a entrada estiver vazia ou inválida.
+ */
+function parseScheduledToUtc(string $localDateTime): ?string
+{
+    $localDateTime = trim($localDateTime);
+    if ($localDateTime === '') {
+        return null;
+    }
+    try {
+        $dt = new DateTime($localDateTime, new DateTimeZone(SITE_TIMEZONE));
+        $dt->setTimezone(new DateTimeZone('UTC'));
+        return $dt->format('Y-m-d H:i:s');
+    } catch (Throwable) {
+        return null;
+    }
+}
+
+/**
+ * Timestamp UTC do banco → valor pronto pro input datetime-local (horário de
+ * São Paulo, formato "Y-m-d\TH:i"). Vazio se não houver data.
+ */
+function utcToLocalInput(?string $utc): string
+{
+    $utc = trim((string) $utc);
+    if ($utc === '') {
+        return '';
+    }
+    try {
+        $dt = new DateTime($utc, new DateTimeZone('UTC'));
+        $dt->setTimezone(new DateTimeZone(SITE_TIMEZONE));
+        return $dt->format('Y-m-d\TH:i');
+    } catch (Throwable) {
+        return '';
+    }
+}
+
 function slugify(string $text): string
 {
     $text = trim($text);

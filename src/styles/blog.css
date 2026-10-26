@@ -552,9 +552,21 @@ article.post .prose li { margin-bottom: 0.4rem; }
 .admin-table-actions { display: flex; gap: 0.75rem; align-items: center; }
 .admin-table-actions form { display: inline; margin: 0; }
 
-.admin-status { font-size: 0.75rem; font-weight: 700; padding: 0.15rem 0.6rem; border-radius: var(--radius-full); }
+.admin-status { font-size: 0.75rem; font-weight: 700; padding: 0.15rem 0.6rem; border-radius: var(--radius-full); white-space: nowrap; }
 .admin-status-draft { background: hsl(220 12% 42% / 0.12); color: hsl(var(--color-mist)); }
 .admin-status-published { background: hsl(var(--color-treme-terra) / 0.14); color: hsl(var(--color-treme-terra-text)); }
+.admin-status-scheduled { background: hsl(38 92% 50% / 0.16); color: hsl(32 80% 34%); }
+
+/* Fila editorial (posts agendados) */
+.admin-queue { background: hsl(38 92% 50% / 0.07); border: 1px solid hsl(38 92% 50% / 0.25); border-radius: var(--radius-md); padding: 1.1rem 1.35rem; margin-bottom: 1.75rem; }
+.admin-queue h2 { font-family: var(--font-display); font-size: 1.1rem; margin: 0 0 0.25rem; }
+.admin-queue-hint { color: hsl(var(--color-mist)); font-size: 0.85rem; margin: 0 0 0.85rem; }
+.admin-queue-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+.admin-queue-list li { display: flex; gap: 0.85rem; align-items: baseline; flex-wrap: wrap; }
+.admin-queue-when { font-weight: 700; font-size: 0.85rem; color: hsl(32 80% 34%); min-width: 11rem; }
+.admin-queue-title-link { font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
+
+.admin-field-hint { display: block; margin-top: 0.3rem; color: hsl(var(--color-mist)); font-size: 0.8rem; font-weight: 400; }
 
 .admin-form { display: flex; flex-direction: column; gap: 1.1rem; background: hsl(var(--color-surface)); padding: 1.75rem; border-radius: var(--radius-md); }
 .admin-form label,

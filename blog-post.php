@@ -11,7 +11,7 @@ if ($slug === '') {
 }
 
 $db = getDb();
-$stmt = $db->prepare("SELECT * FROM posts WHERE slug = ? AND status = 'published'");
+$stmt = $db->prepare("SELECT * FROM posts WHERE slug = ? AND " . livePostsSql());
 $stmt->execute([$slug]);
 $post = $stmt->fetch();
 
